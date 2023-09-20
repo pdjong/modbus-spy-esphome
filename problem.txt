@@ -1,0 +1,29 @@
+[12:31:33][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:31:33][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:31:35][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:31:37][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:31:38][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:31:40][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:31:41][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:31:42][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:31:45][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:31:46][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:31:48][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:31:48][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:31:50][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:31:51][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:31:52][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:31:53][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:31:55][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:31:56][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:31:57][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:32:01][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:32:01][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:32:03][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:32:04][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:32:05][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:32:07][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:32:10][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:32:11][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60
+[12:32:13][V][daalderop.sensor:197]: Buffer cleared because of timeout
+[12:32:13][V][daalderop.sensor:273]: Request received : 8 bytes, address 0x0B, function 0x03, start address 0x04AF, requested bytes 60

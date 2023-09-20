@@ -187,6 +187,11 @@ class Daalderop : public Component, public uart::UARTDevice {
     bool convertRegisterValueToOnOff(uint16_t registerValue) {
       return static_cast<bool>(registerValue);
     }
+
+    void fleppertje();
+    
+  public:
+    static void read_loop_task(void* params);
 };
 
 typedef float(Daalderop::*RegisterValueConversion)(uint16_t);

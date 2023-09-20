@@ -1,12 +1,14 @@
 /* defrost: 20, 24, 25 */
 
-
-#include "esphome/core/log.h"
-#include "daalderop.h"
-
 #include <iostream>
 #include <vector>
 #include <sstream>
+
+#include "esphome/core/log.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
+#include "daalderop.h"
 
 using namespace std; 
 
@@ -170,6 +172,14 @@ namespace esphome
       map_register_to_sensor_and_unit(0x045D, this->decode319_sensor_, sensorUnit::frequency);      
       map_register_to_sensor_and_unit(0x045E, this->decode320_sensor_, sensorUnit::frequency);      
 
+      xTaskCreatePinnedToCore(Daalderop::read_loop_task,
+                                  "read_task", // name
+                                  30000,       // stack size (in words)
+                                  this,        // input params
+                                  1,           // priority
+                                  nullptr,     // Handle, not needed
+                                  0            // core
+      );
     }
 
     void Daalderop::map_register_to_sensor_and_unit(uint16_t registerNr, sensor::Sensor *sensor, sensorUnit unit) {
@@ -186,35 +196,96 @@ namespace esphome
       registerToSensorAndUnitMap[registerNr] = sAndU;
     }
 
+    void Daalderop::read_loop_task(void* params) {
+      Daalderop *daalderop = reinterpret_cast<Daalderop*>(params);
+      while (true) {
+        if (daalderop->available() > 0) {
+          daalderop->fleppertje();
+        }
+
+        delay(1);
+      }
+    }
+
+    void Daalderop::fleppertje() {
+      bool current_package_done = false;
+      bool first_byte = true;
+      while (!current_package_done) {
+        while (this->available() == 0) {
+          delayMicroseconds(125);
+        }
+        uint32_t now = millis();
+
+        if (!first_byte && (now - this->last_modbus_byte_ > 5))
+        {
+          if (this->rx_buffer_.size() > 0)
+          {
+            ESP_LOGV(TAG, "Buffer cleared because of timeout");
+            this->rx_buffer_.clear();
+            this->last_modbus_byte_ = now;
+            current_package_done = true;
+          }
+          while (this->available())
+          {
+            uint8_t byte;
+            this->read_byte(&byte);
+          }
+          break;
+        }
+        first_byte = false;
+
+        while (this->available())
+        {
+          uint8_t byte;
+          this->read_byte(&byte);
+          now = millis();
+          if (this->parse_modbus_byte_(byte))
+          {
+            // Still filling the buffer
+            this->last_modbus_byte_ = now;
+            current_package_done = false;
+          }
+          else
+          {
+            // Message complete, clear the buffer
+            this->rx_buffer_.clear();
+            current_package_done = true;
+            break;
+          }
+        }
+      }
+    }
+
     void Daalderop::loop()
     {
-      const uint32_t now = millis();
+      // const uint32_t now = millis();
 
-      if (now - this->last_modbus_byte_ > 5)
-      {
-        if (this->rx_buffer_.size() > 0)
-        {
-          ESP_LOGV(TAG, "Buffer cleared because of timeout");
-          this->rx_buffer_.clear();
-          this->last_modbus_byte_ = now;
-        }
-      }
+      // if (now - this->last_modbus_byte_ > 5)
+      // {
+      //   if (this->rx_buffer_.size() > 0)
+      //   {
+      //     ESP_LOGV(TAG, "Buffer cleared because of timeout");
+      //     this->rx_buffer_.clear();
+      //     this->last_modbus_byte_ = now;
+      //   }
+      // }
 
-      while (this->available())
-      {
-        uint8_t byte;
-        this->read_byte(&byte);
-        if (this->parse_modbus_byte_(byte))
-        {
-          // Still filling the buffer
-          this->last_modbus_byte_ = now;
-        }
-        else
-        {
-          // Message complete, clear the buffer
-          this->rx_buffer_.clear();
-        }
-      }
+      // while (this->available())
+      // {
+      //   uint8_t byte;
+      //   this->read_byte(&byte);
+      //   if (this->parse_modbus_byte_(byte))
+      //   {
+      //     // Still filling the buffer
+      //     this->last_modbus_byte_ = now;
+      //   }
+      //   else
+      //   {
+      //     // Message complete, clear the buffer
+      //     this->rx_buffer_.clear();
+      //   }
+      // }
+      delay(5);
     }
 
     bool Daalderop::parse_modbus_byte_(uint8_t byte)

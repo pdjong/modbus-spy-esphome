@@ -1,0 +1,160 @@
+esphome:
+  name: hokjepaul
+  name_add_mac_suffix: false
+  comment: ""
+  project:
+    name: "lschelvis.hokje"
+    version: "1.0.0"
+
+external_components:
+  - source:
+    #   type: git
+    #   url: https://github.com/pdjong/daalderop-esphome
+    #   ref: main
+    # refresh: 0s
+      type: local
+      path: components
+
+esp32:
+  board: esp32dev
+
+# Enable logging
+logger:
+  baud_rate: 0
+  level: VERBOSE
+  
+# Enable Home Assistant API
+api:
+
+ota:
+
+wifi:
+  ssid: ""
+  password: ""
+  ap:
+    password: "sharingwifi"
+
+captive_portal:
+
+dallas:
+  - pin: GPIO27  
+    #update_interval: 5sec
+
+uart:
+  baud_rate: 19200
+  rx_pin: GPIO32
+  parity: ODD 
+
+switch:
+  - platform: gpio
+    pin: GPIO18
+    name: "Groen"
+  - platform: gpio
+    pin: GPIO19
+    name: "Rood"    
+  - platform: gpio
+    pin: GPIO22
+    name: "Koelen"        
+  - platform: gpio
+    pin: GPIO23
+    name: "Verwarmen"            
+
+    
+
+sensor:
+  # - platform: dallas
+  #   address: 0x983ce104573f8528
+  #   name: Temperatuur  
+  # - platform: pulse_meter
+  #   id: sensor_pulse_meter
+  #   name: "Huidig verbruik"
+  #   icon: "mdi:water-pump"
+  #   unit_of_measurement: "L/min"
+  #   timeout: 2min
+  #   accuracy_decimals: 1
+  #   total:
+  #     id: sensor_pulse_meter_total
+  #     name: "Total Consumption"
+  #     icon: "mdi:cube-outline"
+  #     unit_of_measurement: "m³"
+  #     state_class: total_increasing
+  #     device_class: water
+  #     accuracy_decimals: 3
+  #     filters:
+  #       - multiply: 0.001
+  #   pin: GPIO33
+  #   # on_value:
+  #   #   then:
+  #   #     - light.turn_on:
+  #   #         id: light_led_green
+  #   #         flash_length: 1s    
+  - platform: daalderop
+    cooling_heating_temperature:
+      name: daalderop_cooling_heating_temperature
+    sanitary_hot_water_temperature:
+      name: daalderop_sanitary_hot_water_temperature
+    outside_temperature:
+      name: daalderop_outside_temperature
+    inside_temperature:
+      name: daalderop_inside_temperature
+    heat_exchanger_water_inlet_temperature:
+      name: daalderop_heat_exchanger_water_inlet_temperature
+    heat_exchanger_water_outlet_temperature:
+      name: daalderop_heat_exchanger_water_outlet_temperature
+    compressor_working_speed_actual:
+      name: daalderop_compressor_working_speed_actual
+    compressor_working_speed_setpoint:
+      name: daalderop_compressor_working_speed_setpoint
+    outdoor_fan_setpoint:
+      name: daalderop_outdoor_fan_setpoint
+    outdoor_fan_1_actual:
+      name: daalderop_outdoor_fan_1_actual
+    indoor_coil_temperature:
+      name: daalderop_indoor_coil_temperature
+    low_pressure:
+      name: daalderop_low_pressure
+    high_pressure:
+      name: daalderop_high_pressure
+    suction_temperature:
+      name: daalderop_suction_temperature
+    discharge_temperature:
+      name: daalderop_discharge_temperature
+    outdoor_coil_temperature:
+      name: daalderop_outdoor_coil_temperature
+    internal_pump_active:
+      name: daalderop_internal_pump_active
+    heating_switch:
+      name: daalderop_heating_switch
+    three_way_valve:
+      id: daalderop_three_way_valve   
+      name: daalderop_three_way_valve      
+      on_state:
+        then:
+          - text_sensor.template.publish:
+              id: three_way_valve_text
+              state: !lambda |
+                if (x) 
+                  return "Verwarming";
+                else
+                  return "Tapwater";
+    
+    outdoor_voltage:
+      name: daalderop_outdoor_voltage
+    outdoor_current:
+      name: daalderop_outdoor_current
+    decode20:
+      name: daalderop_decode20   
+      id: decode20   
+    decode24:
+      name: daalderop_decode24 
+      id: decode24
+    decode25:
+      name: daalderop_decode25   
+      id: decode25
+    decode210:
+      name: daalderop_decode210     
+        
+text_sensor:
+  - platform: template
+    id: three_way_valve_text
+    name: daalderop_three_way_valve_text        
