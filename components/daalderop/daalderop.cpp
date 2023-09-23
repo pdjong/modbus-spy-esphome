@@ -216,11 +216,21 @@ namespace esphome
         }
         uint32_t now = millis();
 
-        if (!first_byte && (now - this->last_modbus_byte_ > 5))
+        if (!first_byte && (now - this->last_modbus_byte_ > 500))
         {
           if (this->rx_buffer_.size() > 0)
           {
-            ESP_LOGV(TAG, "Buffer cleared because of timeout");
+            ESP_LOGV(TAG, "Buffer cleared because of timeout. RX buffer follows, with all available() bytes");
+
+            // ESP_LOGV(TAG, "(Appending %d bytes in UART buffer)", this->available());
+            // while (this->available())
+            // {
+            //   uint8_t byte;
+            //   this->read_byte(&byte);
+            //   this->rx_buffer_.push_back(byte);
+            // }
+
+            this->log_rx_buffer();
             this->rx_buffer_.clear();
             this->last_modbus_byte_ = now;
             current_package_done = true;
@@ -229,6 +239,7 @@ namespace esphome
           {
             uint8_t byte;
             this->read_byte(&byte);
+
           }
           break;
         }
@@ -254,6 +265,22 @@ namespace esphome
           }
         }
       }
+    }
+
+    void Daalderop::log_rx_buffer() {
+      char *string_buffer = new char[this->rx_buffer_.size() * 2 + 1];
+      string_buffer[this->rx_buffer_.size() * 2] = '\0';
+      
+      size_t i { 0 };
+      for (auto rx_byte : this->rx_buffer_) {
+        uint8_t high_nibble = rx_byte >> 4;
+        uint8_t low_nibble = rx_byte & 0x0F;
+        string_buffer[i * 2] = (high_nibble > 9 ? (high_nibble - 10 + 'A') : high_nibble + '0');
+        string_buffer[i * 2 + 1] = (low_nibble > 9 ? (low_nibble - 10 + 'A') : low_nibble + '0');
+        ++i;
+      }
+      ESP_LOGD(TAG, "Raw message bytes (count = %d): %s", this->rx_buffer_.size(), string_buffer);
+      delete[] string_buffer;
     }
 
     void Daalderop::loop()
@@ -322,20 +349,7 @@ namespace esphome
             ESP_LOGD(TAG, "Function %02X received, discarded", function_code);
 
             // Loop over all bytes in the receive buffer, and print 'em.
-            char *stringBuffer = new char[this->rx_buffer_.size() * 2 + 1];
-            stringBuffer[this->rx_buffer_.size() * 2] = '\0';
-            uint8_t i = 0;
-            std::vector<uint8_t>::iterator it = this->rx_buffer_.begin();
-            while (it != this->rx_buffer_.end()) {
-              uint8_t high_nibble = (*it) >> 4;
-              uint8_t low_nibble = (*it) & 0x0F;
-              stringBuffer[i * 2] = (high_nibble > 9 ? (high_nibble - 10 + 'A') : high_nibble + '0');
-              stringBuffer[i * 2 + 1] = (low_nibble > 9 ? (low_nibble - 10 + 'A') : low_nibble + '0');
-              it++;
-              i++;
-            }
-            ESP_LOGD(TAG, "Raw message bytes: %s", stringBuffer);
-            delete[] stringBuffer;
+            this->log_rx_buffer();
 
             return false;
           }

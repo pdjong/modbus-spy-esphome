@@ -189,6 +189,7 @@ class Daalderop : public Component, public uart::UARTDevice {
     }
 
     void fleppertje();
+    void log_rx_buffer();
     
   public:
     static void read_loop_task(void* params);
