@@ -199,10 +199,58 @@ namespace esphome
     void Daalderop::read_loop_task(void* params) {
       Daalderop *daalderop = reinterpret_cast<Daalderop*>(params);
       while (true) {
-        if (daalderop->available() > 0) {
-          daalderop->fleppertje();
+        //  1. Wait for incoming data
+        //  2. Receive entire request
+        //  3. If not a request, discard the data, empty the entire receive buffer and start over
+        //  4. It is a request, so wait for incoming data
+        //  5. Receive entire response
+        //  6. If not a response, discard the data, empty the entire receive buffer and start over
+        //  7. It is a response! Check if it matches the request
+        //  8. If the response does not match the request, start over
+        //     The response matches the request!
+        //  9. Handle the data
+
+        // 1. Wait for incoming data
+        while (daalderop->available() == 0) {
+          delayMicroseconds(500);
         }
 
+        // 2. Receive entire request
+        const ModbusRequest *request = daalderop->receive_request();
+
+        // 3. If not a request, discard the data, empty the entire receive buffer and start over
+        if (nullptr == request) {
+          // TODO
+          continue;
+        }
+
+        // 4. It is a request, so wait for incoming data
+        while (daalderop->available() == 0) {
+          delayMicroseconds(500);
+        }
+
+        // 5. Receive entire response
+        const ModbusResponse response = daalderop->receive_response();
+
+        // 6. If not a response, discard the data, empty the entire receive buffer and start over
+        if (nullptr == response) {
+          // TODO
+          continue;
+        }
+
+        // 7. It is a response! Check if it matches the request
+        const bool response_matches_request = daalderop->does_response_match_request(response, request);
+
+        // 8. If the response does not match the request, start over
+        if (!response_matches_request) {
+          // TODO
+          continue;
+        }
+
+        // The response matches the request! Check if we're interested in the data:
+        // 9. Handle the data
+        daalderop->handle_data_in_request_response(request, response);
+        
         delay(1);
       }
     }
