@@ -1,6 +1,6 @@
 substitutions:
-  device_name: daalderop-1.2.1
-  friendly_name: Daalderop v1.2.1
+  device_name: daalderop-new-sw
+  friendly_name: Daalderop New SW
   time_timezone: "Europe/Amsterdam"
 
 esphome:
@@ -43,7 +43,7 @@ wifi:
 #  password: !secret wifi_password
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "Daalderop-v-1-2"
+    ssid: "Daalderop-new-sw"
     password: "MHcfSqvZc6fe"
 
 # Status LED of ESP
@@ -57,46 +57,46 @@ uart:
   parity: ODD
 
 sensor:
-  - platform: daalderop
+  - platform: modbus_sniffer
     cooling_heating_temperature:
-      name: daalderop_cooling_heating_temperature
+      name: modbus_sniffer_cooling_heating_temperature
     sanitary_hot_water_temperature:
-      name: daalderop_sanitary_hot_water_temperature
+      name: modbus_sniffer_sanitary_hot_water_temperature
     outside_temperature:
-      name: daalderop_outside_temperature
+      name: modbus_sniffer_outside_temperature
     inside_temperature:
-      name: daalderop_inside_temperature
+      name: modbus_sniffer_inside_temperature
     heat_exchanger_water_inlet_temperature:
-      name: daalderop_heat_exchanger_water_inlet_temperature
+      name: modbus_sniffer_heat_exchanger_water_inlet_temperature
     heat_exchanger_water_outlet_temperature:
-      name: daalderop_heat_exchanger_water_outlet_temperature
+      name: modbus_sniffer_heat_exchanger_water_outlet_temperature
     compressor_working_speed_actual:
-      name: daalderop_compressor_working_speed_actual
+      name: modbus_sniffer_compressor_working_speed_actual
     compressor_working_speed_setpoint:
-      name: daalderop_compressor_working_speed_setpoint
+      name: modbus_sniffer_compressor_working_speed_setpoint
     outdoor_fan_setpoint:
-      name: daalderop_outdoor_fan_setpoint
+      name: modbus_sniffer_outdoor_fan_setpoint
     outdoor_fan_1_actual:
-      name: daalderop_outdoor_fan_1_actual
+      name: modbus_sniffer_outdoor_fan_1_actual
     indoor_coil_temperature:
-      name: daalderop_indoor_coil_temperature
+      name: modbus_sniffer_indoor_coil_temperature
     low_pressure:
-      name: daalderop_low_pressure
+      name: modbus_sniffer_low_pressure
     high_pressure:
-      name: daalderop_high_pressure
+      name: modbus_sniffer_high_pressure
     suction_temperature:
-      name: daalderop_suction_temperature
+      name: modbus_sniffer_suction_temperature
     discharge_temperature:
-      name: daalderop_discharge_temperature
+      name: modbus_sniffer_discharge_temperature
     outdoor_coil_temperature:
-      name: daalderop_outdoor_coil_temperature
+      name: modbus_sniffer_outdoor_coil_temperature
     internal_pump_active:
-      name: daalderop_internal_pump_active
+      name: modbus_sniffer_internal_pump_active
     heating_switch:
-      name: daalderop_heating_switch
+      name: modbus_sniffer_heating_switch
     three_way_valve:
-      id: daalderop_three_way_valve   
-      name: daalderop_three_way_valve      
+      id: modbus_sniffer_three_way_valve   
+      name: modbus_sniffer_three_way_valve      
       on_state:
         then:
           - text_sensor.template.publish:
@@ -108,177 +108,177 @@ sensor:
                   return "Tapwater";
     
     outdoor_voltage:
-      name: daalderop_outdoor_voltage
+      name: modbus_sniffer_outdoor_voltage
     outdoor_current:
-      name: daalderop_outdoor_current
+      name: modbus_sniffer_outdoor_current
   
     # decode1:
-    #   name: daalderop_decode1
+    #   name: modbus_sniffer_decode1
     # decode2:
-    #   name: daalderop_decode2
+    #   name: modbus_sniffer_decode2
     # decode3:
-    #   name: daalderop_decode3
+    #   name: modbus_sniffer_decode3
     # decode4:
-    #   name: daalderop_decode4
+    #   name: modbus_sniffer_decode4
     # decode5:
-    #   name: daalderop_decode5
+    #   name: modbus_sniffer_decode5
     # decode6:
-    #   name: daalderop_decode6
+    #   name: modbus_sniffer_decode6
     # decode7:
-    #   name: daalderop_decode7
+    #   name: modbus_sniffer_decode7
     # decode8:
-    #   name: daalderop_decode8
+    #   name: modbus_sniffer_decode8
     # decode9:
-    #   name: daalderop_decode9
+    #   name: modbus_sniffer_decode9
     # decode10:
-    #   name: daalderop_decode10
+    #   name: modbus_sniffer_decode10
     decode20:
-      name: daalderop_decode20   
+      name: modbus_sniffer_decode20   
       id: decode20
     # decode21:
-    #   name: daalderop_decode21  
+    #   name: modbus_sniffer_decode21  
     # decode22:
-    #   name: daalderop_decode22   
+    #   name: modbus_sniffer_decode22   
     # decode23:
-    #   name: daalderop_decode23   
+    #   name: modbus_sniffer_decode23   
     decode24:
-      name: daalderop_decode24 
+      name: modbus_sniffer_decode24 
       id: decode24
     decode25:
-      name: daalderop_decode25   
+      name: modbus_sniffer_decode25   
       id: decode25
     # decode26:
-    #   name: daalderop_decode26   
+    #   name: modbus_sniffer_decode26   
     # decode27:
-    #   name: daalderop_decode27   
+    #   name: modbus_sniffer_decode27   
     # decode28:
-    #   name: daalderop_decode28   
+    #   name: modbus_sniffer_decode28   
     # decode29:
-    #   name: daalderop_decode29   
+    #   name: modbus_sniffer_decode29   
     # decode30:
-    #   name: daalderop_decode30     
+    #   name: modbus_sniffer_decode30     
     # decode31:
-    #   name: daalderop_decode31    
+    #   name: modbus_sniffer_decode31    
     # decode32:
-    #   name: daalderop_decode32    
+    #   name: modbus_sniffer_decode32    
     # decode33:
-    #   name: daalderop_decode33    
+    #   name: modbus_sniffer_decode33    
     # decode34:
-    #   name: daalderop_decode34    
+    #   name: modbus_sniffer_decode34    
     # decode35:
-    #   name: daalderop_decode35
+    #   name: modbus_sniffer_decode35
     # decode120:
-    #   name: daalderop_decode120      
+    #   name: modbus_sniffer_decode120      
     # decode121:
-    #   name: daalderop_decode121  
+    #   name: modbus_sniffer_decode121  
     # decode122:
-    #   name: daalderop_decode122   
+    #   name: modbus_sniffer_decode122   
     # decode123:
-    #   name: daalderop_decode123   
+    #   name: modbus_sniffer_decode123   
     # decode124:
-    #   name: daalderop_decode124   
+    #   name: modbus_sniffer_decode124   
     # decode125:
-    #   name: daalderop_decode125   
+    #   name: modbus_sniffer_decode125   
     # decode126:
-    #   name: daalderop_decode126   
+    #   name: modbus_sniffer_decode126   
     # decode127:
-    #   name: daalderop_decode127   
+    #   name: modbus_sniffer_decode127   
     # decode128:
-    #   name: daalderop_decode128   
+    #   name: modbus_sniffer_decode128   
     # decode129:
-    #   name: daalderop_decode129   
+    #   name: modbus_sniffer_decode129   
     # decode130:
-    #   name: daalderop_decode130     
+    #   name: modbus_sniffer_decode130     
     # decode131:
-    #   name: daalderop_decode131    
+    #   name: modbus_sniffer_decode131    
     # decode132:
-    #   name: daalderop_decode132    
+    #   name: modbus_sniffer_decode132    
     # decode133:
-    #   name: daalderop_decode133    
+    #   name: modbus_sniffer_decode133    
     # decode134:
-    #   name: daalderop_decode134    
+    #   name: modbus_sniffer_decode134    
     # decode135:
-    #   name: daalderop_decode135           
+    #   name: modbus_sniffer_decode135           
       
     # decode201:
-    #   name: daalderop_decode201  
+    #   name: modbus_sniffer_decode201  
     # decode202:
-    #   name: daalderop_decode202   
+    #   name: modbus_sniffer_decode202   
     # decode203:
-    #   name: daalderop_decode203   
+    #   name: modbus_sniffer_decode203   
     # decode204:
-    #   name: daalderop_decode204   
+    #   name: modbus_sniffer_decode204   
     # decode205:
-    #   name: daalderop_decode205   
+    #   name: modbus_sniffer_decode205   
     # decode206:
-    #   name: daalderop_decode206   
+    #   name: modbus_sniffer_decode206   
     # decode207:
-    #   name: daalderop_decode207   
+    #   name: modbus_sniffer_decode207   
     # decode208:
-    #   name: daalderop_decode208   
+    #   name: modbus_sniffer_decode208   
     # decode209:
-    #   name: daalderop_decode209   
+    #   name: modbus_sniffer_decode209   
     decode210:
-      name: daalderop_decode210     
+      name: modbus_sniffer_decode210     
     # decode211:
-    #   name: daalderop_decode211    
+    #   name: modbus_sniffer_decode211    
     # decode212:
-    #   name: daalderop_decode212    
+    #   name: modbus_sniffer_decode212    
     # decode213:
-    #   name: daalderop_decode213    
+    #   name: modbus_sniffer_decode213    
     # decode214:
-    #   name: daalderop_decode214    
+    #   name: modbus_sniffer_decode214    
     # decode215:
-    #   name: daalderop_decode215  
+    #   name: modbus_sniffer_decode215  
     # decode216:
-    #   name: daalderop_decode216   
+    #   name: modbus_sniffer_decode216   
     # decode217:
-    #   name: daalderop_decode217   
+    #   name: modbus_sniffer_decode217   
     # decode218:
-    #   name: daalderop_decode218   
+    #   name: modbus_sniffer_decode218   
     # decode219:
-    #   name: daalderop_decode219   
+    #   name: modbus_sniffer_decode219   
 
     # decode301:
-    #   name: daalderop_decode301  
+    #   name: modbus_sniffer_decode301  
     # decode302:
-    #   name: daalderop_decode302   
+    #   name: modbus_sniffer_decode302   
     # decode303:
-    #   name: daalderop_decode303   
+    #   name: modbus_sniffer_decode303   
     # decode304:
-    #   name: daalderop_decode304   
+    #   name: modbus_sniffer_decode304   
     # decode305:
-    #   name: daalderop_decode305   
+    #   name: modbus_sniffer_decode305   
     # decode306:
-    #   name: daalderop_decode306   
+    #   name: modbus_sniffer_decode306   
     # decode307:
-    #   name: daalderop_decode307   
+    #   name: modbus_sniffer_decode307   
     # decode308:
-    #   name: daalderop_decode308   
+    #   name: modbus_sniffer_decode308   
     # decode309:
-    #   name: daalderop_decode309   
+    #   name: modbus_sniffer_decode309   
     # decode310:
-    #   name: daalderop_decode310     
+    #   name: modbus_sniffer_decode310     
     # decode311:
-    #   name: daalderop_decode311    
+    #   name: modbus_sniffer_decode311    
     # decode312:
-    #   name: daalderop_decode312    
+    #   name: modbus_sniffer_decode312    
     # decode313:
-    #   name: daalderop_decode313    
+    #   name: modbus_sniffer_decode313    
     # decode314:
-    #   name: daalderop_decode314    
+    #   name: modbus_sniffer_decode314    
     # decode315:
-    #   name: daalderop_decode315  
+    #   name: modbus_sniffer_decode315  
     # decode316:
-    #   name: daalderop_decode316   
+    #   name: modbus_sniffer_decode316   
     # decode317:
-    #   name: daalderop_decode317   
+    #   name: modbus_sniffer_decode317   
     # decode318:
-    #   name: daalderop_decode318   
+    #   name: modbus_sniffer_decode318   
     # decode319:
-    #   name: daalderop_decode319   
+    #   name: modbus_sniffer_decode319   
     # decode320:
-    #   name: daalderop_decode320   
+    #   name: modbus_sniffer_decode320   
 
   - platform: uptime
     id: sensor_uptime
@@ -294,19 +294,19 @@ sensor:
       );
       return timestamp;
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
-    name: "Daalderop WiFi Signal dB"
+    name: "Modbus Sniffer WiFi Signal dB"
     id: wifi_signal_db
     update_interval: 20s
   - platform: copy # Reports the WiFi signal strength in %
     source_id: wifi_signal_db
-    name: "Daalderop WiFi Signal Percent"
+    name: "Modbus Sniffer WiFi Signal Percent"
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: " %"
 
 binary_sensor:
   - platform: template
-    name: daalderop_defrost
+    name: modbus_sniffer_defrost
     lambda: |-
       return (id(decode20).state == 68 && (id(decode24).state == 1 || id(decode25).state == 2048)) || (id(decode20).state == 4);
               
@@ -321,4 +321,4 @@ time:
 text_sensor:
   - platform: template
     id: three_way_valve_text
-    name: daalderop_three_way_valve_text
+    name: modbus_sniffer_three_way_valve_text
