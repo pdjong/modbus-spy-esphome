@@ -8,18 +8,18 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-#include "daalderop.h"
+#include "modbus_sniffer.h"
 
 using namespace std; 
 
 namespace esphome
 {
-  namespace daalderop
+  namespace modbus_sniffer
   {
 
-    static const char *TAG = "daalderop.sensor";
+    static const char *TAG = "modbus_sniffer.sensor";
 
-    void Daalderop::setup()
+    void ModbusSniffer::setup()
     {
       // 0x044C: Pump 2 active
       //map_register_to_sensor_and_unit(0x044C, this->pump_p2_active_binary_sensor_, sensorUnit::onOff);
@@ -172,7 +172,7 @@ namespace esphome
       map_register_to_sensor_and_unit(0x045D, this->decode319_sensor_, sensorUnit::frequency);      
       map_register_to_sensor_and_unit(0x045E, this->decode320_sensor_, sensorUnit::frequency);      
 
-      xTaskCreatePinnedToCore(Daalderop::read_loop_task,
+      xTaskCreatePinnedToCore(ModbusSniffer::read_loop_task,
                                   "read_task", // name
                                   30000,       // stack size (in words)
                                   this,        // input params
@@ -182,22 +182,22 @@ namespace esphome
       );
     }
 
-    void Daalderop::map_register_to_sensor_and_unit(uint16_t registerNr, sensor::Sensor *sensor, sensorUnit unit) {
+    void ModbusSniffer::map_register_to_sensor_and_unit(uint16_t registerNr, sensor::Sensor *sensor, sensorUnit unit) {
       SensorAndUnit sAndU;
       sAndU.sensor.sensor = sensor;
       sAndU.unit = unit;
       registerToSensorAndUnitMap[registerNr] = sAndU;
     }
 
-    void Daalderop::map_register_to_sensor_and_unit(uint16_t registerNr, binary_sensor::BinarySensor *sensor, sensorUnit unit) {
+    void ModbusSniffer::map_register_to_sensor_and_unit(uint16_t registerNr, binary_sensor::BinarySensor *sensor, sensorUnit unit) {
       SensorAndUnit sAndU;
       sAndU.sensor.binarySensor = sensor;
       sAndU.unit = unit;
       registerToSensorAndUnitMap[registerNr] = sAndU;
     }
 
-    void Daalderop::read_loop_task(void* params) {
-      Daalderop *daalderop = reinterpret_cast<Daalderop*>(params);
+    void ModbusSniffer::read_loop_task(void* params) {
+      ModbusSniffer *modbus_sniffer = reinterpret_cast<ModbusSniffer*>(params);
       while (true) {
         //  1. Wait for incoming data
         //  2. Receive entire request
@@ -211,12 +211,12 @@ namespace esphome
         //  9. Handle the data
 
         // 1. Wait for incoming data
-        while (daalderop->available() == 0) {
+        while (modbus_sniffer->available() == 0) {
           delayMicroseconds(500);
         }
 
         // 2. Receive entire request
-        const ModbusRequest *request = daalderop->receive_request();
+        const ModbusRequest *request = modbus_sniffer->receive_request();
 
         // 3. If not a request, discard the data, empty the entire receive buffer and start over
         if (nullptr == request) {
@@ -225,12 +225,12 @@ namespace esphome
         }
 
         // 4. It is a request, so wait for incoming data
-        while (daalderop->available() == 0) {
+        while (modbus_sniffer->available() == 0) {
           delayMicroseconds(500);
         }
 
         // 5. Receive entire response
-        const ModbusResponse response = daalderop->receive_response();
+        const ModbusResponse response = modbus_sniffer->receive_response();
 
         // 6. If not a response, discard the data, empty the entire receive buffer and start over
         if (nullptr == response) {
@@ -239,7 +239,7 @@ namespace esphome
         }
 
         // 7. It is a response! Check if it matches the request
-        const bool response_matches_request = daalderop->does_response_match_request(response, request);
+        const bool response_matches_request = modbus_sniffer->does_response_match_request(response, request);
 
         // 8. If the response does not match the request, start over
         if (!response_matches_request) {
@@ -249,13 +249,13 @@ namespace esphome
 
         // The response matches the request! Check if we're interested in the data:
         // 9. Handle the data
-        daalderop->handle_data_in_request_response(request, response);
+        modbus_sniffer->handle_data_in_request_response(request, response);
         
         delay(1);
       }
     }
 
-    void Daalderop::fleppertje() {
+    void ModbusSniffer::fleppertje() {
       bool current_package_done = false;
       bool first_byte = true;
       while (!current_package_done) {
@@ -315,7 +315,7 @@ namespace esphome
       }
     }
 
-    void Daalderop::log_rx_buffer() {
+    void ModbusSniffer::log_rx_buffer() {
       char *string_buffer = new char[this->rx_buffer_.size() * 2 + 1];
       string_buffer[this->rx_buffer_.size() * 2] = '\0';
       
@@ -331,7 +331,7 @@ namespace esphome
       delete[] string_buffer;
     }
 
-    void Daalderop::loop()
+    void ModbusSniffer::loop()
     {
       // const uint32_t now = millis();
 
@@ -363,7 +363,7 @@ namespace esphome
       delay(5);
     }
 
-    bool Daalderop::parse_modbus_byte_(uint8_t byte)
+    bool ModbusSniffer::parse_modbus_byte_(uint8_t byte)
     {
       size_t at = this->rx_buffer_.size();
       this->rx_buffer_.push_back(byte);
@@ -471,7 +471,7 @@ namespace esphome
                   RegisterValueConversion conversionFunction;
                   switch (it->second.unit) {
                     case sensorUnit::temperature: {
-                      conversionFunction = &Daalderop::convertRegisterValueToTemperature;
+                      conversionFunction = &ModbusSniffer::convertRegisterValueToTemperature;
                       float sensorValue = ((*this).*(conversionFunction))(registerValue);
                       ESP_LOGV(TAG, "  Value: %f", sensorValue);
                       pSensor->publish_state(sensorValue);
@@ -479,7 +479,7 @@ namespace esphome
                     }
                     case sensorUnit::pressure:
                     case sensorUnit::current: {
-                      conversionFunction = &Daalderop::convertRegisterValueToFloat;
+                      conversionFunction = &ModbusSniffer::convertRegisterValueToFloat;
                       float sensorValue = ((*this).*(conversionFunction))(registerValue) / 10.0f;
                       ESP_LOGV(TAG, "  Value: %f", sensorValue);
                       pSensor->publish_state(sensorValue);
@@ -487,7 +487,7 @@ namespace esphome
                     }
                     case sensorUnit::frequency: 
                     case sensorUnit::voltage: {
-                      conversionFunction = &Daalderop::convertRegisterValueToFloat;
+                      conversionFunction = &ModbusSniffer::convertRegisterValueToFloat;
                       float sensorValue = ((*this).*(conversionFunction))(registerValue);
                       ESP_LOGV(TAG, "  Value: %f", sensorValue);
                       pSensor->publish_state(sensorValue);
@@ -527,19 +527,19 @@ namespace esphome
       return true;
     }
 
-    float Daalderop::get_setup_priority() const
+    float ModbusSniffer::get_setup_priority() const
     {
       // After UART bus
       return setup_priority::BUS - 1.0f;
     }
 
-    void Daalderop::dump_config()
+    void ModbusSniffer::dump_config()
     {
-      ESP_LOGCONFIG(TAG, "Daalderop sensor");
+      ESP_LOGCONFIG(TAG, "ModbusSniffer sensor");
       //LOG_SENSOR("  ", "Heat Exchanger Water Outlet Temperature", this->heat_exchanger_water_outlet_temperature_sensor_);
       //LOG_SENSOR("  ", "Heat Exchanger Water Inlet Temperature", this->heat_exchanger_water_inlet_temperature_sensor_);
       //LOG_SENSOR("  ", "Compressor Working Speed", this->compressor_working_speed_sensor_);
     }
 
   } // namespace empty_compound_sensor
-} // namespace daalderop
+} // namespace modbus_sniffer
