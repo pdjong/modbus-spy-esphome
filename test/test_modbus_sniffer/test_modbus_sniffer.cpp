@@ -84,10 +84,25 @@ void test_modbus_request_detector_request_function_3_bytes_already_received() {
   TEST_ASSERT_EQUAL_UINT8(0x1E, actual_data[3]);
 }
 
+void test_modbus_request_detector_wrong_crc_results_in_nullptr() {}
+
+void test_modbus_request_detector_receive_timeout_results_in_nullptr() {}
+
+void test_modbus_request_detector_response_function_3_results_in_nullptr() {}
+
+void test_modbus_request_detector_request_function_15() {}
+
+void test_modbus_request_detector_unsupported_function_results_in_nullptr() {}
+
+
 int runUnityTests(void) {
   UNITY_BEGIN();
   RUN_TEST(test_modbus_request_detector_request_function_3_bytes_coming_in_live);
   RUN_TEST(test_modbus_request_detector_request_function_3_bytes_already_received);
+  RUN_TEST(test_modbus_request_detector_wrong_crc_results_in_nullptr);
+  RUN_TEST(test_modbus_request_detector_response_function_3_results_in_nullptr);
+  RUN_TEST(test_modbus_request_detector_request_function_15);
+  RUN_TEST(test_modbus_request_detector_unsupported_function_results_in_nullptr);
   return UNITY_END();
 }
 
