@@ -20,8 +20,8 @@ from esphome.const import  (
 DEPENDENCIES = ["uart"]
 AUTO_LOAD = ["binary_sensor"]
 
-modbus_sniffer_ns = cg.esphome_ns.namespace("modbus_sniffer")
-modbus_sniffer = modbus_sniffer_ns.class_("ModbusSniffer", cg.Component, uart.UARTDevice)
+modbus_spy_ns = cg.esphome_ns.namespace("modbus_spy")
+modbus_spy = modbus_spy_ns.class_("ModbusSpy", cg.Component, uart.UARTDevice)
 binary_sensor_ns = cg.esphome_ns.namespace("binary_sensor")
 
 CONF_COOLING_HEATING_TEMPERATURE = "cooling_heating_temperature"
@@ -370,7 +370,7 @@ BINARY_SENSORS = {
 CONFIG_SCHEMA = (
     cv.Schema(
         {
-            cv.GenerateID(): cv.declare_id(modbus_sniffer)
+            cv.GenerateID(): cv.declare_id(modbus_spy)
         }
     )
     .extend(
@@ -385,7 +385,7 @@ CONFIG_SCHEMA = (
 )
 
 async def to_code(config):
-    cg.add_global(modbus_sniffer_ns.using)
+    cg.add_global(modbus_spy_ns.using)
     cg.add_global(binary_sensor_ns.using)
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)

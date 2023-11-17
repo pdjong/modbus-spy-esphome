@@ -9,7 +9,7 @@
 #endif // UNIT_TEST
 
 namespace esphome {
-namespace modbus_sniffer {
+namespace modbus_spy {
 
 class ModbusRequest {
  public:
@@ -25,7 +25,7 @@ class ModbusRequest {
   uint16_t received_crc_;
 };
 
-} //namespace modbus_sniffer
+} //namespace modbus_spy
 } //namespace esphome
 
 #endif // MODBUS_REQUEST_H_

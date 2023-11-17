@@ -11,8 +11,9 @@
 #include "modbus_request.h"
 
 namespace esphome {
-namespace modbus_sniffer {
-class ModbusSniffer : public Component, public uart::UARTDevice {
+namespace modbus_spy {
+
+class ModbusSpy : public Component, public uart::UARTDevice {
   public:  
     void setup() override;
     void loop() override;
@@ -30,5 +31,5 @@ class ModbusSniffer : public Component, public uart::UARTDevice {
     ModbusRequest* receive_request();
 };
 
-} //namespace modbus_sniffer
+} //namespace modbus_spy
 } //namespace esphome
