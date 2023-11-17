@@ -5,6 +5,7 @@
 
 #include <_stdint.h>
 #include <stddef.h>
+#include <crc.h>
 
 #endif // UNIT_TEST
 
