@@ -54,23 +54,23 @@ class FakeUartInterface : public esphome::modbus_spy::IUartInterface {
     queue<uint8_t> fake_data_to_return_;
 };
 
-// typedef struct FakeUartInterfaceTaskArgs {
-//   FakeUartInterface* uart_interface;
-//   const uint8_t respond_to_nth_write;
-//   const uint8_t delay_in_ms;
-//   const uint8_t* data_to_return;
-//   const size_t len_of_data_to_return;
-// } FakeUartInterfaceTaskArgs;
+typedef struct FakeUartInterfaceTaskArgs {
+  FakeUartInterface* uart_interface;
+  const uint16_t delay_between_bytes_in_us;
+  const uint8_t* data_to_return;
+  const size_t len_of_data_to_return;
+} FakeUartInterfaceTaskArgs;
 
-// void fake_uart_interface_task(void* param) {
-//   FakeUartInterfaceTaskArgs *args = reinterpret_cast<FakeUartInterfaceTaskArgs*>(param);
-//   FakeUartInterface *uart_interface = args->uart_interface;
-//   while (uart_interface->write_array_call_count() < args->respond_to_nth_write) {
-//     vTaskDelay(1 / portTICK_PERIOD_MS);
-//   }
-//   delay(args->delay_in_ms);
-//   uart_interface->set_fake_data_to_return(args->data_to_return, args->len_of_data_to_return);
-//   vTaskDelete(NULL);
-// }
+void fake_uart_interface_task(void* param) {
+  FakeUartInterfaceTaskArgs *args = reinterpret_cast<FakeUartInterfaceTaskArgs*>(param);
+  FakeUartInterface *uart_interface = args->uart_interface;
+  size_t next_byte_index { 0 };
+  while (next_byte_index < args->len_of_data_to_return) {
+    delayMicroseconds(args->delay_between_bytes_in_us);
+    uart_interface->set_fake_data_to_return(&(args->data_to_return[next_byte_index]), 1);
+    ++next_byte_index;
+  }
+  vTaskDelete(NULL);
+}
 
 #endif // FAKE_UART_INTERFACE_H_
