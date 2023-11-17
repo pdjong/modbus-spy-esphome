@@ -8,7 +8,7 @@
 #include <vector>
 #include <map>
 
-#include "modbus_request.h"
+#include "modbus_frame.h"
 
 namespace esphome {
 namespace modbus_spy {
@@ -28,7 +28,7 @@ class ModbusSpy : public Component, public uart::UARTDevice {
     static void read_loop_task(void* params);
 
   private:
-    ModbusRequest* receive_request();
+    ModbusFrame* receive_request();
 };
 
 } //namespace modbus_spy

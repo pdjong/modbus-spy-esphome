@@ -11,7 +11,7 @@
 namespace esphome {
 namespace modbus_spy {
 
-class ModbusRequest {
+class ModbusFrame {
  public:
   void set_address(uint8_t address) { this->address_ = address; }
   void set_function(uint8_t function) { this->function_ = function; }
