@@ -9,6 +9,7 @@
 #include <freertos/task.h>
 
 #include "modbus_sniffer.h"
+#include "modbus_request.h"
 
 using namespace std; 
 
@@ -46,12 +47,12 @@ namespace esphome
         //  9. Handle the data
 
         // 1. Wait for incoming data
-        // while (modbus_sniffer->available() == 0) {
-        //   delayMicroseconds(500);
-        // }
+        while (modbus_sniffer->available() == 0) {
+          delayMicroseconds(500);
+        }
 
         // // 2. Receive entire request
-        // const ModbusRequest *request = modbus_sniffer->receive_request();
+        const ModbusRequest *request = modbus_sniffer->receive_request();
 
         // // 3. If not a request, discard the data, empty the entire receive buffer and start over
         // if (nullptr == request) {
