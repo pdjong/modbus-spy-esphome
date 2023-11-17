@@ -37,13 +37,11 @@
       <Entity type="Class">
         <Name>ModbusSpy</Name>
         <Access>Public</Access>
-        <Location left="1117" top="539" />
-        <Size width="241" height="145" />
+        <Location left="1061" top="539" />
+        <Size width="336" height="145" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">public void enable_mbus()</Member>
-        <Member type="Method">public void disable_mbus()</Member>
-        <Member type="Method">public void read_mbus()</Member>
-        <Member type="Method">public MbusSensor create_sensor(uint8_t index)</Member>
+        <Member type="Method">public ModbusRegisterSensor create_register_sensor(uint8_t index)</Member>
+        <Member type="Method">public ModbusCoilSenser create_coil_sensor()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
@@ -59,10 +57,10 @@
       <Entity type="Class">
         <Name>ModbusSniffer</Name>
         <Access>Public</Access>
-        <Location left="1039" top="945" />
-        <Size width="376" height="94" />
+        <Location left="1156" top="945" />
+        <Size width="163" height="94" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">public bool read_meter_data(MbusMeterData meter_data, uint8_t address)</Member>
+        <Member type="Method">public bool start_sniffing()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
@@ -90,16 +88,16 @@ read_mbus() uses MbusReader to read everything, and puts each value in an object
 
 After reading everything, MbusController goes over all its sensors and uses the sensor's index to map it on a read DataBlock. Then it tells the MbusSensor to transform and publish the value in the DataBlock.
 ?!</Text>
-        <Location left="724" top="727" />
+        <Location left="153" top="721" />
         <Size width="353" height="171" />
       </Entity>
       <Entity type="Class">
         <Name>ModbusDataSplitter</Name>
         <Access>Public</Access>
-        <Location left="532" top="945" />
-        <Size width="439" height="94" />
+        <Location left="662" top="945" />
+        <Size width="320" height="94" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">public vector&lt;DataBlock&gt; read_data_blocks_from_long_frame(LongFrame plong_frame)</Member>
+        <Member type="Method">public vector&lt;ModbusData&gt; split_data(ModbusFrame response)</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
@@ -163,11 +161,51 @@ After reading everything, MbusController goes over all its sensors and uses the 
       <Entity type="Class">
         <Name>ModbusData</Name>
         <Access>Public</Access>
-        <Location left="210" top="945" />
+        <Location left="355" top="945" />
         <Size width="185" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Property">protected uint16_t address_ { get; set; }</Member>
         <Member type="Property">public uint16_t value_ { get; set; }</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ModbusDataHandler</Name>
+        <Access>Public</Access>
+        <Location left="954" top="739" />
+        <Size width="216" height="121" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void handle_data(ModbusData data)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ModbusFrame</Name>
+        <Access>Public</Access>
+        <Location left="1156" top="1339" />
+        <Size width="181" height="128" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">protected uint8_t address_ { get; set; }</Member>
+        <Member type="Property">protected uint8_t function_ { get; set; }</Member>
+        <Member type="Property">protected uint8_t pdata_ { get; set; }</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ModbusRequestDetector</Name>
+        <Access>Public</Access>
+        <Location left="1370" top="1112" />
+        <Size width="244" height="128" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public ModbusFrame detect_request()</Member>
+        <Member type="Property">protected IUartInterface uart_interface_ { get; set; }</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ModbusResponseDetector</Name>
+        <Access>Public</Access>
+        <Location left="922" top="1112" />
+        <Size width="307" height="128" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public ModbusFrame detect_response(ModbusFrame request)</Member>
+        <Member type="Property">protected IUartInterface uart_interface_ { get; set; }</Member>
         <Modifier>None</Modifier>
       </Entity>
     </Entities>
@@ -195,7 +233,7 @@ After reading everything, MbusController goes over all its sensors and uses the 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1207</X>
+          <X>1151</X>
           <Y>514</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -209,7 +247,7 @@ After reading everything, MbusController goes over all its sensors and uses the 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1264</X>
+          <X>1208</X>
           <Y>504</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -221,8 +259,8 @@ After reading everything, MbusController goes over all its sensors and uses the 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1228</X>
-          <Y>709</Y>
+          <X>1238</X>
+          <Y>716</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
@@ -297,7 +335,7 @@ After reading everything, MbusController goes over all its sensors and uses the 
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1076</X>
+          <X>1020</X>
           <Y>623</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -320,7 +358,7 @@ After reading everything, MbusController goes over all its sensors and uses the 
           <Y>867</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1399</X>
+          <X>1438</X>
           <Y>596</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -336,7 +374,7 @@ After reading everything, MbusController goes over all its sensors and uses the 
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1874</X>
+          <X>1778</X>
           <Y>995</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -350,6 +388,114 @@ After reading everything, MbusController goes over all its sensors and uses the 
         <Label>splits into</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="18" second="6">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>926</X>
+          <Y>753</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>871</X>
+          <Y>659</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="18" second="12">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>799</X>
+          <Y>796</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>554</X>
+          <Y>624</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="3" second="18">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="5" second="18">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1195</X>
+          <Y>920</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="5" second="21">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1188</X>
+          <Y>1064</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1080</X>
+          <Y>1087</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="5" second="20">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1292</X>
+          <Y>1064</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="21" second="19">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1076</X>
+          <Y>1265</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1198</X>
+          <Y>1314</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="20" second="19">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1295</X>
+          <Y>1313</Y>
+        </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
