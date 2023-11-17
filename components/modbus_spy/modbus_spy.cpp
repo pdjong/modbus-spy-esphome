@@ -1,4 +1,4 @@
-/* defrost: 20, 24, 25 */
+#ifndef UNIT_TEST
 
 #include <iostream>
 #include <vector>
@@ -39,3 +39,5 @@ void ModbusSpy::dump_config()
 
 } // namespace modbus_spy
 } // namespace esphome
+
+#endif // UNIT_TEST
