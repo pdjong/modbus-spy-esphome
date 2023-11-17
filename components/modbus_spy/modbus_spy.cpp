@@ -1,15 +1,10 @@
 #ifndef UNIT_TEST
 
 #include <iostream>
-#include <vector>
-#include <sstream>
 
 #include "esphome/core/log.h"
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
 
 #include "modbus_spy.h"
-// #include "modbus_request.h"
 
 using namespace std; 
 
