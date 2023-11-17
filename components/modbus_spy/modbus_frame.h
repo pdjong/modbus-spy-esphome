@@ -1,5 +1,5 @@
-#ifndef MODBUS_REQUEST_H_
-#define MODBUS_REQUEST_H_
+#ifndef MODBUS_FRAME_H_
+#define MODBUS_FRAME_H_
 
 #ifdef UNIT_TEST
 #include <test_includes.h>
@@ -12,6 +12,13 @@ namespace esphome {
 namespace modbus_spy {
 
 class ModbusFrame {
+ public:
+  ModbusFrame() : address_(0), function_(0), data_(nullptr), received_crc_(0) {}
+  ~ModbusFrame();
+
+ private:
+  ModbusFrame(const ModbusFrame&);
+
  public:
   void set_address(uint8_t address) { this->address_ = address; }
   void set_function(uint8_t function) { this->function_ = function; }
@@ -28,4 +35,4 @@ class ModbusFrame {
 } //namespace modbus_spy
 } //namespace esphome
 
-#endif // MODBUS_REQUEST_H_
+#endif // MODBUS_FRAME_H_
