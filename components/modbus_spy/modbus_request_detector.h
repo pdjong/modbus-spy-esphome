@@ -5,7 +5,7 @@
 #include <test_includes.h>
 #else
 #include "esphome/core/datatypes.h"
-#include "esphome/core/log.h"
+// #include "esphome/core/log.h"
 #endif // UNIT_TEST
 
 #include "modbus_frame.h"
@@ -15,6 +15,9 @@ namespace esphome {
 namespace modbus_spy {
 
 class ModbusRequestDetector {
+ private:
+  static const uint8_t MAX_TIME_BETWEEN_BYTES_IN_MS = 3;
+
  public:
   ModbusRequestDetector(IUartInterface* uart_interface) : uart_interface_(uart_interface) {}
   
@@ -25,7 +28,11 @@ class ModbusRequestDetector {
   ModbusFrame* detect_request();
 
  protected:
-  IUartInterface* uart_interface_ { nullptr };  
+  IUartInterface* uart_interface_ { nullptr };
+  uint32_t time_last_byte_received_ { 0 };
+
+ private:
+  bool read_next_byte(uint8_t* byte);
 };
 
 } //namespace modbus_spy
