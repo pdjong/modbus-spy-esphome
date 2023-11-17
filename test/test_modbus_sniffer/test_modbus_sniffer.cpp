@@ -11,16 +11,27 @@ using namespace esphome::modbus_spy;
 void setUp(void) {}
 void tearDown(void) {}
 
-void test_modbus_request_detector_request_function_1() {
+void test_modbus_request_detector_request_function_3() {
   // Arrange
-  FakeUartInterface uart_interface;
-  ModbusRequestDetector modbus_request_detector(&uart_interface);
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x0B, 0x03, 0x04, 0xAF, 0x00, 0x1E, 0xF4, 0x79 };
+  fake_uart_interface.set_fake_data_to_return(fake_data, 8);
+  ModbusRequestDetector modbus_request_detector(&fake_uart_interface);
 
   // Act
   ModbusFrame *request_frame = modbus_request_detector.detect_request();
 
   // Assert
   TEST_ASSERT_FALSE(nullptr == request_frame);
+  TEST_ASSERT_EQUAL_UINT8(0x0B, request_frame->get_address());
+  TEST_ASSERT_EQUAL_UINT8(0x03, request_frame->get_function());
+  TEST_ASSERT_EQUAL_UINT8(4, request_frame->get_data_length());
+  
+  const uint8_t *actual_data = request_frame->get_data();
+  TEST_ASSERT_EQUAL_UINT8(0x04, actual_data[0]);
+  TEST_ASSERT_EQUAL_UINT8(0xAF, actual_data[1]);
+  TEST_ASSERT_EQUAL_UINT8(0x00, actual_data[2]);
+  TEST_ASSERT_EQUAL_UINT8(0x1E, actual_data[3]);
 }
 
 // void test_data_link_layer_req_ud2_different_l_fields(void) {
