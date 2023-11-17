@@ -3,7 +3,12 @@
 #include <sstream>
 
 #include <Arduino.h>
+#ifdef UNIT_TEST
+#include <test_includes.h>
+#else
+// #include "esphome/core/datatypes.h"
 #include "esphome/core/log.h"
+#endif // UNIT_TEST
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
