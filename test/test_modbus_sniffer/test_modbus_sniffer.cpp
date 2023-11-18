@@ -3,6 +3,7 @@
 
 #include "fake_uart_interface.h"
 #include "modbus_frame.h"
+#include "modbus_response_detector.h"
 #include "modbus_request_detector.h"
 #include <test_includes.h>
 
@@ -199,15 +200,55 @@ void test_modbus_request_detector_unsupported_function_results_in_nullptr() {
   TEST_ASSERT_TRUE(nullptr == request_frame);
 }
 
+/// -- ModbusResponseDetector --
+void test_modbus_response_detector_response_function_3() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x02, 0x03, 0x02, 0x34, 0x56, 0xFF, 0xFF };
+  ModbusResponseDetector modbus_response_detector(&fake_uart_interface);
+  FakeUartInterfaceTaskArgs args = { 
+    .uart_interface = &fake_uart_interface,
+    .delay_between_bytes_in_us = 573,
+    .data_to_return = fake_data,
+    .len_of_data_to_return = 7
+  };
+  xTaskCreatePinnedToCore(fake_uart_interface_task,
+                    "fake_uart_interface_task", // name
+                    30000,                      // stack size (in words)
+                    &args,                      // input params
+                    1,                          // priority
+                    nullptr,                    // Handle, not needed
+                    0                           // core
+  );
+
+  // Act
+  ModbusFrame *response_frame = modbus_response_detector.detect_response();
+
+  // Assert
+  TEST_ASSERT_FALSE(nullptr == response_frame);
+  TEST_ASSERT_EQUAL_UINT8(0x02, response_frame->get_address());
+  TEST_ASSERT_EQUAL_UINT8(0x03, response_frame->get_function());
+  TEST_ASSERT_EQUAL_UINT8(2, response_frame->get_data_length());
+  
+  const uint8_t *actual_data = response_frame->get_data();
+  TEST_ASSERT_EQUAL_UINT8(0x34, actual_data[0]);
+  TEST_ASSERT_EQUAL_UINT8(0x56, actual_data[1]);
+}
 
 int runUnityTests(void) {
   UNITY_BEGIN();
+
+  // ModbusRequestDetector tests
   RUN_TEST(test_modbus_request_detector_request_function_3_bytes_coming_in_live);
   RUN_TEST(test_modbus_request_detector_request_function_3_bytes_already_received);
   RUN_TEST(test_modbus_request_detector_wrong_crc_results_in_nullptr);
   RUN_TEST(test_modbus_request_detector_response_function_3_results_in_nullptr);
   // RUN_TEST(test_modbus_request_detector_request_function_15);
   RUN_TEST(test_modbus_request_detector_unsupported_function_results_in_nullptr);
+
+  // ModbusResponseDetector tests
+  RUN_TEST(test_modbus_response_detector_response_function_3);
+
   return UNITY_END();
 }
 
