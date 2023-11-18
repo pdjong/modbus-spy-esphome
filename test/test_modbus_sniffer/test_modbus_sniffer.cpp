@@ -169,7 +169,7 @@ void test_modbus_request_detector_response_function_3_results_in_nullptr() {
 void test_modbus_request_detector_request_function_15() {
   // Arrange
   FakeUartInterface fake_uart_interface;
-  uint8_t fake_data[] = { 0x0B, 0x0F, 0x00, 0x10, 0x00, 0x01, 0x09, 0x55, 0x01, 0x14, 0x7E };
+  uint8_t fake_data[] = { 0x0B, 0x0F, 0x00, 0x10, 0x00, 0x09, 0x02, 0x55, 0x01, 0x67, 0xDC };
   ModbusRequestDetector modbus_request_detector(&fake_uart_interface);
   FakeUartInterfaceTaskArgs args = { 
     .uart_interface = &fake_uart_interface,
@@ -199,8 +199,8 @@ void test_modbus_request_detector_request_function_15() {
   TEST_ASSERT_EQUAL_UINT8(0x00, actual_data[0]);
   TEST_ASSERT_EQUAL_UINT8(0x10, actual_data[1]);
   TEST_ASSERT_EQUAL_UINT8(0x00, actual_data[2]);
-  TEST_ASSERT_EQUAL_UINT8(0x01, actual_data[3]);
-  TEST_ASSERT_EQUAL_UINT8(0x09, actual_data[4]);
+  TEST_ASSERT_EQUAL_UINT8(0x09, actual_data[3]);
+  TEST_ASSERT_EQUAL_UINT8(0x02, actual_data[4]);
   TEST_ASSERT_EQUAL_UINT8(0x55, actual_data[5]);
   TEST_ASSERT_EQUAL_UINT8(0x01, actual_data[6]);
 }
@@ -429,7 +429,7 @@ void test_modbus_response_detector_response_function_6() {
 }
 
 void generate_crc() {
-  uint8_t crc_data[] = { 0x0B, 0x0F, 0x00, 0x10, 0x00, 0x01, 0x09, 0x55, 0x01 };
+  uint8_t crc_data[] = { 0x0B, 0x0F, 0x00, 0x10, 0x00, 0x09, 0x02, 0x55, 0x01 };
   uint16_t expected_crc = esphome::crc16(crc_data, 9);
   TEST_ASSERT_EQUAL_UINT16(expected_crc, 0);
 }
