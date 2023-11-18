@@ -13,16 +13,20 @@ namespace esphome {
 namespace modbus_spy {
 
 ModbusFrame* ModbusResponseDetector::detect_response() {
-  // FOR NOW ONLY SUPPORT FUNCTION 3!
 	//  1. Read the first byte. Assume it is the address
 	//  2. Read the second byte. Assume it is the function
-	//  If function is 3:
+	//  If function is 1, 2, 3 or 4:
   //  	○ Read the 3rd byte. Assume it is the number of data bytes
   //  	○ Read the data bytes
   //  	○ Read two more bytes. Assume it is the CRC
 	//    ○ See if the last two bytes contain the correct CRC
 	//  	○ If so, it is a response. If not, it is not a response.
-  //  If function is not 3:
+	//  If function is 5, 6, 15 or 16:
+  //  	○ Read five more bytes. Assum it is the data bytes
+  //  	○ Read two more bytes. Assume it is the CRC
+	//    ○ See if the last two bytes contain the correct CRC
+	//  	○ If so, it is a response. If not, it is not a response.
+  //  If other function:
   //  	○ Return nothing. Unsupported for now.
   
   this->time_last_byte_received_ = millis();
