@@ -195,16 +195,14 @@ void test_modbus_request_detector_unsupported_function_results_in_nullptr() {
 
   // Assert
   uint8_t *raw_data = new uint8_t[6] { 0x0B, 0x08, 0x00, 0x01, 0x00, 0x00 };
-  uint16_t correct_crc = esphome::crc16(raw_data, 6);
-  TEST_ASSERT_EQUAL_UINT16(correct_crc, 0x61B1);
   TEST_ASSERT_TRUE(nullptr == request_frame);
 }
 
 /// -- ModbusResponseDetector --
-void test_modbus_response_detector_response_function_3() {
+void test_modbus_response_detector_response_function_3_good() {
   // Arrange
   FakeUartInterface fake_uart_interface;
-  uint8_t fake_data[] = { 0x02, 0x03, 0x02, 0x34, 0x56, 0xFF, 0xFF };
+  uint8_t fake_data[] = { 0x02, 0x03, 0x02, 0x34, 0x56, 0xBA, 0x6A };
   ModbusResponseDetector modbus_response_detector(&fake_uart_interface);
   FakeUartInterfaceTaskArgs args = { 
     .uart_interface = &fake_uart_interface,
@@ -235,6 +233,168 @@ void test_modbus_response_detector_response_function_3() {
   TEST_ASSERT_EQUAL_UINT8(0x56, actual_data[1]);
 }
 
+void test_modbus_response_detector_wrong_crc_results_in_nullptr() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x02, 0x03, 0x02, 0x34, 0x56, 0xBA, 0x00 };
+  ModbusResponseDetector modbus_response_detector(&fake_uart_interface);
+  FakeUartInterfaceTaskArgs args = { 
+    .uart_interface = &fake_uart_interface,
+    .delay_between_bytes_in_us = 573,
+    .data_to_return = fake_data,
+    .len_of_data_to_return = 7
+  };
+  xTaskCreatePinnedToCore(fake_uart_interface_task,
+                    "fake_uart_interface_task", // name
+                    30000,                      // stack size (in words)
+                    &args,                      // input params
+                    1,                          // priority
+                    nullptr,                    // Handle, not needed
+                    0                           // core
+  );
+
+  // Act
+  ModbusFrame *response_frame = modbus_response_detector.detect_response();
+  // Delay 4 ms to make sure that the fake uart task is done
+  delay(4);
+  
+  // Assert
+  TEST_ASSERT_TRUE(nullptr == response_frame);
+}
+
+void test_modbus_response_detector_request_function_3_results_in_nullptr() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x0B, 0x03, 0x04, 0xAF, 0x00, 0x1E, 0xF4, 0x79 };
+  ModbusResponseDetector modbus_response_detector(&fake_uart_interface);
+  FakeUartInterfaceTaskArgs args = { 
+    .uart_interface = &fake_uart_interface,
+    .delay_between_bytes_in_us = 573,
+    .data_to_return = fake_data,
+    .len_of_data_to_return = 8
+  };
+  xTaskCreatePinnedToCore(fake_uart_interface_task,
+                    "fake_uart_interface_task", // name
+                    30000,                      // stack size (in words)
+                    &args,                      // input params
+                    1,                          // priority
+                    nullptr,                    // Handle, not needed
+                    0                           // core
+  );
+
+  // Act
+  ModbusFrame *response_frame = modbus_response_detector.detect_response();
+  // Delay 4 ms to make sure that the fake uart task is done
+  delay(4);
+
+  // Assert
+  TEST_ASSERT_TRUE(nullptr == response_frame);
+}
+
+void test_modbus_response_detector_unsupported_function_results_in_nullptr() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x0B, 0x07, 0x04, 0xF4, 0x79 };
+  ModbusResponseDetector modbus_response_detector(&fake_uart_interface);
+  FakeUartInterfaceTaskArgs args = { 
+    .uart_interface = &fake_uart_interface,
+    .delay_between_bytes_in_us = 573,
+    .data_to_return = fake_data,
+    .len_of_data_to_return = 5
+  };
+  xTaskCreatePinnedToCore(fake_uart_interface_task,
+                    "fake_uart_interface_task", // name
+                    30000,                      // stack size (in words)
+                    &args,                      // input params
+                    1,                          // priority
+                    nullptr,                    // Handle, not needed
+                    0                           // core
+  );
+
+  // Act
+  ModbusFrame *response_frame = modbus_response_detector.detect_response();
+  // Delay 3 ms to make sure that the fake uart task is done
+  delay(3);
+
+  // Assert
+  TEST_ASSERT_TRUE(nullptr == response_frame);
+}
+
+void test_modbus_response_detector_response_function_1() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x02, 0x01, 0x01, 0x5A, 0xF7, 0xD1 };
+  ModbusResponseDetector modbus_response_detector(&fake_uart_interface);
+  FakeUartInterfaceTaskArgs args = { 
+    .uart_interface = &fake_uart_interface,
+    .delay_between_bytes_in_us = 573,
+    .data_to_return = fake_data,
+    .len_of_data_to_return = 6
+  };
+  xTaskCreatePinnedToCore(fake_uart_interface_task,
+                    "fake_uart_interface_task", // name
+                    30000,                      // stack size (in words)
+                    &args,                      // input params
+                    1,                          // priority
+                    nullptr,                    // Handle, not needed
+                    0                           // core
+  );
+
+  // Act
+  ModbusFrame *response_frame = modbus_response_detector.detect_response();
+
+  // Assert
+  TEST_ASSERT_FALSE(nullptr == response_frame);
+  TEST_ASSERT_EQUAL_UINT8(0x02, response_frame->get_address());
+  TEST_ASSERT_EQUAL_UINT8(0x01, response_frame->get_function());
+  TEST_ASSERT_EQUAL_UINT8(1, response_frame->get_data_length());
+  
+  const uint8_t *actual_data = response_frame->get_data();
+  TEST_ASSERT_EQUAL_UINT8(0x5A, actual_data[0]);
+}
+
+void test_modbus_response_detector_response_function_6() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x02, 0x06, 0x01, 0x23, 0x98, 0x76, 0xE9, 0x93 };
+  ModbusResponseDetector modbus_response_detector(&fake_uart_interface);
+  FakeUartInterfaceTaskArgs args = { 
+    .uart_interface = &fake_uart_interface,
+    .delay_between_bytes_in_us = 573,
+    .data_to_return = fake_data,
+    .len_of_data_to_return = 8
+  };
+  xTaskCreatePinnedToCore(fake_uart_interface_task,
+                    "fake_uart_interface_task", // name
+                    30000,                      // stack size (in words)
+                    &args,                      // input params
+                    1,                          // priority
+                    nullptr,                    // Handle, not needed
+                    0                           // core
+  );
+
+  // Act
+  ModbusFrame *response_frame = modbus_response_detector.detect_response();
+
+  // Assert
+  TEST_ASSERT_FALSE(nullptr == response_frame);
+  TEST_ASSERT_EQUAL_UINT8(0x02, response_frame->get_address());
+  TEST_ASSERT_EQUAL_UINT8(0x06, response_frame->get_function());
+  TEST_ASSERT_EQUAL_UINT8(4, response_frame->get_data_length());
+  
+  const uint8_t *actual_data = response_frame->get_data();
+  TEST_ASSERT_EQUAL_UINT8(0x01, actual_data[0]);
+  TEST_ASSERT_EQUAL_UINT8(0x23, actual_data[1]);
+  TEST_ASSERT_EQUAL_UINT8(0x98, actual_data[2]);
+  TEST_ASSERT_EQUAL_UINT8(0x76, actual_data[3]);
+}
+
+void generate_crc() {
+  uint8_t crc_data[] = { 0x0B, 0x07, 0x04 };
+  uint16_t expected_crc = esphome::crc16(crc_data, 6);
+  TEST_ASSERT_EQUAL_UINT16(expected_crc, 0);
+}
+
 int runUnityTests(void) {
   UNITY_BEGIN();
 
@@ -247,7 +407,16 @@ int runUnityTests(void) {
   RUN_TEST(test_modbus_request_detector_unsupported_function_results_in_nullptr);
 
   // ModbusResponseDetector tests
-  RUN_TEST(test_modbus_response_detector_response_function_3);
+  RUN_TEST(test_modbus_response_detector_response_function_3_good);
+  RUN_TEST(test_modbus_response_detector_wrong_crc_results_in_nullptr);
+  RUN_TEST(test_modbus_response_detector_request_function_3_results_in_nullptr);
+  RUN_TEST(test_modbus_response_detector_unsupported_function_results_in_nullptr);
+  
+  RUN_TEST(test_modbus_response_detector_response_function_1);
+  RUN_TEST(test_modbus_response_detector_response_function_6);
+
+  // CRC generation tool :P
+  RUN_TEST(generate_crc);
 
   return UNITY_END();
 }
