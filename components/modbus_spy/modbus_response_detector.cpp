@@ -39,41 +39,80 @@ ModbusFrame* ModbusResponseDetector::detect_response() {
     return nullptr;
   }
 
-  if (3 == function) {
-    // uint8_t *raw_data = new uint8_t[6];
-    // raw_data[0] = address;
-    // raw_data[1] = function;
-    // for (uint8_t i { 2 }; i < 6; ++i) {
-    //   if (!read_next_byte(&raw_data[i])) {
-    //     delete[] raw_data;
-    //     return nullptr;
-    //   }
-    // }
-    // uint8_t crc_low_byte { 0x00 };
-    // if (!read_next_byte(&crc_low_byte)) {
-    //   delete[] raw_data;
-    //   return nullptr;
-    // }
-    // uint8_t crc_high_byte { 0x00 };
-    // if (!read_next_byte(&crc_high_byte)) {
-    //   delete[] raw_data;
-    //   return nullptr;
-    // }
-    // uint16_t calculated_crc = crc16(raw_data, 6);
-    // uint16_t received_crc = crc_low_byte | (crc_high_byte << 8);
-    // if (calculated_crc != received_crc) {
-    //   delete[] raw_data;
-    //   return nullptr;
-    // }
-    // // CRC is right! So this must be a request.
-    // uint8_t *data = new uint8_t[4];
-    // for (uint8_t i {0}; i < 4; ++i) {
-    //   data[i] = raw_data[i + 2];
-    // }
-    // delete[] raw_data;
-    // ModbusFrame *request_frame = new ModbusFrame(address, function, data, 4);
-    // return request_frame;
-    return nullptr;
+  if ((function >= 1) && (function <= 4)) {
+    uint8_t byte_count { 0 };
+    if (!read_next_byte(&byte_count)) {
+      return nullptr;
+    }
+    uint8_t *crc_data = new uint8_t[byte_count + 3];
+    crc_data[0] = address;
+    crc_data[1] = function;
+    crc_data[2] = byte_count;
+    for (uint8_t i { 0 }; i < byte_count; ++i) {
+      if (!read_next_byte(&crc_data[i + 3])) {
+        delete[] crc_data;
+        return nullptr;
+      }
+    }
+    uint8_t crc_low_byte { 0x00 };
+    if (!read_next_byte(&crc_low_byte)) {
+      delete[] crc_data;
+      return nullptr;
+    }
+    uint8_t crc_high_byte { 0x00 };
+    if (!read_next_byte(&crc_high_byte)) {
+      delete[] crc_data;
+      return nullptr;
+    }
+    uint16_t calculated_crc = crc16(crc_data, byte_count + 3);
+    uint16_t received_crc = crc_low_byte | (crc_high_byte << 8);
+    if (calculated_crc != received_crc) {
+      delete[] crc_data;
+      return nullptr;
+    }
+    // CRC is right! So this must be a response.
+    uint8_t *data = new uint8_t[byte_count + 1];
+    data[0] = byte_count;
+    for (uint8_t i {0}; i < byte_count; ++i) {
+      data[i + 1] = crc_data[i + 3];
+    }
+    delete[] crc_data;
+    ModbusFrame *response_frame = new ModbusFrame(address, function, data, byte_count + 1);
+    return response_frame;
+  } else if ((function == 5) || (function == 6) || (function == 15) || (function == 16)) {
+    uint8_t *crc_data = new uint8_t[6];
+    crc_data[0] = address;
+    crc_data[1] = function;
+    for (uint8_t i { 0 }; i < 4; ++i) {
+      if (!read_next_byte(&crc_data[i + 2])) {
+        delete[] crc_data;
+        return nullptr;
+      }
+    }
+    uint8_t crc_low_byte { 0x00 };
+    if (!read_next_byte(&crc_low_byte)) {
+      delete[] crc_data;
+      return nullptr;
+    }
+    uint8_t crc_high_byte { 0x00 };
+    if (!read_next_byte(&crc_high_byte)) {
+      delete[] crc_data;
+      return nullptr;
+    }
+    uint16_t calculated_crc = crc16(crc_data, 6);
+    uint16_t received_crc = crc_low_byte | (crc_high_byte << 8);
+    if (calculated_crc != received_crc) {
+      delete[] crc_data;
+      return nullptr;
+    }
+    // CRC is right! So this must be a response.
+    uint8_t *data = new uint8_t[4];
+    for (uint8_t i { 0 }; i < 4; ++i) {
+      data[i] = crc_data[i + 2];
+    }
+    delete[] crc_data;
+    ModbusFrame *response_frame = new ModbusFrame(address, function, data, 4);
+    return response_frame;
   } else {
     // Unsupported function!
     return nullptr;
