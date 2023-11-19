@@ -2,17 +2,14 @@
 #define FAKE_UART_INTERFACE_H_
 
 #include <queue>
-// #include <vector>
 
-// #include <Arduino.h>
-// #include <freertos/FreeRTOS.h>
-// #include <freertos/task.h>
+#include <Arduino.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
-// #include <mbus_reader.h>
-// #include <test_includes.h>
+#include <test_includes.h>
 #include <uart_interface.h>
 
-// using std::vector;
 using std::queue;
 
 class FakeUartInterface : public esphome::modbus_spy::IUartInterface {
