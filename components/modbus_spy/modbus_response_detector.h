@@ -16,6 +16,7 @@ namespace modbus_spy {
 
 class ModbusResponseDetector {
  private:
+  static const uint16_t MAX_TIME_BETWEEN_REQUEST_AND_RESPONSE_IN_MS = 500;
   static const uint8_t MAX_TIME_BETWEEN_BYTES_IN_MS = 3;
 
  public:
