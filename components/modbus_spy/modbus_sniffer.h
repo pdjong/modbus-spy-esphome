@@ -15,10 +15,13 @@ class ModbusSniffer {
   ModbusSniffer(IUartInterface* uart_interface, IModbusDataPublisher* data_publisher) :
     uart_interface_(uart_interface), data_publisher_(data_publisher) {}
   void start_sniffing();
+  void stop_sniffing();
 
  protected:
   IUartInterface* uart_interface_;
   IModbusDataPublisher* data_publisher_;
+  bool should_stop_sniffing_ { false };
+  bool is_sniffing_ { false };
 
  private:
   static void sniff_loop_task(void* params);

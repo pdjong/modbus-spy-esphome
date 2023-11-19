@@ -22,8 +22,7 @@ namespace modbus_spy {
 
 static const char *TAG = "ModbusSniffer";
 
-void ModbusSniffer::start_sniffing()
-{
+void ModbusSniffer::start_sniffing() {
   xTaskCreatePinnedToCore(ModbusSniffer::sniff_loop_task,
                               "sniff_task", // name
                               50000,        // stack size (in words)
@@ -32,6 +31,13 @@ void ModbusSniffer::start_sniffing()
                               nullptr,      // Handle, not needed
                               0             // core
   );
+}
+
+void ModbusSniffer::stop_sniffing() {
+  this->should_stop_sniffing_ = true;
+  while (this->is_sniffing_) {
+    delay(1);
+  }
 }
 
 void ModbusSniffer::sniff_loop_task(void* params) {
@@ -63,6 +69,9 @@ void ModbusSniffer::sniff_loop_task(void* params) {
     // // 9. Handle the data
     // modbus_sniffer->handle_data_in_request_response(request, response);
     
+    if (modbus_sniffer->should_stop_sniffing_) {
+      break;
+    }
     delay(1);
   }
 }
