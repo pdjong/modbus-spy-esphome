@@ -4,26 +4,37 @@
 #include <unity.h>
 
 #include "modbus_data.h"
+#include "modbus_data_splitter.h"
 #include "modbus_frame.h"
 #include <test_includes.h>
 
 using std::vector;
 using namespace esphome::modbus_spy;
 
-void test_something() {
+void test_matching_pair_with_one_register() {
   // Arrange
+  ModbusDataSplitter data_splitter;
+  uint8_t request_data[] = { 0x04, 0xAF, 0x00, 0x01 };
+  ModbusFrame request(0x0B, 3, request_data, 4);
+  uint8_t response_data[] = { 0x02, 0x34, 0x56 };
+  ModbusFrame response(0x0B, 0x03, response_data, 3);
 
   // Act
+  vector<ModbusData*>* split_data = data_splitter.split_data(&request, &response);
 
   // Assert
-  TEST_ASSERT_EQUAL_UINT8(1, 2);
+  TEST_ASSERT_TRUE(split_data != nullptr);
+  TEST_ASSERT_EQUAL_UINT8(1, split_data->size());
+  ModbusData* data1 = split_data->at(1);
+  TEST_ASSERT_EQUAL_UINT8(0x0B, data1->address);
+  TEST_ASSERT_EQUAL_UINT16(0x3456, data1->value);
 }
 
 int runUnityTests(void) {
   UNITY_BEGIN();
 
   // ModbusDataSplitter tests
-  RUN_TEST(test_something);
+  RUN_TEST(test_matching_pair_with_one_register);
 
   return UNITY_END();
 }
