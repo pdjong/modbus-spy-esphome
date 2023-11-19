@@ -14,7 +14,12 @@
 namespace esphome {
 namespace modbus_spy {
 
-class ModbusResponseDetector {
+class IModbusResponseDetector {
+ public:
+  virtual ModbusFrame* detect_response() = 0;
+};
+
+class ModbusResponseDetector : public IModbusResponseDetector {
  private:
   static const uint16_t MAX_TIME_BETWEEN_REQUEST_AND_RESPONSE_IN_MS = 500;
   static const uint8_t MAX_TIME_BETWEEN_BYTES_IN_MS = 3;

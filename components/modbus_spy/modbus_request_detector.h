@@ -14,7 +14,12 @@
 namespace esphome {
 namespace modbus_spy {
 
-class ModbusRequestDetector {
+class IModbusRequestDetector {
+ public:
+  virtual ModbusFrame* detect_request() = 0;
+};
+
+class ModbusRequestDetector : public IModbusRequestDetector {
  private:
   static const uint8_t MAX_TIME_BETWEEN_BYTES_IN_MS = 3;
 
@@ -25,7 +30,7 @@ class ModbusRequestDetector {
   ModbusRequestDetector(ModbusRequestDetector&);
 
  public:
-  ModbusFrame* detect_request();
+  virtual ModbusFrame* detect_request();
 
  protected:
   IUartInterface* uart_interface_ { nullptr };
