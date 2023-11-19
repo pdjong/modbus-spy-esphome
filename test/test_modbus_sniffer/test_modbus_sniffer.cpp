@@ -39,8 +39,8 @@ void test_modbus_request_detector_request_function_3_bytes_coming_in_live() {
   // Act
   ModbusFrame *request_frame = modbus_request_detector.detect_request();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_FALSE(nullptr == request_frame);
@@ -83,8 +83,8 @@ void test_modbus_request_detector_request_function_3_bytes_already_received() {
   // Act
   ModbusFrame *request_frame = modbus_request_detector.detect_request();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_FALSE(nullptr == request_frame);
@@ -126,8 +126,8 @@ void test_modbus_request_detector_wrong_crc_results_in_nullptr() {
   // Act
   ModbusFrame *request_frame = modbus_request_detector.detect_request();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_TRUE(nullptr == request_frame);
@@ -160,8 +160,8 @@ void test_modbus_request_detector_receive_timeout_in_between_characters_results_
   // Act
   ModbusFrame *request_frame = modbus_request_detector.detect_request();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_TRUE(nullptr == request_frame);
@@ -194,8 +194,8 @@ void test_modbus_request_detector_response_function_3_results_in_nullptr() {
   // Act
   ModbusFrame *request_frame = modbus_request_detector.detect_request();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_TRUE(nullptr == request_frame);
@@ -228,8 +228,8 @@ void test_modbus_request_detector_request_function_15() {
   // Act
   ModbusFrame *request_frame = modbus_request_detector.detect_request();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_FALSE(nullptr == request_frame);
@@ -274,8 +274,8 @@ void test_modbus_request_detector_unsupported_function_results_in_nullptr() {
   // Act
   ModbusFrame *request_frame = modbus_request_detector.detect_request();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   uint8_t *raw_data = new uint8_t[6] { 0x0B, 0x08, 0x00, 0x01, 0x00, 0x00 };
@@ -310,8 +310,8 @@ void test_modbus_response_detector_response_function_3_directly_available() {
   // Act
   ModbusFrame *response_frame = modbus_response_detector.detect_response();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_FALSE(nullptr == response_frame);
@@ -352,8 +352,8 @@ void test_modbus_response_detector_response_function_3_available_after_50ms() {
   // Act
   ModbusFrame *response_frame = modbus_response_detector.detect_response();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_FALSE(nullptr == response_frame);
@@ -365,6 +365,40 @@ void test_modbus_response_detector_response_function_3_available_after_50ms() {
   TEST_ASSERT_EQUAL_UINT8(0x02, actual_data[0]);
   TEST_ASSERT_EQUAL_UINT8(0x34, actual_data[1]);
   TEST_ASSERT_EQUAL_UINT8(0x56, actual_data[2]);
+}
+
+void test_modbus_response_detector_response_function_3_available_after_500ms() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x02, 0x03, 0x02, 0x34, 0x56, 0x6A, 0xBA };
+  ModbusResponseDetector modbus_response_detector(&fake_uart_interface);
+  bool uart_task_should_stop = false;
+  FakeUartInterfaceTaskArgs args = {
+    .uart_interface = &fake_uart_interface,
+    .initial_delay_in_ms = 500,
+    .delay_between_bytes_in_us = 573,
+    .data_to_return = fake_data,
+    .len_of_data_to_return = 7,
+    .should_stop = &uart_task_should_stop
+  };
+  TaskHandle_t uart_task_handle { nullptr };
+  xTaskCreatePinnedToCore(fake_uart_interface_task,
+                    "fake_uart_interface_task", // name
+                    30000,                      // stack size (in words)
+                    &args,                      // input params
+                    1,                          // priority
+                    &uart_task_handle,          // Handle, not needed
+                    0                           // core
+  );
+
+  // Act
+  ModbusFrame *response_frame = modbus_response_detector.detect_response();
+  uart_task_should_stop = true;
+  // Delay 500 ms to make sure that the fake uart task is done
+  delay(500);
+
+  // Assert
+  TEST_ASSERT_TRUE(nullptr == response_frame);
 }
 
 void test_modbus_response_detector_wrong_crc_results_in_nullptr() {
@@ -394,8 +428,8 @@ void test_modbus_response_detector_wrong_crc_results_in_nullptr() {
   // Act
   ModbusFrame *response_frame = modbus_response_detector.detect_response();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_TRUE(nullptr == response_frame);
@@ -428,8 +462,8 @@ void test_modbus_response_detector_request_function_3_results_in_nullptr() {
   // Act
   ModbusFrame *response_frame = modbus_response_detector.detect_response();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_TRUE(nullptr == response_frame);
@@ -462,8 +496,8 @@ void test_modbus_response_detector_unsupported_function_results_in_nullptr() {
   // Act
   ModbusFrame *response_frame = modbus_response_detector.detect_response();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_TRUE(nullptr == response_frame);
@@ -496,8 +530,8 @@ void test_modbus_response_detector_response_function_1() {
   // Act
   ModbusFrame *response_frame = modbus_response_detector.detect_response();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_FALSE(nullptr == response_frame);
@@ -537,8 +571,8 @@ void test_modbus_response_detector_response_function_6() {
   // Act
   ModbusFrame *response_frame = modbus_response_detector.detect_response();
   uart_task_should_stop = true;
-  // Delay 1 ms to make sure that the fake uart task is done
-  delay(1);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_FALSE(nullptr == response_frame);
@@ -574,6 +608,7 @@ int runUnityTests(void) {
   // ModbusResponseDetector tests
   RUN_TEST(test_modbus_response_detector_response_function_3_directly_available);
   RUN_TEST(test_modbus_response_detector_response_function_3_available_after_50ms);
+  RUN_TEST(test_modbus_response_detector_response_function_3_available_after_500ms);
   RUN_TEST(test_modbus_response_detector_wrong_crc_results_in_nullptr);
   RUN_TEST(test_modbus_response_detector_request_function_3_results_in_nullptr);
   RUN_TEST(test_modbus_response_detector_unsupported_function_results_in_nullptr);

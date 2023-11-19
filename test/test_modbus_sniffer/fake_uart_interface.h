@@ -56,7 +56,7 @@ class FakeUartInterface : public esphome::modbus_spy::IUartInterface {
 
 typedef struct FakeUartInterfaceTaskArgs {
   FakeUartInterface* uart_interface;
-  const uint8_t initial_delay_in_ms;
+  const uint16_t initial_delay_in_ms;
   const uint16_t delay_between_bytes_in_us;
   const uint8_t* data_to_return;
   const size_t len_of_data_to_return;
