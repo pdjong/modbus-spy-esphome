@@ -394,8 +394,8 @@ void test_modbus_response_detector_response_function_3_available_after_500ms() {
   // Act
   ModbusFrame *response_frame = modbus_response_detector.detect_response();
   uart_task_should_stop = true;
-  // Delay 500 ms to make sure that the fake uart task is done
-  delay(500);
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
 
   // Assert
   TEST_ASSERT_TRUE(nullptr == response_frame);
