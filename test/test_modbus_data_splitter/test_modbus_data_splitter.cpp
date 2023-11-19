@@ -11,7 +11,7 @@
 using std::vector;
 using namespace esphome::modbus_spy;
 
-void test_matching_pair_with_one_register() {
+void test_matching_pair_with_one_holding_register() {
   // Arrange
   ModbusDataSplitter data_splitter;
   uint8_t request_data[] = { 0x04, 0xAF, 0x00, 0x01 };
@@ -34,7 +34,7 @@ int runUnityTests(void) {
   UNITY_BEGIN();
 
   // ModbusDataSplitter tests
-  RUN_TEST(test_matching_pair_with_one_register);
+  RUN_TEST(test_matching_pair_with_one_holding_register);
 
   return UNITY_END();
 }
