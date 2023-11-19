@@ -28,7 +28,7 @@ ModbusFrame* ModbusResponseDetector::detect_response() {
 	//  	○ If so, it is a response. If not, it is not a response.
   //  If other function:
   //  	○ Return nothing. Unsupported for now.
-  
+  while (this->uart_interface_->available() == 0);
   this->time_last_byte_received_ = millis();
   uint8_t address { 0 };
   if (!read_next_byte(&address)) {
