@@ -4,6 +4,8 @@
 #include <unity.h>
 
 #include "fake_modbus_data_publisher.h"
+#include "fake_modbus_request_detector.h"
+#include "fake_modbus_response_detector.h"
 #include "fake_uart_interface.h"
 #include "modbus_data.h"
 #include "modbus_frame.h"
@@ -19,6 +21,40 @@ using namespace esphome::modbus_spy;
 // What to test?
 // - combination of actual request- and response detector, using fake uart interface
 // - combination of matching and non-matching results of detectors, using fake detectors
+
+void test_modbus_sniffer_with_fake_detectors_good() {
+  // Arrange
+  FakeModbusRequestDetector request_detector;
+  uint8_t *request_data = new uint8_t[4] { 0x01, 0xAF, 0x00, 0x01 };
+  ModbusFrame request_frame(0x09, 3, request_data, 4);
+  request_detector.set_request(&request_frame);
+  ModbusFrameDetectorFactory::set_request_detector(&request_detector);
+  
+  FakeModbusResponseDetector response_detector;
+  uint8_t *response_data = new uint8_t[3] { 0x02, 0xAB, 0xCD };
+  ModbusFrame response_frame(0x09, 3, response_data, 3);
+  response_detector.set_response(&response_frame);
+  ModbusFrameDetectorFactory::set_response_detector(&response_detector);
+
+  FakeModbusDataPublisher fake_data_publisher;
+  ModbusSniffer modbus_sniffer(nullptr, &fake_data_publisher);
+
+  // Act
+  modbus_sniffer.start_sniffing();
+  delay(10);
+  modbus_sniffer.stop_sniffing();
+  // Delay 10 ms to make sure that the sniffer task is done
+  delay(10);
+
+  // Assert
+  vector<PublishedData*> *published_data = fake_data_publisher.get_published_data();
+  TEST_ASSERT_EQUAL_UINT8(1, published_data->size());
+  PublishedData *published_data_item = published_data->at(0);
+  TEST_ASSERT_EQUAL_UINT8(0x09, published_data_item->device_address);
+  TEST_ASSERT_EQUAL_UINT8(3, published_data_item->function);
+  TEST_ASSERT_EQUAL_UINT16(0x01AF, published_data_item->modbus_data->address);
+  TEST_ASSERT_EQUAL_UINT16(0xABCD, published_data_item->modbus_data->value);
+}
 
 void test_modbus_sniffer_with_actual_detectors_good() {
   // Arrange
@@ -48,8 +84,9 @@ void test_modbus_sniffer_with_actual_detectors_good() {
   // Act
   modbus_sniffer.start_sniffing();
   delay(10);
+  modbus_sniffer.stop_sniffing();
   uart_task_should_stop = true;
-  // Delay 5 ms to make sure that the fake uart task is done
+  // Delay 5 ms to make sure that the fake uart and sniffer tasks are done
   delay(5);
 
   // Assert
@@ -63,8 +100,8 @@ void test_modbus_sniffer_with_actual_detectors_good() {
 }
 
 void generate_crc() {
-  uint8_t crc_data[] = { 0x02, 0x03, 0x04, 0xAF, 0x00, 0x01 };
-  uint16_t expected_crc = esphome::crc16(crc_data, 6);
+  uint8_t crc_data[] = { 0x02, 0x03, 0x02, 0x34, 0x56 };
+  uint16_t expected_crc = esphome::crc16(crc_data, 5);
   TEST_ASSERT_EQUAL_UINT16(expected_crc, 0);
 }
 
@@ -73,7 +110,7 @@ int runUnityTests(void) {
 
   // ModbusSniffer tests
   RUN_TEST(test_modbus_sniffer_with_actual_detectors_good);
-
+  RUN_TEST(test_modbus_sniffer_with_fake_detectors_good);
   // CRC generation tool :P
   // RUN_TEST(generate_crc);
 

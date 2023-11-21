@@ -12,11 +12,12 @@ using esphome::modbus_spy::IModbusDataPublisher;
 using esphome::modbus_spy::IModbusRegisterSensor;
 using esphome::modbus_spy::ModbusData;
 
-typedef struct PublishedData {
-  uint8_t device_address;
-  uint8_t function;
-  ModbusData* modbus_data;
-} PublishedData;
+class PublishedData {
+ public:
+  uint8_t device_address { 0 };
+  uint8_t function { 0 };
+  ModbusData* modbus_data { nullptr };
+};
 
 class FakeModbusDataPublisher : public IModbusDataPublisher {
  public:
