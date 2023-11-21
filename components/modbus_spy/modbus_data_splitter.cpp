@@ -69,7 +69,7 @@ vector<ModbusData*>* ModbusDataSplitter::handle_function_3(ModbusFrame* request,
   vector<ModbusData*> *split_data = new vector<ModbusData*>;
   for (uint8_t i = 0; i < register_count_requested; ++i) {
     ModbusData *modbus_data_for_register = new ModbusData;
-    modbus_data_for_register->address = request->get_address();
+    modbus_data_for_register->address = start_address + i;
     uint8_t value_high_byte = response_data[i * 2 + 1];
     uint8_t value_low_byte = response_data[i * 2 + 2];
     modbus_data_for_register->value = (value_high_byte << 8) | value_low_byte;
