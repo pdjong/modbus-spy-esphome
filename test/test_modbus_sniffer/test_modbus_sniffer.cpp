@@ -83,11 +83,11 @@ void test_modbus_sniffer_with_actual_detectors_good() {
 
   // Act
   modbus_sniffer.start_sniffing();
-  delay(10);
+  delay(15);
   modbus_sniffer.stop_sniffing();
   uart_task_should_stop = true;
-  // Delay 5 ms to make sure that the fake uart and sniffer tasks are done
-  delay(5);
+  // Delay 15 ms to make sure that the fake uart and sniffer tasks are done
+  delay(15);
 
   // Assert
   vector<PublishedData*> *published_data = fake_data_publisher.get_published_data();
