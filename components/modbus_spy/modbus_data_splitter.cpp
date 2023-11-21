@@ -9,7 +9,7 @@ using std::vector;
 namespace esphome {
 namespace modbus_spy {
 
-vector<ModbusData*>* ModbusDataSplitter::split_data(ModbusFrame* request, ModbusFrame* response) {
+vector<ModbusData*>* ModbusDataSplitter::split_request_and_response_data(ModbusFrame* request, ModbusFrame* response) {
   vector<ModbusData*>* split_data { nullptr };
 
   if (!address_and_function_match(request, response)) {
@@ -28,7 +28,7 @@ vector<ModbusData*>* ModbusDataSplitter::split_data(ModbusFrame* request, Modbus
 }
 
 bool ModbusDataSplitter::address_and_function_match(ModbusFrame* request, ModbusFrame* response) {
-if ((nullptr == request) || (nullptr == response)) {
+  if ((nullptr == request) || (nullptr == response)) {
     return false;
   }
   if (request->get_address() != response->get_address()) {
@@ -64,7 +64,18 @@ vector<ModbusData*>* ModbusDataSplitter::handle_function_3(ModbusFrame* request,
     return nullptr;
   }
 
-  
+  // Amount of data in response matches the request
+  // Now process it
+  vector<ModbusData*> *split_data = new vector<ModbusData*>;
+  for (uint8_t i = 0; i < register_count_requested; ++i) {
+    ModbusData *modbus_data_for_register = new ModbusData;
+    modbus_data_for_register->address = request->get_address();
+    uint8_t value_high_byte = response_data[i * 2 + 1];
+    uint8_t value_low_byte = response_data[i * 2 + 2];
+    modbus_data_for_register->value = (value_high_byte << 8) | value_low_byte;
+    split_data->push_back(modbus_data_for_register);
+  }
+  return split_data;
 }
 
 } //namespace modbus_spy

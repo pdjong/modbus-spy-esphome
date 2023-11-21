@@ -17,11 +17,11 @@ namespace modbus_spy {
 
 class ModbusDataSplitter {
  public:
-  std::vector<ModbusData*>* split_data(ModbusFrame* request, ModbusFrame* response);
+  std::vector<ModbusData*>* split_request_and_response_data(ModbusFrame* request, ModbusFrame* response);
 
  private:
   bool address_and_function_match(ModbusFrame* request, ModbusFrame* response);
-  vector<ModbusData*>* handle_function_3(ModbusFrame* request, ModbusFrame* response);
+  std::vector<ModbusData*>* handle_function_3(ModbusFrame* request, ModbusFrame* response);
 };
 
 } //namespace modbus_spy

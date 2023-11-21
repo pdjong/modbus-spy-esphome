@@ -20,7 +20,7 @@ void test_matching_pair_with_one_holding_register() {
   ModbusFrame response(0x0B, 3, response_data, 3);
 
   // Act
-  vector<ModbusData*>* split_data = data_splitter.split_data(&request, &response);
+  vector<ModbusData*>* split_data = data_splitter.split_request_and_response_data(&request, &response);
 
   // Assert
   TEST_ASSERT_TRUE(split_data != nullptr);
