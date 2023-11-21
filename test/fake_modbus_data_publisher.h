@@ -5,18 +5,27 @@
 
 #include "modbus_data.h"
 #include "modbus_data_publisher.h"
+#include "modbus_register_sensor.h"
 
 using std::vector;
 using esphome::modbus_spy::IModbusDataPublisher;
+using esphome::modbus_spy::IModbusRegisterSensor;
 using esphome::modbus_spy::ModbusData;
+
+typedef struct PublishedData {
+  uint8_t device_address;
+  uint8_t function;
+  ModbusData* modbus_data;
+} PublishedData;
 
 class FakeModbusDataPublisher : public IModbusDataPublisher {
  public:
-  virtual void publish_data(std::vector<ModbusData*> data);
-  const vector<ModbusData*> get_published_data() const { return this->published_data_; }
+  virtual void publish_data(uint8_t device_address, uint8_t function, std::vector<ModbusData*>* data);
+  virtual void add_register_sensor(uint8_t device_address, uint16_t register_address, IModbusRegisterSensor* register_sensor) override;
+  const vector<PublishedData*> get_published_data() const { return this->published_data_; }
   
  protected:
-  vector<ModbusData*> published_data_;
+  vector<PublishedData*> published_data_;
 };
 
 
