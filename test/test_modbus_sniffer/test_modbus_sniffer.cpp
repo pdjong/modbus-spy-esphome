@@ -53,11 +53,13 @@ void test_modbus_sniffer_with_actual_detectors_good() {
   delay(5);
 
   // Assert
-  vector<ModbusData*> published_data = fake_data_publisher.get_published_data();
-  TEST_ASSERT_EQUAL_UINT8(1, published_data.size());
-  ModbusData* data = published_data.at(1);
-  TEST_ASSERT_EQUAL_UINT16(0x04AF, data->address);
-  TEST_ASSERT_EQUAL_UINT16(0x3456, data->value);
+  vector<PublishedData*> *published_data = fake_data_publisher.get_published_data();
+  TEST_ASSERT_EQUAL_UINT8(1, published_data->size());
+  PublishedData *published_data_item = published_data->at(0);
+  TEST_ASSERT_EQUAL_UINT8(0x02, published_data_item->device_address);
+  TEST_ASSERT_EQUAL_UINT8(3, published_data_item->function);
+  TEST_ASSERT_EQUAL_UINT16(0x04AF, published_data_item->modbus_data->address);
+  TEST_ASSERT_EQUAL_UINT16(0x3456, published_data_item->modbus_data->value);
 }
 
 void generate_crc() {
