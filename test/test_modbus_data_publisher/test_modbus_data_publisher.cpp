@@ -25,7 +25,7 @@ void test_publish_data_function_3() {
   data->push_back(&modbus_data);
 
   FakeModbusRegisterSensor fakeRegisterSensor;
-  data_publisher.add_register_sensor(device_address, register_address, &fakeRegisterSensor);
+  data_publisher.add_register_sensor(device_address, register_address + 40001, &fakeRegisterSensor);
 
   // Act
   data_publisher.publish_data(device_address, function, data);
