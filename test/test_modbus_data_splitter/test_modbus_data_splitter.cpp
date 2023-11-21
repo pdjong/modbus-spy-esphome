@@ -14,10 +14,10 @@ using namespace esphome::modbus_spy;
 void test_matching_pair_with_one_holding_register() {
   // Arrange
   ModbusDataSplitter data_splitter;
-  uint8_t request_data[] = { 0x04, 0xAF, 0x00, 0x01 };
+  uint8_t *request_data = new uint8_t[4] { 0x04, 0xAF, 0x00, 0x01 };
   ModbusFrame request(0x0B, 3, request_data, 4);
-  uint8_t response_data[] = { 0x02, 0x34, 0x56 };
-  ModbusFrame response(0x0B, 0x03, response_data, 3);
+  uint8_t *response_data = new uint8_t[3] { 0x02, 0x34, 0x56 };
+  ModbusFrame response(0x0B, 3, response_data, 3);
 
   // Act
   vector<ModbusData*>* split_data = data_splitter.split_data(&request, &response);
@@ -25,7 +25,7 @@ void test_matching_pair_with_one_holding_register() {
   // Assert
   TEST_ASSERT_TRUE(split_data != nullptr);
   TEST_ASSERT_EQUAL_UINT8(1, split_data->size());
-  ModbusData* data1 = split_data->at(1);
+  ModbusData* data1 = split_data->at(0);
   TEST_ASSERT_EQUAL_UINT8(0x0B, data1->address);
   TEST_ASSERT_EQUAL_UINT16(0x3456, data1->value);
 }
