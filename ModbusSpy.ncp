@@ -158,10 +158,11 @@ After reading everything, MbusController goes over all its sensors and uses the 
       <Entity type="Class">
         <Name>ModbusDataPublisher</Name>
         <Access>Public</Access>
-        <Location left="364" top="667" />
-        <Size width="474" height="94" />
+        <Location left="271" top="661" />
+        <Size width="576" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void publish_data(uint8_t function, uint8_t device_address, vector&lt;ModbusData&gt; data)</Member>
+        <Member type="Method">public void add_register_sensor(uint8_t device_address, uint16_t register_address, IModbusRegisterSensor sensor)</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
@@ -199,6 +200,15 @@ After reading everything, MbusController goes over all its sensors and uses the 
         <Text>Introduce a NextByteReader that both detectors can use?</Text>
         <Location left="2114" top="1075" />
         <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Class">
+        <Name>IModbusRegisterSensor</Name>
+        <Access>Public</Access>
+        <Location left="544" top="83" />
+        <Size width="185" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void publish_state(float state)</Member>
+        <Modifier>Abstract</Modifier>
       </Entity>
     </Entities>
     <Relationships>
@@ -342,7 +352,7 @@ After reading everything, MbusController goes over all its sensors and uses the 
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>629</X>
-          <Y>641</Y>
+          <Y>634</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>629</X>
@@ -358,7 +368,7 @@ After reading everything, MbusController goes over all its sensors and uses the 
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>408</X>
-          <Y>642</Y>
+          <Y>629</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>408</X>
@@ -377,8 +387,8 @@ After reading everything, MbusController goes over all its sensors and uses the 
           <Y>688</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>901</X>
-          <Y>699</Y>
+          <X>910</X>
+          <Y>693</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
@@ -393,7 +403,7 @@ After reading everything, MbusController goes over all its sensors and uses the 
           <Y>746</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>891</X>
+          <X>898</X>
           <Y>746</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -474,6 +484,10 @@ After reading everything, MbusController goes over all its sensors and uses the 
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="6" second="21">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>
