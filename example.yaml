@@ -27,11 +27,11 @@ logger:
   level: INFO 
   logs:
     sensor: INFO
-    ModbusSpy: INFO
+    ModbusSpy: WARN
 # Enable Home Assistant API
 api:
-#   encryption:
-#     key: "PsKaCvrdD8AjEdWsv7b32V2KGBf7kicJAqhE+/zU1H8="
+  encryption:
+    key: "DYWW/4NFHUUChW2rbGIhJv7MME2MqROqOHKF4WblPHk="
 ota:
   password: "e5264b2500ef5b812b82d4342c5a60f6"
 wifi:
@@ -43,8 +43,8 @@ wifi:
 #  password: !secret wifi_password
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "modbus-spy-new-sw-dev"
-    password: "MHcfSqvZc6fe"
+    ssid: "Modbus-Spy-New-Sw-Dev"
+    password: "XB75Tnz2Bp9Y"
 
 # Status LED of ESP
 status_led:
@@ -62,8 +62,22 @@ modbus_spy:
 sensor:
   - platform: modbus_spy
     name: "Inside Temperature"
-    device_address: 11
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
     register_address: 41200
+    filters:
+      - offset: -3000
+      - multiply: .01
+
+  - platform: debug
+    free:
+      name: Heap Free
+    loop_time:
+      name: Loop Time
 
   - platform: uptime
     id: sensor_uptime
@@ -107,3 +121,9 @@ time:
 #   - platform: template
 #     id: three_way_valve_text
 #     name: modbus_spy_three_way_valve_text
+
+debug:
+  update_interval: 5s
+
+web_server:
+  port: 80
