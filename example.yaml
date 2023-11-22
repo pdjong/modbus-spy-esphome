@@ -103,6 +103,12 @@ sensor:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: " %"
 
+binary_sensor:
+  - platform: modbus_spy
+    name: "Heating Switch - Room Thermostat"
+    device_address: 0x0B
+    register_address: 41215
+
 # binary_sensor:
 #   - platform: template
 #     name: modbus_spy_defrost
