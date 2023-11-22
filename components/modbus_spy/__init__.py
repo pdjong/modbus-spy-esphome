@@ -3,9 +3,10 @@ import esphome.config_validation as cv
 from esphome.const import CONF_ID
 from esphome.components import uart
 
+CODEOWNERS = ["@pdjong"]
+
 DEPENDENCIES = ["uart"]
 MULTI_CONF = True
-CODEOWNERS = ["@pdjong"]
 
 modbus_spy_ns = cg.esphome_ns.namespace('modbus_spy')
 
