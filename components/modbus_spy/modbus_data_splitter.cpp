@@ -1,5 +1,12 @@
 #include <vector>
 
+#ifdef UNIT_TEST
+#include "test_includes.h"
+#else
+#include "esphome/core/datatypes.h"
+#include "esphome/core/log.h"
+#endif
+
 #include "modbus_data.h"
 #include "modbus_data_splitter.h"
 #include "modbus_frame.h"
@@ -9,7 +16,10 @@ using std::vector;
 namespace esphome {
 namespace modbus_spy {
 
+static const char *TAG = "ModbusDataSplitter";
+
 vector<ModbusData*>* ModbusDataSplitter::split_request_and_response_data(ModbusFrame* request, ModbusFrame* response) {
+  ESP_LOGI(TAG, "ModbusDataSplitter::split_request_and_response_data");
   vector<ModbusData*>* split_data { nullptr };
 
   if (!address_and_function_match(request, response)) {

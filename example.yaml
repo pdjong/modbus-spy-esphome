@@ -1,6 +1,6 @@
 substitutions:
-  device_name: daalderop-new-sw
-  friendly_name: Daalderop New SW
+  device_name: modbus-spy-new-sw-dev
+  friendly_name: Modbus Spy New SW Dev
   time_timezone: "Europe/Amsterdam"
 
 esphome:
@@ -27,7 +27,7 @@ logger:
   level: INFO 
   logs:
     sensor: INFO
-    MbusController: INFO
+    ModbusSpy: INFO
 # Enable Home Assistant API
 api:
 #   encryption:
@@ -43,7 +43,7 @@ wifi:
 #  password: !secret wifi_password
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "Daalderop-new-sw"
+    ssid: "modbus-spy-new-sw-dev"
     password: "MHcfSqvZc6fe"
 
 # Status LED of ESP
@@ -56,229 +56,14 @@ uart:
   rx_pin: 32
   parity: ODD
 
-sensor:
-  - platform: modbus_sniffer
-    # cooling_heating_temperature:
-    #   name: modbus_sniffer_cooling_heating_temperature
-    # sanitary_hot_water_temperature:
-    #   name: modbus_sniffer_sanitary_hot_water_temperature
-    # outside_temperature:
-    #   name: modbus_sniffer_outside_temperature
-    # inside_temperature:
-    #   name: modbus_sniffer_inside_temperature
-    # heat_exchanger_water_inlet_temperature:
-    #   name: modbus_sniffer_heat_exchanger_water_inlet_temperature
-    # heat_exchanger_water_outlet_temperature:
-    #   name: modbus_sniffer_heat_exchanger_water_outlet_temperature
-    # compressor_working_speed_actual:
-    #   name: modbus_sniffer_compressor_working_speed_actual
-    # compressor_working_speed_setpoint:
-    #   name: modbus_sniffer_compressor_working_speed_setpoint
-    # outdoor_fan_setpoint:
-    #   name: modbus_sniffer_outdoor_fan_setpoint
-    # outdoor_fan_1_actual:
-    #   name: modbus_sniffer_outdoor_fan_1_actual
-    # indoor_coil_temperature:
-    #   name: modbus_sniffer_indoor_coil_temperature
-    # low_pressure:
-    #   name: modbus_sniffer_low_pressure
-    # high_pressure:
-    #   name: modbus_sniffer_high_pressure
-    # suction_temperature:
-    #   name: modbus_sniffer_suction_temperature
-    # discharge_temperature:
-    #   name: modbus_sniffer_discharge_temperature
-    # outdoor_coil_temperature:
-    #   name: modbus_sniffer_outdoor_coil_temperature
-    # internal_pump_active:
-    #   name: modbus_sniffer_internal_pump_active
-    # heating_switch:
-    #   name: modbus_sniffer_heating_switch
-    # three_way_valve:
-    #   id: modbus_sniffer_three_way_valve   
-    #   name: modbus_sniffer_three_way_valve      
-    #   on_state:
-    #     then:
-    #       - text_sensor.template.publish:
-    #           id: three_way_valve_text
-    #           state: !lambda |
-    #             if (x) 
-    #               return "Verwarming";
-    #             else
-    #               return "Tapwater";
-    
-    # outdoor_voltage:
-    #   name: modbus_sniffer_outdoor_voltage
-    # outdoor_current:
-    #   name: modbus_sniffer_outdoor_current
+modbus_spy:
+  id: modbusspy
   
-    # # decode1:
-    # #   name: modbus_sniffer_decode1
-    # # decode2:
-    # #   name: modbus_sniffer_decode2
-    # # decode3:
-    # #   name: modbus_sniffer_decode3
-    # # decode4:
-    # #   name: modbus_sniffer_decode4
-    # # decode5:
-    # #   name: modbus_sniffer_decode5
-    # # decode6:
-    # #   name: modbus_sniffer_decode6
-    # # decode7:
-    # #   name: modbus_sniffer_decode7
-    # # decode8:
-    # #   name: modbus_sniffer_decode8
-    # # decode9:
-    # #   name: modbus_sniffer_decode9
-    # # decode10:
-    # #   name: modbus_sniffer_decode10
-    # decode20:
-    #   name: modbus_sniffer_decode20   
-    #   id: decode20
-    # # decode21:
-    # #   name: modbus_sniffer_decode21  
-    # # decode22:
-    # #   name: modbus_sniffer_decode22   
-    # # decode23:
-    # #   name: modbus_sniffer_decode23   
-    # decode24:
-    #   name: modbus_sniffer_decode24 
-    #   id: decode24
-    # decode25:
-    #   name: modbus_sniffer_decode25   
-    #   id: decode25
-    # # decode26:
-    # #   name: modbus_sniffer_decode26   
-    # # decode27:
-    # #   name: modbus_sniffer_decode27   
-    # # decode28:
-    # #   name: modbus_sniffer_decode28   
-    # # decode29:
-    # #   name: modbus_sniffer_decode29   
-    # # decode30:
-    # #   name: modbus_sniffer_decode30     
-    # # decode31:
-    # #   name: modbus_sniffer_decode31    
-    # # decode32:
-    # #   name: modbus_sniffer_decode32    
-    # # decode33:
-    # #   name: modbus_sniffer_decode33    
-    # # decode34:
-    # #   name: modbus_sniffer_decode34    
-    # # decode35:
-    # #   name: modbus_sniffer_decode35
-    # # decode120:
-    # #   name: modbus_sniffer_decode120      
-    # # decode121:
-    # #   name: modbus_sniffer_decode121  
-    # # decode122:
-    # #   name: modbus_sniffer_decode122   
-    # # decode123:
-    # #   name: modbus_sniffer_decode123   
-    # # decode124:
-    # #   name: modbus_sniffer_decode124   
-    # # decode125:
-    # #   name: modbus_sniffer_decode125   
-    # # decode126:
-    # #   name: modbus_sniffer_decode126   
-    # # decode127:
-    # #   name: modbus_sniffer_decode127   
-    # # decode128:
-    # #   name: modbus_sniffer_decode128   
-    # # decode129:
-    # #   name: modbus_sniffer_decode129   
-    # # decode130:
-    # #   name: modbus_sniffer_decode130     
-    # # decode131:
-    # #   name: modbus_sniffer_decode131    
-    # # decode132:
-    # #   name: modbus_sniffer_decode132    
-    # # decode133:
-    # #   name: modbus_sniffer_decode133    
-    # # decode134:
-    # #   name: modbus_sniffer_decode134    
-    # # decode135:
-    # #   name: modbus_sniffer_decode135           
-      
-    # # decode201:
-    # #   name: modbus_sniffer_decode201  
-    # # decode202:
-    # #   name: modbus_sniffer_decode202   
-    # # decode203:
-    # #   name: modbus_sniffer_decode203   
-    # # decode204:
-    # #   name: modbus_sniffer_decode204   
-    # # decode205:
-    # #   name: modbus_sniffer_decode205   
-    # # decode206:
-    # #   name: modbus_sniffer_decode206   
-    # # decode207:
-    # #   name: modbus_sniffer_decode207   
-    # # decode208:
-    # #   name: modbus_sniffer_decode208   
-    # # decode209:
-    # #   name: modbus_sniffer_decode209   
-    # decode210:
-    #   name: modbus_sniffer_decode210     
-    # # decode211:
-    # #   name: modbus_sniffer_decode211    
-    # # decode212:
-    # #   name: modbus_sniffer_decode212    
-    # # decode213:
-    # #   name: modbus_sniffer_decode213    
-    # # decode214:
-    # #   name: modbus_sniffer_decode214    
-    # # decode215:
-    # #   name: modbus_sniffer_decode215  
-    # # decode216:
-    # #   name: modbus_sniffer_decode216   
-    # # decode217:
-    # #   name: modbus_sniffer_decode217   
-    # # decode218:
-    # #   name: modbus_sniffer_decode218   
-    # # decode219:
-    # #   name: modbus_sniffer_decode219   
-
-    # # decode301:
-    # #   name: modbus_sniffer_decode301  
-    # # decode302:
-    # #   name: modbus_sniffer_decode302   
-    # # decode303:
-    # #   name: modbus_sniffer_decode303   
-    # # decode304:
-    # #   name: modbus_sniffer_decode304   
-    # # decode305:
-    # #   name: modbus_sniffer_decode305   
-    # # decode306:
-    # #   name: modbus_sniffer_decode306   
-    # # decode307:
-    # #   name: modbus_sniffer_decode307   
-    # # decode308:
-    # #   name: modbus_sniffer_decode308   
-    # # decode309:
-    # #   name: modbus_sniffer_decode309   
-    # # decode310:
-    # #   name: modbus_sniffer_decode310     
-    # # decode311:
-    # #   name: modbus_sniffer_decode311    
-    # # decode312:
-    # #   name: modbus_sniffer_decode312    
-    # # decode313:
-    # #   name: modbus_sniffer_decode313    
-    # # decode314:
-    # #   name: modbus_sniffer_decode314    
-    # # decode315:
-    # #   name: modbus_sniffer_decode315  
-    # # decode316:
-    # #   name: modbus_sniffer_decode316   
-    # # decode317:
-    # #   name: modbus_sniffer_decode317   
-    # # decode318:
-    # #   name: modbus_sniffer_decode318   
-    # # decode319:
-    # #   name: modbus_sniffer_decode319   
-    # # decode320:
-    # #   name: modbus_sniffer_decode320   
+sensor:
+  - platform: modbus_spy
+    name: "Inside Temperature"
+    device_address: 11
+    register_address: 41200
 
   - platform: uptime
     id: sensor_uptime
@@ -294,19 +79,19 @@ sensor:
       );
       return timestamp;
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
-    name: "Modbus Sniffer WiFi Signal dB"
+    name: "Modbus Spy WiFi Signal dB"
     id: wifi_signal_db
     update_interval: 20s
   - platform: copy # Reports the WiFi signal strength in %
     source_id: wifi_signal_db
-    name: "Modbus Sniffer WiFi Signal Percent"
+    name: "Modbus Spy WiFi Signal Percent"
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: " %"
 
 # binary_sensor:
 #   - platform: template
-#     name: modbus_sniffer_defrost
+#     name: modbus_spy_defrost
 #     lambda: |-
 #       return (id(decode20).state == 68 && (id(decode24).state == 1 || id(decode25).state == 2048)) || (id(decode20).state == 4);
               
@@ -321,4 +106,4 @@ time:
 # text_sensor:
 #   - platform: template
 #     id: three_way_valve_text
-#     name: modbus_sniffer_three_way_valve_text
+#     name: modbus_spy_three_way_valve_text

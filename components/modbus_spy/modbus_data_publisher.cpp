@@ -2,6 +2,7 @@
 #include <test_includes.h>
 #else
 #include "esphome/core/datatypes.h"
+#include "esphome/core/log.h"
 #endif // UNIT_TEST
 
 #include "modbus_data_publisher.h"
@@ -9,6 +10,8 @@
 
 namespace esphome {
 namespace modbus_spy {
+
+static const char *TAG = "ModbusDataPublisher";
 
 void ModbusDataPublisher::add_register_sensor(
   uint8_t device_address, 
@@ -20,6 +23,7 @@ void ModbusDataPublisher::add_register_sensor(
 }
 
 void ModbusDataPublisher::publish_data(uint8_t device_address, uint8_t function, std::vector<ModbusData*>* data) {
+  ESP_LOGI(TAG, "ModbusDataPublisher::publish_data");
   for (ModbusData* modbus_data : *data) {
     uint16_t data_model_register_address = convert_pdu_address_to_data_model_address(function, modbus_data->address);
     find_sensor_and_publish_data(data_model_register_address, modbus_data->value);
@@ -43,8 +47,10 @@ uint16_t ModbusDataPublisher::convert_pdu_address_to_data_model_address(uint8_t 
 }
 
 void ModbusDataPublisher::find_sensor_and_publish_data(uint16_t data_model_register_address, uint16_t value) {
+  ESP_LOGI(TAG, "Finding sensor for register address %d, to publish value %d", data_model_register_address, value);
   IModbusRegisterSensor *register_sensor = this->register_sensors_[data_model_register_address];
   if (register_sensor != nullptr) {
+    ESP_LOGI(TAG, "Found sensor!");
     register_sensor->publish_state(value);
   }
 }

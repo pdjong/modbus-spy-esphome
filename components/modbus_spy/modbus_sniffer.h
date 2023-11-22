@@ -25,6 +25,7 @@ class ModbusSniffer {
 
  private:
   static void sniff_loop_task(void* params);
+  void empty_rx_buffer();
 };
 
 } //namespace modbus_spy

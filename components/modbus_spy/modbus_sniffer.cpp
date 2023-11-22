@@ -26,6 +26,7 @@ namespace modbus_spy {
 static const char *TAG = "ModbusSniffer";
 
 void ModbusSniffer::start_sniffing() {
+  ESP_LOGI(TAG, "ModbusSniffer::start_sniffing");
   xTaskCreatePinnedToCore(ModbusSniffer::sniff_loop_task,
                               "sniff_task", // name
                               50000,        // stack size (in words)
@@ -50,8 +51,12 @@ void ModbusSniffer::sniff_loop_task(void* params) {
   IModbusResponseDetector *response_detector =
     ModbusFrameDetectorFactory::create_response_detector(modbus_sniffer->uart_interface_);
   ModbusDataSplitter data_splitter;
-
+  uint8_t loop_counter { 0 };
   while (true) {
+    if (0 == loop_counter) {
+      ESP_LOGI(TAG, "ModbusSniffer::sniff_loop_task");
+      loop_counter = (loop_counter + 1) % 128;
+    }
     if (modbus_sniffer->should_stop_sniffing_) {
       vTaskDelete(NULL);
       break;
@@ -70,24 +75,39 @@ void ModbusSniffer::sniff_loop_task(void* params) {
 
     ModbusFrame *request_frame = request_detector->detect_request();
     if (nullptr == request_frame) {
-      // TODO: Empty UART RX buffer
+      modbus_sniffer->empty_rx_buffer();
       continue;
     }
     ModbusFrame *response_frame = response_detector->detect_response();
     if (nullptr == response_frame) {
-      // TODO: Empty UART RX buffer
+      modbus_sniffer->empty_rx_buffer();
       continue;
     }
     vector<ModbusData*> *split_data = data_splitter.split_request_and_response_data(request_frame, response_frame);
     if (nullptr == split_data) {
-      // TODO: Empty UART RX buffer
+      delete request_frame;
+      delete response_frame;
+      modbus_sniffer->empty_rx_buffer();
       continue;
     }
     uint8_t device_address = request_frame->get_address();
     uint8_t function = request_frame->get_function();
+    delete request_frame;
+    delete response_frame;
     modbus_sniffer->data_publisher_->publish_data(device_address, function, split_data);
+    for (ModbusData* modbus_data : *split_data) {
+      delete modbus_data;
+    }
+    delete split_data;
 
-    delay(1);
+    delay(50);
+  }
+}
+
+void ModbusSniffer::empty_rx_buffer() {
+  uint8_t dummy_byte { 0 };
+  while (this->uart_interface_->available() > 0) {
+    this->uart_interface_->read_byte(&dummy_byte);
   }
 }
 

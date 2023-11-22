@@ -13,23 +13,22 @@ namespace modbus_spy {
 
 static const char *TAG = "modbus_spy";
 
-void ModbusSpy::loop()
-{
+void ModbusSpy::setup() {
+  ESP_LOGI(TAG, "ModbusSpy::setup");
+  this->sniffer_->start_sniffing();
+}
+
+void ModbusSpy::loop() {
   delay(5);
 }
 
-float ModbusSpy::get_setup_priority() const
-{
+float ModbusSpy::get_setup_priority() const {
   // After UART bus
   return setup_priority::BUS - 1.0f;
 }
 
-void ModbusSpy::dump_config()
-{
+void ModbusSpy::dump_config() {
   ESP_LOGCONFIG(TAG, "ModbusSpy");
-  //LOG_SENSOR("  ", "Heat Exchanger Water Outlet Temperature", this->heat_exchanger_water_outlet_temperature_sensor_);
-  //LOG_SENSOR("  ", "Heat Exchanger Water Inlet Temperature", this->heat_exchanger_water_inlet_temperature_sensor_);
-  //LOG_SENSOR("  ", "Compressor Working Speed", this->compressor_working_speed_sensor_);
 }
 
 } // namespace modbus_spy

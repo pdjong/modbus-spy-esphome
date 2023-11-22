@@ -4,6 +4,7 @@
 #else
 #include "esphome/core/datatypes.h"
 #include "esphome/core/helpers.h"
+#include "esphome/core/log.h"
 #endif
 
 #include "modbus_frame.h"
@@ -12,7 +13,10 @@
 namespace esphome {
 namespace modbus_spy {
 
+static const char *TAG = "ModbusRequestDetector";
+
 ModbusFrame* ModbusRequestDetector::detect_request() {
+  ESP_LOGI(TAG, "ModbusRequestDetector::detect_request");
 	//  1. Read the first byte. Assume it is the address
 	//  2. Read the second byte. Assume it is the function
 	//  If function 1-6:

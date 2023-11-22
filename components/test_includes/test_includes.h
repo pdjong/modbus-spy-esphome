@@ -7,6 +7,10 @@
 #include <stddef.h>
 #include <crc.h>
 
+#ifndef ESP_LOGI
+#define ESP_LOGI
+#endif
+
 #endif // UNIT_TEST
 
 #endif // TEST_INCLUDES_H_

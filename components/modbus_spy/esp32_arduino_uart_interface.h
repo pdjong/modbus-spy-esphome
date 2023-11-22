@@ -21,10 +21,6 @@ class Esp32ArduinoUartInterface : public IUartInterface {
     return this->uart_device_->read_array(data, len);
   }
 
-  virtual void write_array(const uint8_t* data, size_t len) {
-    this->uart_device_->write_array(data, len);
-  }
-
   virtual int available() const {
     return this->uart_device_->available();
   }
