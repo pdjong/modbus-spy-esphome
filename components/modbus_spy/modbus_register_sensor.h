@@ -6,13 +6,10 @@
 #else
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/core/datatypes.h"
-#include "esphome/core/log.h"
 #endif // UNIT_TEST
 
 namespace esphome {
 namespace modbus_spy {
-
-// static const char *TAG = "ModbusRegisterSensor";
 
 class IModbusRegisterSensor {
  public:
@@ -27,11 +24,8 @@ class ModbusRegisterSensor : public IModbusRegisterSensor {
     this->sensor_ = new sensor::Sensor;
   }
 
-  virtual void publish_state(uint16_t state) {
-    ESP_LOGI("ModbusRegisterSensor", "About to publish state: %d", state);
-    this->sensor_->publish_state(static_cast<float>(state));
-  }
-  sensor::Sensor* get_sensor() const { return this->sensor_; }
+  virtual void publish_state(uint16_t state) override;
+  sensor::Sensor* get_sensor() const;
 
  protected:
   sensor::Sensor* sensor_;

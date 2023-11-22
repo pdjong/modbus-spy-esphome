@@ -13,8 +13,7 @@ namespace modbus_spy {
 
 class ModbusFrame {
  public:
-  ModbusFrame(uint8_t address, uint8_t function, uint8_t* data, uint8_t data_length) : 
-    address_(address), function_(function), data_(data), data_length_(data_length) {}
+  ModbusFrame(uint8_t address, uint8_t function, uint8_t* data, uint8_t data_length);
   ~ModbusFrame();
 
  private:

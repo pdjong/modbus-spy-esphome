@@ -11,6 +11,10 @@
 #define ESP_LOGI
 #endif
 
+#ifndef ESP_LOGD
+#define ESP_LOGD
+#endif
+
 #endif // UNIT_TEST
 
 #endif // TEST_INCLUDES_H_

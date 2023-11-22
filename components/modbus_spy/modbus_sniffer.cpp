@@ -26,7 +26,7 @@ namespace modbus_spy {
 static const char *TAG = "ModbusSniffer";
 
 void ModbusSniffer::start_sniffing() {
-  ESP_LOGI(TAG, "ModbusSniffer::start_sniffing");
+  ESP_LOGD(TAG, "ModbusSniffer::start_sniffing");
   xTaskCreatePinnedToCore(ModbusSniffer::sniff_loop_task,
                               "sniff_task", // name
                               50000,        // stack size (in words)
@@ -54,7 +54,7 @@ void ModbusSniffer::sniff_loop_task(void* params) {
   uint8_t loop_counter { 0 };
   while (true) {
     if (0 == loop_counter) {
-      ESP_LOGI(TAG, "ModbusSniffer::sniff_loop_task");
+      ESP_LOGD(TAG, "ModbusSniffer::sniff_loop_task");
       loop_counter = (loop_counter + 1) % 128;
     }
     if (modbus_sniffer->should_stop_sniffing_) {
