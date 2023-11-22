@@ -23,6 +23,10 @@ class IModbusRegisterSensor {
 
 class ModbusRegisterSensor : public IModbusRegisterSensor {
  public:
+  ModbusRegisterSensor() {
+    this->sensor_ = new sensor::Sensor;
+  }
+
   virtual void publish_state(uint16_t state) {
     ESP_LOGI("ModbusRegisterSensor", "About to publish state: %d", state);
     this->sensor_->publish_state(static_cast<float>(state));
