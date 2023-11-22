@@ -10,6 +10,7 @@
 #include "esphome/core/datatypes.h"
 #endif // UNIT_TEST
 
+#include "modbus_binary_sensor.h"
 #include "modbus_data.h"
 #include "modbus_frame_detector_factory.h"
 #include "modbus_register_sensor.h"
@@ -24,15 +25,18 @@ class IModbusDataPublisher {
  public:
   virtual void publish_data(uint8_t device_address, uint8_t function, std::vector<ModbusData*>* data) = 0;
   virtual void add_register_sensor(uint8_t device_address, uint16_t register_address, IModbusRegisterSensor* register_sensor) = 0;
+  virtual void add_binary_sensor(uint8_t device_address, uint16_t register_address, IModbusBinarySensor* binary_sensor) = 0;
 };
 
 class ModbusDataPublisher : public IModbusDataPublisher {
  public:
   virtual void publish_data(uint8_t device_address, uint8_t function, std::vector<ModbusData*>* data) override;
   virtual void add_register_sensor(uint8_t device_address, uint16_t register_address, IModbusRegisterSensor* register_sensor) override;
+  virtual void add_binary_sensor(uint8_t device_address, uint16_t register_address, IModbusBinarySensor* binary_sensor) override;
 
  protected:
   std::map<uint16_t, IModbusRegisterSensor*> register_sensors_;
+  std::map<uint16_t, IModbusBinarySensor*> binary_sensors_;
 
  private:
   uint16_t convert_pdu_address_to_data_model_address(uint8_t function, uint16_t pdu_address);

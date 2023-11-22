@@ -4,6 +4,8 @@
 
 #include "esphome/core/log.h"
 
+#include "modbus_binary_sensor.h"
+#include "modbus_register_sensor.h"
 #include "modbus_spy.h"
 
 using namespace std; 
@@ -22,6 +24,12 @@ sensor::Sensor* ModbusSpy::create_sensor(uint8_t device_address, uint16_t regist
   ModbusRegisterSensor *register_sensor = new ModbusRegisterSensor();
   this->data_publisher_.add_register_sensor(device_address, register_address, register_sensor);
   return register_sensor->get_sensor();
+}
+
+binary_sensor::BinarySensor* ModbusSpy::create_binary_sensor(uint8_t device_address, uint16_t register_address) {
+  ModbusBinarySensor *binary_sensor = new ModbusBinarySensor();
+  this->data_publisher_.add_binary_sensor(device_address, register_address, binary_sensor);
+  return binary_sensor->get_sensor();
 }
 
 void ModbusSpy::setup() {
