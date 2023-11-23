@@ -24,27 +24,26 @@ external_components:
 # Enable logging
 logger:
   # baud_rate: 115200
-  level: INFO 
-  logs:
-    sensor: INFO
-    ModbusSpy: WARN
+  level: INFO
+  #logs:
+    #sensor: INFO
+    #ModbusSpy: WARN
 # Enable Home Assistant API
 api:
   encryption:
     key: "DYWW/4NFHUUChW2rbGIhJv7MME2MqROqOHKF4WblPHk="
 ota:
   password: "e5264b2500ef5b812b82d4342c5a60f6"
+
 wifi:
-# Next two lines for building locally with ESPHome
-  ssid: "?"
-  password: "?"
-# Next two lines for building on Home Assistant OS, ESPHome
-#  ssid: !secret wifi_ssid
-#  password: !secret wifi_password
+  ssid: ?
+  password: ?
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "Modbus-Spy-New-Sw-Dev"
-    password: "XB75Tnz2Bp9Y"
+    ssid: "HeatPumpController"
+    password: "heatpump"
+
+captive_portal:
 
 # Status LED of ESP
 status_led:
@@ -72,6 +71,205 @@ sensor:
     filters:
       - offset: -3000
       - multiply: .01
+  - platform: modbus_spy
+    name: "Sanitary Hot Water Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41201
+    filters:
+      - offset: -3000
+      - multiply: .01  
+  - platform: modbus_spy
+    name: "Heating/Cooling Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41202
+    filters:
+      - offset: -3000
+      - multiply: .01     
+  - platform: modbus_spy
+    name: "Heat Exchanger Water Outlet Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41203
+    filters:
+      - offset: -3000
+      - multiply: .01          
+  - platform: modbus_spy
+    name: "Heat Exchanger Water Inlet Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41204
+    filters:
+      - offset: -3000
+      - multiply: .01                        
+  - platform: modbus_spy
+    name: "Indoor Coil Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41205
+    filters:
+      - offset: -3000
+      - multiply: .01                        
+  - platform: modbus_spy
+    name: "Heating/Cooling Circuit 1 Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41205
+    filters:
+      - offset: -3000
+      - multiply: .01
+  - platform: modbus_spy
+    name: "Outdoor Voltage"
+    device_class: "voltage"
+    accuracy_decimals: 0
+    state_class: "measurement"
+    unit_of_measurement: "V"
+    #icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42101
+  - platform: modbus_spy
+    name: "Outdoor Current"
+    device_class: "current"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "A"
+    #icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42102
+    filters:
+      - multiply: .1
+  - platform: modbus_spy
+    name: "Compressor Working Speed Setpoint"
+    device_class: "frequency"
+    accuracy_decimals: 0
+    state_class: "measurement"
+    unit_of_measurement: "Hz"
+    #icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42103
+  - platform: modbus_spy
+    name: "Compressor Working Speed Actual"
+    device_class: "frequency"
+    accuracy_decimals: 0
+    state_class: "measurement"
+    unit_of_measurement: "Hz"
+    #icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42104
+  - platform: modbus_spy
+    name: "Outdoor Fan Setpoint"
+    device_class: "frequency"
+    accuracy_decimals: 0
+    state_class: "measurement"
+    unit_of_measurement: "rpm"
+    #icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42105
+  - platform: modbus_spy
+    name: "Outdoor Fan 1 Actual"
+    device_class: "frequency"
+    accuracy_decimals: 0
+    state_class: "measurement"
+    unit_of_measurement: "rpm"
+    #icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42106
+  - platform: modbus_spy
+    name: "Outside Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42111
+    filters:
+      - offset: -3000
+      - multiply: .01
+  - platform: modbus_spy
+    name: "Outdoor Coil Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42112
+    filters:
+      - offset: -3000
+      - multiply: .01
+  - platform: modbus_spy
+    name: "Discharge Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42113
+    filters:
+      - offset: -3000
+      - multiply: .01       
+  - platform: modbus_spy
+    name: "Suction Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42114
+    filters:
+      - offset: -3000
+      - multiply: .01 
+
+  - platform: modbus_spy
+    name: "Low Pressure"
+    device_class: "pressure"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "bar"
+    #icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42117
+    filters:
+      - multiply: .1    
+  - platform: modbus_spy
+    name: "High Pressure"
+    device_class: "pressure"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "bar"
+    #icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42118
+    filters:
+      - multiply: .1   
 
   - platform: debug
     free:
