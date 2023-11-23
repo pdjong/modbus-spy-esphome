@@ -42,3 +42,5 @@
 # ESPHome
 .esphome
 __pycache__
+
+.vscode
