@@ -12,7 +12,6 @@
 #include "modbus_data_publisher.h"
 #include "modbus_register_sensor.h"
 
-using std::map;
 using std::vector;
 
 namespace esphome {
@@ -25,7 +24,7 @@ void ModbusDataPublisher::add_register_sensor(
   uint16_t register_address,
   IModbusRegisterSensor* register_sensor
 ) {
-  map<uint16_t, IModbusRegisterSensor*> *register_sensors_for_device = get_register_sensors_for_device(device_address);
+  std::map<uint16_t, IModbusRegisterSensor*> *register_sensors_for_device = get_register_sensors_for_device(device_address);
   register_sensors_for_device->insert({ register_address, register_sensor });
 }
 
@@ -34,25 +33,25 @@ void ModbusDataPublisher::add_binary_sensor(
   uint16_t register_address, 
   IModbusBinarySensor* binary_sensor
 ) {
-  map<uint16_t, IModbusBinarySensor*> *binary_sensors_for_device = get_binary_sensors_for_device(device_address);
+  std::map<uint16_t, IModbusBinarySensor*> *binary_sensors_for_device = get_binary_sensors_for_device(device_address);
   binary_sensors_for_device->insert({ register_address, binary_sensor });
 }
 
-map<uint16_t, IModbusRegisterSensor*>* ModbusDataPublisher::get_register_sensors_for_device(uint8_t device_address) {
+std::map<uint16_t, IModbusRegisterSensor*>* ModbusDataPublisher::get_register_sensors_for_device(uint8_t device_address) {
   DeviceSensors *sensors_for_device = get_sensors_for_device(device_address);
-  map<uint16_t, IModbusRegisterSensor*>* register_sensors_for_device = sensors_for_device->register_sensors_;
+std::map<uint16_t, IModbusRegisterSensor*>* register_sensors_for_device = sensors_for_device->register_sensors_;
   if (nullptr == register_sensors_for_device) {
-    register_sensors_for_device = new map<uint16_t, IModbusRegisterSensor*>;
+    register_sensors_for_device = new std::map<uint16_t, IModbusRegisterSensor*>;
     sensors_for_device->register_sensors_ = register_sensors_for_device;
   }
   return register_sensors_for_device;
 }
 
-map<uint16_t, IModbusBinarySensor*>* ModbusDataPublisher::get_binary_sensors_for_device(uint8_t device_address) {
+std::map<uint16_t, IModbusBinarySensor*>* ModbusDataPublisher::get_binary_sensors_for_device(uint8_t device_address) {
   DeviceSensors *sensors_for_device = get_sensors_for_device(device_address);
-  map<uint16_t, IModbusBinarySensor*>* binary_sensors_for_device = sensors_for_device->binary_sensors_;
+  std::map<uint16_t, IModbusBinarySensor*>* binary_sensors_for_device = sensors_for_device->binary_sensors_;
   if (nullptr == binary_sensors_for_device) {
-    binary_sensors_for_device = new map<uint16_t, IModbusBinarySensor*>;
+    binary_sensors_for_device = new std::map<uint16_t, IModbusBinarySensor*>;
     sensors_for_device->binary_sensors_ = binary_sensors_for_device;
   }
   return binary_sensors_for_device;
@@ -114,7 +113,7 @@ IModbusRegisterSensor* ModbusDataPublisher::find_register_sensor(uint8_t device_
   if (nullptr == device_sensors->register_sensors_) {
     return nullptr;
   }
-  map<uint16_t, IModbusRegisterSensor*>& register_sensors_for_device = *device_sensors->register_sensors_;
+  std::map<uint16_t, IModbusRegisterSensor*>& register_sensors_for_device = *device_sensors->register_sensors_;
   return register_sensors_for_device[data_model_register_address];
 }
 
@@ -126,7 +125,7 @@ IModbusBinarySensor* ModbusDataPublisher::find_binary_sensor(uint8_t device_addr
   if (nullptr == device_sensors->binary_sensors_) {
     return nullptr;
   }
-  map<uint16_t, IModbusBinarySensor*>& binary_sensors_for_device = *device_sensors->binary_sensors_;
+  std::map<uint16_t, IModbusBinarySensor*>& binary_sensors_for_device = *device_sensors->binary_sensors_;
   return binary_sensors_for_device[data_model_register_address];
 }
 
