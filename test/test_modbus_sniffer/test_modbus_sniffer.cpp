@@ -99,6 +99,24 @@ void test_modbus_sniffer_with_actual_detectors_good() {
   TEST_ASSERT_EQUAL_UINT16(0x3456, published_data_item->modbus_data->value);
 }
 
+void test_modbus_sniffer_with_actual_detectors_no_data() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  FakeModbusDataPublisher fake_data_publisher;
+  ModbusSniffer modbus_sniffer(&fake_uart_interface, &fake_data_publisher);
+
+  // Act
+  modbus_sniffer.start_sniffing();
+  delay(5);
+  modbus_sniffer.stop_sniffing();
+  // Delay 15 ms to make sure that the sniffer task is done
+  delay(1200);
+
+  // Assert
+  vector<PublishedData*> *published_data = fake_data_publisher.get_published_data();
+  TEST_ASSERT_EQUAL_UINT8(0, published_data->size());
+}
+
 void generate_crc() {
   uint8_t crc_data[] = { 0x02, 0x03, 0x02, 0x34, 0x56 };
   uint16_t expected_crc = esphome::crc16(crc_data, 5);
@@ -111,6 +129,8 @@ int runUnityTests(void) {
   // ModbusSniffer tests
   RUN_TEST(test_modbus_sniffer_with_actual_detectors_good);
   RUN_TEST(test_modbus_sniffer_with_fake_detectors_good);
+  RUN_TEST(test_modbus_sniffer_with_actual_detectors_no_data);
+
   // CRC generation tool :P
   // RUN_TEST(generate_crc);
 
