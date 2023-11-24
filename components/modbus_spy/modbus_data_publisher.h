@@ -12,11 +12,7 @@
 
 #include "modbus_binary_sensor.h"
 #include "modbus_data.h"
-#include "modbus_frame_detector_factory.h"
 #include "modbus_register_sensor.h"
-#include "modbus_request_detector.h"
-#include "modbus_response_detector.h"
-#include "uart_interface.h"
 
 namespace esphome {
 namespace modbus_spy {
@@ -36,6 +32,14 @@ class ModbusDataPublisher : public IModbusDataPublisher {
   } DeviceSensors;
 
  public:
+  ModbusDataPublisher();
+
+ private:
+  ModbusDataPublisher(const ModbusDataPublisher&);
+
+ public:
+  ~ModbusDataPublisher();
+  
   virtual void add_register_sensor(uint8_t device_address, uint16_t register_address, IModbusRegisterSensor* register_sensor) override;
   virtual void add_binary_sensor(uint8_t device_address, uint16_t register_address, IModbusBinarySensor* binary_sensor) override;
   virtual void publish_data(uint8_t device_address, uint8_t function, std::vector<ModbusData*>* data) override;

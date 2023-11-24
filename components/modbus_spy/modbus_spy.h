@@ -6,7 +6,6 @@
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/uart/uart.h"
 
-#include "esp32_arduino_uart_interface.h"
 #include "modbus_data_publisher.h"
 #include "modbus_sniffer.h"
 
@@ -16,6 +15,12 @@ namespace modbus_spy {
 class ModbusSpy : public Component, public uart::UARTDevice {
  public:
   ModbusSpy();
+
+ private:
+  ModbusSpy(const ModbusSpy&);
+
+ public:
+  ~ModbusSpy();
 
   void setup() override;
   void loop() override;

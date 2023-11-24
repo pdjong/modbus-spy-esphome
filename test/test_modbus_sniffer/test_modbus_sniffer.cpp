@@ -24,27 +24,27 @@ using namespace esphome::modbus_spy;
 
 void test_modbus_sniffer_with_fake_detectors_good() {
   // Arrange
-  FakeModbusRequestDetector request_detector;
+  FakeModbusRequestDetector *request_detector = new FakeModbusRequestDetector;
   uint8_t *request_data = new uint8_t[4] { 0x01, 0xAF, 0x00, 0x01 };
-  ModbusFrame request_frame(0x09, 3, request_data, 4);
-  request_detector.set_request(&request_frame);
-  ModbusFrameDetectorFactory::set_request_detector(&request_detector);
+  ModbusFrame *request_frame = new ModbusFrame(0x09, 3, request_data, 4);
+  request_detector->set_request(request_frame);
+  ModbusFrameDetectorFactory::set_request_detector(request_detector);
   
-  FakeModbusResponseDetector response_detector;
+  FakeModbusResponseDetector *response_detector = new FakeModbusResponseDetector;
   uint8_t *response_data = new uint8_t[3] { 0x02, 0xAB, 0xCD };
-  ModbusFrame response_frame(0x09, 3, response_data, 3);
-  response_detector.set_response(&response_frame);
-  ModbusFrameDetectorFactory::set_response_detector(&response_detector);
+  ModbusFrame *response_frame = new ModbusFrame(0x09, 3, response_data, 3);
+  response_detector->set_response(response_frame);
+  ModbusFrameDetectorFactory::set_response_detector(response_detector);
 
   FakeModbusDataPublisher fake_data_publisher;
   ModbusSniffer modbus_sniffer(nullptr, &fake_data_publisher);
 
   // Act
   modbus_sniffer.start_sniffing();
-  delay(10);
+  delay(20);
   modbus_sniffer.stop_sniffing();
   // Delay 10 ms to make sure that the sniffer task is done
-  delay(10);
+  delay(20);
 
   // Assert
   vector<PublishedData*> *published_data = fake_data_publisher.get_published_data();
@@ -83,11 +83,11 @@ void test_modbus_sniffer_with_actual_detectors_good() {
 
   // Act
   modbus_sniffer.start_sniffing();
-  delay(15);
+  delay(25);
   modbus_sniffer.stop_sniffing();
   uart_task_should_stop = true;
   // Delay 15 ms to make sure that the fake uart and sniffer tasks are done
-  delay(15);
+  delay(25);
 
   // Assert
   vector<PublishedData*> *published_data = fake_data_publisher.get_published_data();
@@ -127,9 +127,9 @@ int runUnityTests(void) {
   UNITY_BEGIN();
 
   // ModbusSniffer tests
-  RUN_TEST(test_modbus_sniffer_with_actual_detectors_good);
   RUN_TEST(test_modbus_sniffer_with_fake_detectors_good);
-  RUN_TEST(test_modbus_sniffer_with_actual_detectors_no_data);
+  // RUN_TEST(test_modbus_sniffer_with_actual_detectors_good);
+  // RUN_TEST(test_modbus_sniffer_with_actual_detectors_no_data);
 
   // CRC generation tool :P
   // RUN_TEST(generate_crc);

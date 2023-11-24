@@ -9,7 +9,6 @@
 #include <test_includes.h>
 #else
 #include "esphome/core/datatypes.h"
-#include "esphome/core/log.h"
 #endif // UNIT_TEST
 
 namespace esphome {

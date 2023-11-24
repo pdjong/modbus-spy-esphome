@@ -1,9 +1,8 @@
 #ifndef UNIT_TEST
 
-#include <iostream>
-
 #include "esphome/core/log.h"
 
+#include "esp32_arduino_uart_interface.h"
 #include "modbus_binary_sensor.h"
 #include "modbus_register_sensor.h"
 #include "modbus_spy.h"
@@ -18,6 +17,10 @@ static const char *TAG = "modbus_spy";
 ModbusSpy::ModbusSpy() {
   Esp32ArduinoUartInterface *uart_interface = new Esp32ArduinoUartInterface(this);
   this->sniffer_ = new ModbusSniffer(uart_interface, &this->data_publisher_);
+}
+
+ModbusSpy::~ModbusSpy() {
+  delete this->sniffer_;
 }
 
 sensor::Sensor* ModbusSpy::create_sensor(uint8_t device_address, uint16_t register_address) {

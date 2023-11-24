@@ -1,15 +1,8 @@
-#include <vector>
-
-#ifdef UNIT_TEST
-#include "test_includes.h"
-#else
-#include "esphome/core/datatypes.h"
+#ifndef UNIT_TEST
 #include "esphome/core/log.h"
 #endif
 
-#include "modbus_data.h"
 #include "modbus_data_splitter.h"
-#include "modbus_frame.h"
 
 using std::vector;
 

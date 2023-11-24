@@ -1,19 +1,20 @@
 #include <Arduino.h>
-#ifdef UNIT_TEST
-#include "test_includes.h"
-#else
+#ifndef UNIT_TEST
 #include "esphome/core/datatypes.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
 #endif
 
-#include "modbus_frame.h"
 #include "modbus_request_detector.h"
 
 namespace esphome {
 namespace modbus_spy {
 
 static const char *TAG = "ModbusRequestDetector";
+
+ModbusRequestDetector::ModbusRequestDetector(IUartInterface* uart_interface) : 
+  uart_interface_(uart_interface) {
+}
 
 ModbusFrame* ModbusRequestDetector::detect_request() {
   ESP_LOGD(TAG, "ModbusRequestDetector::detect_request");

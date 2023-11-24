@@ -1,16 +1,8 @@
-#include <map>
-#include <vector>
-
-#ifdef UNIT_TEST
-#include <test_includes.h>
-#else
-#include "esphome/core/datatypes.h"
+#ifndef UNIT_TEST
 #include "esphome/core/log.h"
 #endif // UNIT_TEST
 
-#include "modbus_binary_sensor.h"
 #include "modbus_data_publisher.h"
-#include "modbus_register_sensor.h"
 
 using std::vector;
 
@@ -18,6 +10,30 @@ namespace esphome {
 namespace modbus_spy {
 
 static const char *TAG = "ModbusDataPublisher";
+
+ModbusDataPublisher::ModbusDataPublisher() {
+}
+
+ModbusDataPublisher::~ModbusDataPublisher() {
+  for (auto pair : this->device_sensors_) {
+    DeviceSensors *device_sensors = pair.second;
+    if (device_sensors->binary_sensors_ != nullptr) {
+      for (auto sensor_register_pair : *device_sensors->binary_sensors_) {
+        IModbusBinarySensor *binary_sensor = sensor_register_pair.second;
+        delete binary_sensor;
+      }
+      delete device_sensors->binary_sensors_;
+    }
+    if (device_sensors->register_sensors_ != nullptr) {
+      for (auto sensor_register_pair : *device_sensors->register_sensors_) {
+        IModbusRegisterSensor *register_sensor = sensor_register_pair.second;
+        delete register_sensor;
+      }
+      delete device_sensors->register_sensors_;
+    }
+    delete device_sensors;
+  }
+}
 
 void ModbusDataPublisher::add_register_sensor(
   uint8_t device_address, 

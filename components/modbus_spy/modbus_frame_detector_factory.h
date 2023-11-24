@@ -12,6 +12,7 @@ class ModbusFrameDetectorFactory {
  public: 
   static IModbusRequestDetector* create_request_detector(IUartInterface* uart_interface);
   static IModbusResponseDetector* create_response_detector(IUartInterface* uart_interface);
+  static void clear_detectors();
   static void set_request_detector(IModbusRequestDetector* request_detector);
   static void set_response_detector(IModbusResponseDetector* response_detector);
 

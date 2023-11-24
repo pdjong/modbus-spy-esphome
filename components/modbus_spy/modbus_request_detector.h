@@ -5,7 +5,6 @@
 #include <test_includes.h>
 #else
 #include "esphome/core/datatypes.h"
-// #include "esphome/core/log.h"
 #endif // UNIT_TEST
 
 #include "modbus_frame.h"
@@ -25,7 +24,7 @@ class ModbusRequestDetector : public IModbusRequestDetector {
   static const uint32_t MAX_TIME_TO_WAIT_FOR_REQUEST_IN_MS = 1000;
 
  public:
-  ModbusRequestDetector(IUartInterface* uart_interface) : uart_interface_(uart_interface) {}
+  ModbusRequestDetector(IUartInterface* uart_interface);
   
  private:
   ModbusRequestDetector(ModbusRequestDetector&);

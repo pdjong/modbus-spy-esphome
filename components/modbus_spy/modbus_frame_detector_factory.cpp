@@ -24,6 +24,11 @@ IModbusResponseDetector* ModbusFrameDetectorFactory::create_response_detector(IU
   return ModbusFrameDetectorFactory::response_detector_;
 }
 
+void ModbusFrameDetectorFactory::clear_detectors() {
+  set_request_detector(nullptr);
+  set_response_detector(nullptr);
+}
+
 void ModbusFrameDetectorFactory::set_request_detector(IModbusRequestDetector* request_detector) {
   ModbusFrameDetectorFactory::request_detector_ = request_detector;
 }

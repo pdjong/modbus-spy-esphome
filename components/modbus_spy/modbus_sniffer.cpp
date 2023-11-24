@@ -1,5 +1,3 @@
-// #include <iostream>
-// #include <sstream>
 #include <vector>
 
 #include <Arduino.h>
@@ -24,6 +22,17 @@ namespace esphome {
 namespace modbus_spy {
 
 static const char *TAG = "ModbusSniffer";
+
+ModbusSniffer::ModbusSniffer(IUartInterface* uart_interface, IModbusDataPublisher* data_publisher) :
+    uart_interface_(uart_interface),
+    data_publisher_(data_publisher) {
+}
+
+ModbusSniffer::~ModbusSniffer() {
+  if (this->is_sniffing_) {
+    stop_sniffing();
+  }
+}
 
 void ModbusSniffer::start_sniffing() {
   ESP_LOGD(TAG, "ModbusSniffer::start_sniffing");
@@ -58,21 +67,14 @@ void ModbusSniffer::sniff_loop_task(void* params) {
       loop_counter = (loop_counter + 1) % 128;
     }
     if (modbus_sniffer->should_stop_sniffing_) {
+      ModbusFrameDetectorFactory::clear_detectors();
+      delete request_detector;
+      delete response_detector;
+      modbus_sniffer->is_sniffing_ = false;
       vTaskDelete(NULL);
       break;
     }
     delay(5);
-
-    //  1. Wait for incoming data
-    //  2. Receive entire request
-    //  3. If not a request, discard the data, empty the entire receive buffer and start over
-    //  4. It is a request, so wait for incoming data
-    //  5. Receive entire response
-    //  6. If not a response, discard the data, empty the entire receive buffer and start over
-    //  7. It is a response! Check if it matches the request
-    //  8. If the response does not match the request, start over
-    //     The response matches the request!
-    //  9. Handle the data
 
     ModbusFrame *request_frame = request_detector->detect_request();
     if (nullptr == request_frame) {

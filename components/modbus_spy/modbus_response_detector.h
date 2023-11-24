@@ -5,7 +5,6 @@
 #include <test_includes.h>
 #else
 #include "esphome/core/datatypes.h"
-// #include "esphome/core/log.h"
 #endif // UNIT_TEST
 
 #include "modbus_frame.h"
@@ -25,7 +24,7 @@ class ModbusResponseDetector : public IModbusResponseDetector {
   static const uint8_t MAX_TIME_BETWEEN_BYTES_IN_MS = 3;
 
  public:
-  ModbusResponseDetector(IUartInterface* uart_interface) : uart_interface_(uart_interface) {}
+  ModbusResponseDetector(IUartInterface* uart_interface);
   
  private:
   ModbusResponseDetector(ModbusResponseDetector&);
