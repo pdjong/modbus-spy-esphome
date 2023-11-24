@@ -29,7 +29,14 @@ ModbusFrame* ModbusRequestDetector::detect_request() {
 	//  	○ Read this number of bytes, + 2 extra
 	//  	○ See if the last two bytes contain the correct CRC
 	//  	○ If so, it is a request. If not, it is not a request.
-  while (this->uart_interface_->available() == 0);
+  
+  uint32_t time_before_waiting_for_request = millis();
+  while (this->uart_interface_->available() == 0) {
+    delayMicroseconds(50);
+    if (millis() - time_before_waiting_for_request >= MAX_TIME_TO_WAIT_FOR_REQUEST_IN_MS) {
+      return nullptr;
+    }
+  }
   this->time_last_byte_received_ = millis();
   uint8_t address { 0 };
   if (!read_next_byte(&address)) {
