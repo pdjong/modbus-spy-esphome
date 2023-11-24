@@ -109,6 +109,40 @@ void test_modbus_request_detector_request_function_3_bytes_already_received() {
   TEST_ASSERT_EQUAL_UINT8(0x1E, actual_data[3]);
 }
 
+void test_modbus_request_detector_no_data_before_timeout_results_in_nullptr() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x0B, 0x03, 0x04, 0xAF, 0x00, 0x1E, 0xFF, 0xFF };
+  ModbusRequestDetector modbus_request_detector(&fake_uart_interface);
+  bool uart_task_should_stop = false;
+  FakeUartInterfaceTaskArgs args = { 
+    .uart_interface = &fake_uart_interface,
+    .initial_delay_in_ms = 2100,
+    .delay_between_bytes_in_us = 573,
+    .data_to_return = fake_data,
+    .len_of_data_to_return = 8,
+    .should_stop = &uart_task_should_stop
+  };
+  TaskHandle_t uart_task_handle { nullptr };
+  xTaskCreatePinnedToCore(fake_uart_interface_task,
+                    "fake_uart_interface_task", // name
+                    30000,                      // stack size (in words)
+                    &args,                      // input params
+                    1,                          // priority
+                    &uart_task_handle,          // Handle, not needed
+                    0                           // core
+  );
+
+  // Act
+  ModbusFrame *request_frame = modbus_request_detector.detect_request();
+  uart_task_should_stop = true;
+  // Delay to make sure that the fake uart task is done
+  delay(200);
+
+  // Assert
+  TEST_ASSERT_TRUE(nullptr == request_frame);
+}
+
 void test_modbus_request_detector_wrong_crc_results_in_nullptr() {
   // Arrange
   FakeUartInterface fake_uart_interface;
@@ -609,6 +643,7 @@ int runUnityTests(void) {
   // ModbusRequestDetector tests
   RUN_TEST(test_modbus_request_detector_request_function_3_bytes_coming_in_live);
   RUN_TEST(test_modbus_request_detector_request_function_3_bytes_already_received);
+  RUN_TEST(test_modbus_request_detector_no_data_before_timeout_results_in_nullptr);
   RUN_TEST(test_modbus_request_detector_wrong_crc_results_in_nullptr);
   RUN_TEST(test_modbus_request_detector_receive_timeout_in_between_characters_results_in_nullptr);
   RUN_TEST(test_modbus_request_detector_response_function_3_results_in_nullptr);
