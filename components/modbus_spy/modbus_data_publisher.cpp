@@ -33,7 +33,7 @@ void ModbusDataPublisher::publish_data(uint8_t device_address, uint8_t function,
   ESP_LOGD(TAG, "ModbusDataPublisher::publish_data");
   for (ModbusData* modbus_data : *data) {
     uint16_t data_model_register_address = convert_pdu_address_to_data_model_address(function, modbus_data->address);
-    find_sensor_and_publish_data(data_model_register_address, modbus_data->value);
+    find_sensor_and_publish_data(device_address, data_model_register_address, modbus_data->value);
   }
 }
 
@@ -53,19 +53,23 @@ uint16_t ModbusDataPublisher::convert_pdu_address_to_data_model_address(uint8_t 
   return modbus_data_model_address;
 }
 
-void ModbusDataPublisher::find_sensor_and_publish_data(uint16_t data_model_register_address, uint16_t value) {
+void ModbusDataPublisher::find_sensor_and_publish_data(uint8_t device_address, uint16_t data_model_register_address, uint16_t value) {
   ESP_LOGD(TAG, "Finding sensor for register address %d, to publish value %d", data_model_register_address, value);
-  IModbusRegisterSensor *register_sensor = this->register_sensors_[data_model_register_address];
+  IModbusRegisterSensor *register_sensor = find_register_sensor(device_address, data_model_register_address);
   if (register_sensor != nullptr) {
     ESP_LOGD(TAG, "Found sensor!");
     register_sensor->publish_state(value);
   } else {
     IModbusBinarySensor *binary_sensor = this->binary_sensors_[data_model_register_address];
     if (binary_sensor != nullptr) {
-      ESP_LOGI(TAG, "Found binary sensor! For register %d", data_model_register_address);
+      ESP_LOGD(TAG, "Found binary sensor! For register %d", data_model_register_address);
       binary_sensor->publish_state(static_cast<bool>(value));
     }
   }
+}
+
+IModbusRegisterSensor* ModbusDataPublisher::find_register_sensor(uint8_t device_address, uint16_t data_model_register_address) {
+  return this->register_sensors_[data_model_register_address];
 }
 
 } //namespace modbus_spy
