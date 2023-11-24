@@ -16,7 +16,7 @@ namespace modbus_spy {
 static const char *TAG = "ModbusBinarySensor";
 
 void ModbusBinarySensor::publish_state(bool state) {
-  ESP_LOGI(TAG, "About to publish state: %d", state);
+  ESP_LOGD(TAG, "About to publish state: %d", state);
   this->sensor_->publish_state(state);
 }
 
