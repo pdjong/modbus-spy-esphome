@@ -61,6 +61,7 @@ void ModbusSniffer::sniff_loop_task(void* params) {
       vTaskDelete(NULL);
       break;
     }
+    delay(5);
 
     //  1. Wait for incoming data
     //  2. Receive entire request
@@ -99,14 +100,12 @@ void ModbusSniffer::sniff_loop_task(void* params) {
       delete modbus_data;
     }
     delete split_data;
-
-    delay(50);
   }
 }
 
 void ModbusSniffer::empty_rx_buffer() {
   uint8_t dummy_byte { 0 };
-  while (this->uart_interface_->available() > 0) {
+  while (this->uart_interface_->available() != 0) {
     this->uart_interface_->read_byte(&dummy_byte);
   }
 }
