@@ -36,8 +36,9 @@ void test_modbus_sniffer_with_fake_detectors_good() {
   response_detector->set_response(response_frame);
   ModbusFrameDetectorFactory::set_response_detector(response_detector);
 
+  FakeUartInterface fake_uart_interface;
   FakeModbusDataPublisher fake_data_publisher;
-  ModbusSniffer modbus_sniffer(nullptr, &fake_data_publisher);
+  ModbusSniffer modbus_sniffer(&fake_uart_interface, &fake_data_publisher);
 
   // Act
   modbus_sniffer.start_sniffing();
