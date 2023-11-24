@@ -1,6 +1,8 @@
 #include <vector>
 
 #include <Arduino.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 #include <unity.h>
 
 #include "fake_modbus_data_publisher.h"
@@ -13,7 +15,9 @@
 #include <test_includes.h>
 
 using std::vector;
-using namespace esphome::modbus_spy;
+using esphome::modbus_spy::ModbusFrame;
+using esphome::modbus_spy::ModbusRequestDetector;
+using esphome::modbus_spy::ModbusResponseDetector;
 
 void setUp(void) {}
 void tearDown(void) {}
