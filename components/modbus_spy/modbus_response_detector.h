@@ -30,7 +30,7 @@ class ModbusResponseDetector : public IModbusResponseDetector {
   ModbusResponseDetector(ModbusResponseDetector&);
 
  public:
-  ModbusFrame* detect_response();
+  ModbusFrame* detect_response() override;
 
  protected:
   IUartInterface* uart_interface_ { nullptr };

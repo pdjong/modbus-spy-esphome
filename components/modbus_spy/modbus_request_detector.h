@@ -30,7 +30,7 @@ class ModbusRequestDetector : public IModbusRequestDetector {
   ModbusRequestDetector(ModbusRequestDetector&);
 
  public:
-  virtual ModbusFrame* detect_request();
+  virtual ModbusFrame* detect_request() override;
 
  protected:
   IUartInterface* uart_interface_ { nullptr };
