@@ -13,15 +13,11 @@ class Esp32ArduinoUartInterface : public IUartInterface {
  public:
   Esp32ArduinoUartInterface(uart::UARTDevice* uart_device) : uart_device_(uart_device) {}
 
-  virtual bool read_byte(uint8_t* data) {
+  virtual bool read_byte(uint8_t* data) override {
     return this->uart_device_->read_byte(data);
   }
 
-  virtual bool read_array(uint8_t* data, size_t len) {
-    return this->uart_device_->read_array(data, len);
-  }
-
-  virtual int available() const {
+  virtual int available() const override {
     return this->uart_device_->available();
   }
   
