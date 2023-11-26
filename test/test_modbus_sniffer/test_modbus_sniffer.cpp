@@ -60,7 +60,7 @@ void test_modbus_sniffer_with_fake_detectors_good() {
 void test_modbus_sniffer_with_actual_detectors_good() {
   // Arrange
   FakeUartInterface fake_uart_interface;
-  uint8_t fake_data[] = { 0x02, 0x03, 0x04, 0xAF, 0x00, 0x01, 0xB5, 0x28, 0x02, 0x03, 0x02, 0x34, 0x56, 0x6A, 0xBA };
+  uint8_t *fake_data = new uint8_t[15] { 0x02, 0x03, 0x04, 0xAF, 0x00, 0x01, 0xB5, 0x28, 0x02, 0x03, 0x02, 0x34, 0x56, 0x6A, 0xBA };
   FakeModbusDataPublisher fake_data_publisher;
   ModbusSniffer modbus_sniffer(&fake_uart_interface, &fake_data_publisher);
   bool uart_task_should_stop = false;
@@ -84,11 +84,11 @@ void test_modbus_sniffer_with_actual_detectors_good() {
 
   // Act
   modbus_sniffer.start_sniffing();
-  delay(25);
+  delay(1500);
   modbus_sniffer.stop_sniffing();
   uart_task_should_stop = true;
   // Delay 15 ms to make sure that the fake uart and sniffer tasks are done
-  delay(25);
+  delay(1500);
 
   // Assert
   vector<PublishedData*> *published_data = fake_data_publisher.get_published_data();
@@ -128,8 +128,8 @@ int runUnityTests(void) {
   UNITY_BEGIN();
 
   // ModbusSniffer tests
-  RUN_TEST(test_modbus_sniffer_with_fake_detectors_good);
-  // RUN_TEST(test_modbus_sniffer_with_actual_detectors_good);
+  // RUN_TEST(test_modbus_sniffer_with_fake_detectors_good);
+  RUN_TEST(test_modbus_sniffer_with_actual_detectors_good);
   // RUN_TEST(test_modbus_sniffer_with_actual_detectors_no_data);
 
   // CRC generation tool :P
