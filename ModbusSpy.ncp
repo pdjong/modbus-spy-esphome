@@ -7,7 +7,7 @@
       <Entity type="Class">
         <Name>UARTDevice</Name>
         <Access>Public</Access>
-        <Location left="1236" top="240" />
+        <Location left="1234" top="328" />
         <Size width="162" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public bool read_byte()</Member>
@@ -17,7 +17,7 @@
       <Entity type="Class">
         <Name>UARTComponent</Name>
         <Access>Public</Access>
-        <Location left="1599" top="240" />
+        <Location left="1499" top="328" />
         <Size width="162" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public bool read_byte()</Member>
@@ -27,7 +27,7 @@
       <Entity type="Class">
         <Name>ESP32ArduinoUARTComponent</Name>
         <Access>Public</Access>
-        <Location left="1575" top="427" />
+        <Location left="1475" top="492" />
         <Size width="215" height="216" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
@@ -45,7 +45,7 @@
       <Entity type="Class">
         <Name>Component</Name>
         <Access>Public</Access>
-        <Location left="1021" top="240" />
+        <Location left="1021" top="328" />
         <Size width="162" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void setup()</Member>
@@ -65,7 +65,7 @@
       <Entity type="Class">
         <Name>ModbusSensor</Name>
         <Access>Public</Access>
-        <Location left="552" top="240" />
+        <Location left="552" top="328" />
         <Size width="162" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public Sensor get_sensor()</Member>
@@ -74,7 +74,7 @@
       <Entity type="Class">
         <Name>Sensor</Name>
         <Access>Public</Access>
-        <Location left="780" top="240" />
+        <Location left="780" top="328" />
         <Size width="185" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void publish_state(float state)</Member>
@@ -83,7 +83,7 @@
       <Entity type="Class">
         <Name>ModbusDataSplitter</Name>
         <Access>Public</Access>
-        <Location left="271" top="813" />
+        <Location left="318" top="814" />
         <Size width="555" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public vector&lt;ModbusData&gt; split_request_and_response_data(ModbusFrame request, ModbusFrame response)</Member>
@@ -92,7 +92,7 @@
       <Entity type="Class">
         <Name>BinarySensor</Name>
         <Access>Public</Access>
-        <Location left="63" top="240" />
+        <Location left="63" top="328" />
         <Size width="184" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void publish_state(bool state)</Member>
@@ -101,7 +101,7 @@
       <Entity type="Class">
         <Name>ModbusBinarySensor</Name>
         <Access>Public</Access>
-        <Location left="318" top="240" />
+        <Location left="318" top="328" />
         <Size width="184" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public BinarySensor get_sensor()</Member>
@@ -109,13 +109,13 @@
       </Entity>
       <Entity type="Comment">
         <Text>NOTE: NClass does not support pointers. Therefore in some occasions the mentioned types are actually pointers.</Text>
-        <Location left="1619" top="95" />
+        <Location left="1690" top="205" />
         <Size width="263" height="71" />
       </Entity>
       <Entity type="Class">
         <Name>IUartInterface</Name>
         <Access>Public</Access>
-        <Location left="1660" top="1014" />
+        <Location left="1582" top="1015" />
         <Size width="180" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public abstract bool read_byte(uint8_t data)</Member>
@@ -125,7 +125,7 @@
       <Entity type="Class">
         <Name>Esp32ArduinoUartInterface</Name>
         <Access>Public</Access>
-        <Location left="1673" top="1224" />
+        <Location left="1582" top="1188" />
         <Size width="185" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -133,7 +133,7 @@
       <Entity type="Class">
         <Name>ModbusData</Name>
         <Access>Public</Access>
-        <Location left="11" top="813" />
+        <Location left="58" top="814" />
         <Size width="185" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Property">protected uint16_t address_ { get; set; }</Member>
@@ -143,7 +143,7 @@
       <Entity type="Class">
         <Name>ModbusDataPublisher</Name>
         <Access>Public</Access>
-        <Location left="271" top="661" />
+        <Location left="318" top="662" />
         <Size width="576" height="129" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void publish_data(uint8_t device_address, uint8_t function, vector&lt;ModbusData&gt; data)</Member>
@@ -154,7 +154,7 @@
       <Entity type="Class">
         <Name>ModbusFrame</Name>
         <Access>Public</Access>
-        <Location left="1150" top="1287" />
+        <Location left="1150" top="1252" />
         <Size width="199" height="145" />
         <Collapsed>False</Collapsed>
         <Member type="Property">protected uint8_t address_ { get; set; }</Member>
@@ -166,7 +166,7 @@
       <Entity type="Class">
         <Name>ModbusRequestDetector</Name>
         <Access>Public</Access>
-        <Location left="964" top="1079" />
+        <Location left="979" top="1079" />
         <Size width="244" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -174,7 +174,7 @@
       <Entity type="Class">
         <Name>ModbusResponseDetector</Name>
         <Access>Public</Access>
-        <Location left="1286" top="1079" />
+        <Location left="1256" top="1079" />
         <Size width="244" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -187,7 +187,7 @@
       <Entity type="Class">
         <Name>IModbusSensor</Name>
         <Access>Public</Access>
-        <Location left="541" top="89" />
+        <Location left="541" top="177" />
         <Size width="203" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public abstract void publish_state(uint16_t state)</Member>
@@ -196,7 +196,7 @@
       <Entity type="Class">
         <Name>ModbusFrameDetectorFactory</Name>
         <Access>Public</Access>
-        <Location left="1048" top="1512" />
+        <Location left="1045" top="1441" />
         <Size width="404" height="162" />
         <Collapsed>False</Collapsed>
         <Member type="Property">private static IModbusRequestDetector request_detector_ { get; set; }</Member>
@@ -209,7 +209,7 @@
       <Entity type="Class">
         <Name>IModbusRequestDetector</Name>
         <Access>Public</Access>
-        <Location left="992" top="934" />
+        <Location left="1005" top="934" />
         <Size width="188" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public abstract ModbusFrame detect_request()</Member>
@@ -218,7 +218,7 @@
       <Entity type="Class">
         <Name>IModbusResponseDetector</Name>
         <Access>Public</Access>
-        <Location left="1306" top="934" />
+        <Location left="1287" top="934" />
         <Size width="195" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public abstract ModbusFrame detect_response()</Member>
@@ -227,7 +227,7 @@
       <Entity type="Class">
         <Name>IModbusBinarySensor</Name>
         <Access>Public</Access>
-        <Location left="318" top="89" />
+        <Location left="318" top="177" />
         <Size width="184" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public abstract void publish_state(bool state)</Member>
@@ -240,12 +240,12 @@
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1462</X>
-          <Y>309</Y>
+          <X>1460</X>
+          <Y>397</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1556</X>
-          <Y>309</Y>
+          <X>1456</X>
+          <Y>397</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -253,6 +253,10 @@
       <Relationship type="Generalization" first="2" second="1">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1581</X>
+          <Y>467</Y>
+        </BendPoint>
       </Relationship>
       <Relationship type="Generalization" first="3" second="4">
         <StartOrientation>Vertical</StartOrientation>
@@ -263,7 +267,7 @@
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1098</X>
-          <Y>381</Y>
+          <Y>469</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="3" second="0">
@@ -292,12 +296,12 @@
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>938</X>
-          <Y>584</Y>
+          <X>939</X>
+          <Y>571</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>682</X>
-          <Y>397</Y>
+          <Y>485</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
@@ -308,8 +312,8 @@
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>894</X>
-          <Y>791</Y>
+          <X>941</X>
+          <Y>792</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -323,7 +327,7 @@
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>478</X>
-          <Y>388</Y>
+          <Y>476</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
@@ -337,8 +341,8 @@
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1908</X>
-          <Y>1262</Y>
+          <X>1817</X>
+          <Y>1226</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1593</X>
@@ -355,8 +359,8 @@
           <Y>784</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1752</X>
-          <Y>984</Y>
+          <X>1674</X>
+          <Y>985</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -373,11 +377,11 @@
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>629</X>
-          <Y>634</Y>
+          <Y>633</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>629</X>
-          <Y>377</Y>
+          <Y>465</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
@@ -387,11 +391,11 @@
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>408</X>
-          <Y>629</Y>
+          <Y>635</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>408</X>
-          <Y>359</Y>
+          <Y>447</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
@@ -404,8 +408,8 @@
           <Y>690</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>910</X>
-          <Y>693</Y>
+          <X>957</X>
+          <Y>694</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
@@ -418,8 +422,8 @@
           <Y>746</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>898</X>
-          <Y>746</Y>
+          <X>945</X>
+          <Y>747</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -428,12 +432,12 @@
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1374</X>
+          <X>1344</X>
           <Y>1181</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1288</X>
-          <Y>1262</Y>
+          <Y>1227</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -442,12 +446,12 @@
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1146</X>
+          <X>1161</X>
           <Y>1181</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1200</X>
-          <Y>1262</Y>
+          <Y>1227</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -475,7 +479,7 @@
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
           <X>1115</X>
-          <Y>1357</Y>
+          <Y>1322</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -486,12 +490,12 @@
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>246</X>
-          <Y>713</Y>
+          <X>293</X>
+          <Y>714</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>107</X>
-          <Y>788</Y>
+          <X>154</X>
+          <Y>789</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -514,7 +518,7 @@
           <Y>865</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1120</X>
+          <X>1133</X>
           <Y>909</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -530,7 +534,7 @@
           <Y>866</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1354</X>
+          <X>1335</X>
           <Y>909</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -546,8 +550,8 @@
           <Y>818</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1023</X>
-          <Y>1566</Y>
+          <X>1020</X>
+          <Y>1495</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -558,8 +562,8 @@
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1060</X>
-          <Y>1477</Y>
+          <X>1057</X>
+          <Y>1406</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -570,8 +574,8 @@
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1432</X>
-          <Y>1487</Y>
+          <X>1429</X>
+          <Y>1416</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -582,7 +586,7 @@
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1179</X>
+          <X>1194</X>
           <Y>1052</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -594,8 +598,8 @@
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1635</X>
-          <Y>1110</Y>
+          <X>1557</X>
+          <Y>1111</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
