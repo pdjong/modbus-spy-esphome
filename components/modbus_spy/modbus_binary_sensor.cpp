@@ -15,6 +15,14 @@ namespace modbus_spy {
 
 static const char *TAG = "ModbusBinarySensor";
 
+ModbusBinarySensor::ModbusBinarySensor() {
+  this->sensor_ = new binary_sensor::BinarySensor;
+}
+
+ModbusBinarySensor::~ModbusBinarySensor() {
+  delete this->sensor_;
+}
+
 void ModbusBinarySensor::publish_state(bool state) {
   ESP_LOGD(TAG, "About to publish state: %d", state);
   this->sensor_->publish_state(state);

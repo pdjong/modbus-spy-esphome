@@ -20,9 +20,8 @@ class IModbusBinarySensor {
 
 class ModbusBinarySensor : public IModbusBinarySensor {
  public:
-  ModbusBinarySensor() {
-    this->sensor_ = new binary_sensor::BinarySensor;
-  }
+  ModbusBinarySensor();
+  ~ModbusBinarySensor();
 
   virtual void publish_state(bool state) override;
   binary_sensor::BinarySensor* get_sensor() const;

@@ -20,9 +20,8 @@ class IModbusRegisterSensor {
 
 class ModbusRegisterSensor : public IModbusRegisterSensor {
  public:
-  ModbusRegisterSensor() {
-    this->sensor_ = new sensor::Sensor;
-  }
+  ModbusRegisterSensor();
+  ~ModbusRegisterSensor();
 
   virtual void publish_state(uint16_t state) override;
   sensor::Sensor* get_sensor() const;

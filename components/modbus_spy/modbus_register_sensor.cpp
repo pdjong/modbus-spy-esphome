@@ -15,6 +15,14 @@ namespace modbus_spy {
 
 static const char *TAG = "ModbusRegisterSensor";
 
+ModbusRegisterSensor::ModbusRegisterSensor() {
+  this->sensor_ = new sensor::Sensor;
+}
+
+ModbusRegisterSensor::~ModbusRegisterSensor() {
+  delete this->sensor_;
+}
+
 void ModbusRegisterSensor::publish_state(uint16_t state) {
   ESP_LOGD(TAG, "About to publish state: %d", state);
   this->sensor_->publish_state(static_cast<float>(state));
