@@ -84,11 +84,11 @@ void test_modbus_sniffer_with_actual_detectors_good() {
 
   // Act
   modbus_sniffer.start_sniffing();
-  delay(1500);
+  delay(15);
   modbus_sniffer.stop_sniffing();
   uart_task_should_stop = true;
   // Delay 15 ms to make sure that the fake uart and sniffer tasks are done
-  delay(1500);
+  delay(1200);
 
   // Assert
   vector<PublishedData*> *published_data = fake_data_publisher.get_published_data();
@@ -110,7 +110,7 @@ void test_modbus_sniffer_with_actual_detectors_no_data() {
   modbus_sniffer.start_sniffing();
   delay(5);
   modbus_sniffer.stop_sniffing();
-  // Delay 15 ms to make sure that the sniffer task is done
+  // Delay to make sure that the sniffer task is done
   delay(1200);
 
   // Assert
@@ -128,9 +128,9 @@ int runUnityTests(void) {
   UNITY_BEGIN();
 
   // ModbusSniffer tests
-  // RUN_TEST(test_modbus_sniffer_with_fake_detectors_good);
+  RUN_TEST(test_modbus_sniffer_with_fake_detectors_good);
   RUN_TEST(test_modbus_sniffer_with_actual_detectors_good);
-  // RUN_TEST(test_modbus_sniffer_with_actual_detectors_no_data);
+  RUN_TEST(test_modbus_sniffer_with_actual_detectors_no_data);
 
   // CRC generation tool :P
   // RUN_TEST(generate_crc);
