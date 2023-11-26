@@ -1,6 +1,6 @@
 substitutions:
-  device_name: modbus-spy-new-sw-dev
-  friendly_name: Modbus Spy New SW Dev
+  device_name: daalderop
+  friendly_name: Daalderop
   time_timezone: "Europe/Amsterdam"
 
 esphome:
