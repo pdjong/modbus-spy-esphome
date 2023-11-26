@@ -55,7 +55,7 @@ void ModbusDataPublisher::add_binary_sensor(
 
 std::map<uint16_t, IModbusRegisterSensor*>* ModbusDataPublisher::get_register_sensors_for_device(uint8_t device_address) {
   DeviceSensors *sensors_for_device = get_sensors_for_device(device_address);
-std::map<uint16_t, IModbusRegisterSensor*>* register_sensors_for_device = sensors_for_device->register_sensors_;
+  std::map<uint16_t, IModbusRegisterSensor*>* register_sensors_for_device = sensors_for_device->register_sensors_;
   if (nullptr == register_sensors_for_device) {
     register_sensors_for_device = new std::map<uint16_t, IModbusRegisterSensor*>;
     sensors_for_device->register_sensors_ = register_sensors_for_device;
