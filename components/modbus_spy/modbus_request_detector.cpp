@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <Arduino.h>
 #ifndef UNIT_TEST
 #include "esphome/core/datatypes.h"
@@ -14,6 +16,11 @@ static const char *TAG = "ModbusRequestDetector";
 
 ModbusRequestDetector::ModbusRequestDetector(IUartInterface* uart_interface) : 
   uart_interface_(uart_interface) {
+  const uint32_t baud_rate = uart_interface->get_baud_rate();
+  const float us_per_bit = 1000000.0f / baud_rate;
+  const uint8_t bits_per_byte = 11;
+  const float us_per_byte = bits_per_byte * us_per_bit;
+  this->max_time_between_bytes_in_us_ = static_cast<uint16_t>(round(1.5 * us_per_byte));
 }
 
 ModbusFrame* ModbusRequestDetector::detect_request() {
@@ -147,7 +154,7 @@ bool ModbusRequestDetector::read_next_byte(uint8_t* byte) {
     // Next byte didn't arrive yet. Wait for it, with a timeout.
     bool waiting_too_long { false };
     do {
-      waiting_too_long = (micros() - this->time_last_byte_received_) > MAX_TIME_BETWEEN_BYTES_IN_US;
+      waiting_too_long = (micros() - this->time_last_byte_received_) > this->max_time_between_bytes_in_us_;
       delayMicroseconds(100);
     } while ((this->uart_interface_->available() == 0) && !waiting_too_long);
     if (this->uart_interface_->available() == 0) {
