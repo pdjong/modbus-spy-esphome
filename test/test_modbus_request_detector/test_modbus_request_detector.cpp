@@ -278,10 +278,10 @@ void test_modbus_request_detector_request_function_3_bytes_coming_in_live_lower_
   // Arrange
   FakeUartInterface fake_uart_interface;
   uint8_t fake_data[] = { 0x0B, 0x03, 0x04, 0xAF, 0x00, 0x1E, 0xF4, 0x79 };
+  fake_uart_interface.set_baud_rate(4800);
   ModbusRequestDetector modbus_request_detector(&fake_uart_interface);
   bool uart_task_should_stop = false;
   constexpr uint16_t BYTE_TIME_IN_US_FOR_BAUD_RATE_4800 = 2292;
-  fake_uart_interface.set_baud_rate(4800);
   FakeUartInterfaceTaskArgs args = { 
     .uart_interface = &fake_uart_interface,
     .initial_delay_in_ms = 0,
