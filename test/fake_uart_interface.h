@@ -81,7 +81,24 @@ void fake_uart_interface_task(void* param) {
   }
   size_t next_byte_index { 0 };
   while (next_byte_index < args->len_of_data_to_return) {
-    delayMicroseconds(args->delay_between_bytes_in_us);
+    uint16_t delay_remaining_for_next_byte = args->delay_between_bytes_in_us;
+    const uint16_t MAX_DELAY_PER_LOOP_IN_US = 500;
+    while (delay_remaining_for_next_byte > 0) {
+      uint16_t actual_delay_this_loop = delay_remaining_for_next_byte;
+      if (delay_remaining_for_next_byte > MAX_DELAY_PER_LOOP_IN_US) {
+        actual_delay_this_loop = MAX_DELAY_PER_LOOP_IN_US;
+      }
+      delayMicroseconds(actual_delay_this_loop);
+      if (delay_remaining_for_next_byte > actual_delay_this_loop) {
+        delay_remaining_for_next_byte -= actual_delay_this_loop;
+      } else {
+        delay_remaining_for_next_byte = 0;
+      }
+      if (*args->should_stop) {
+        vTaskDelete(NULL);
+        break;
+      }
+    }
     if (*args->should_stop) {
       vTaskDelete(NULL);
       break;
