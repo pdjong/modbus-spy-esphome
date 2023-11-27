@@ -38,7 +38,7 @@ ModbusFrame* ModbusRequestDetector::detect_request() {
       return nullptr;
     }
   }
-  this->time_last_byte_received_ = millis();
+  this->time_last_byte_received_ = micros();
   uint8_t address { 0 };
   if (!read_next_byte(&address)) {
     return nullptr;
@@ -147,8 +147,8 @@ bool ModbusRequestDetector::read_next_byte(uint8_t* byte) {
     // Next byte didn't arrive yet. Wait for it, with a timeout.
     bool waiting_too_long { false };
     do {
+      waiting_too_long = (micros() - this->time_last_byte_received_) > MAX_TIME_BETWEEN_BYTES_IN_US;
       delayMicroseconds(100);
-      waiting_too_long = (millis() - this->time_last_byte_received_) > MAX_TIME_BETWEEN_BYTES_IN_MS;
     } while ((this->uart_interface_->available() == 0) && !waiting_too_long);
     if (this->uart_interface_->available() == 0) {
       // Still nothing after waiting, so no byte in time...
@@ -157,7 +157,7 @@ bool ModbusRequestDetector::read_next_byte(uint8_t* byte) {
   }
   bool is_byte_received = this->uart_interface_->read_byte(byte);
   if (is_byte_received) {
-    this->time_last_byte_received_ = millis();
+    this->time_last_byte_received_ = micros();
   }
   return is_byte_received;
 }
