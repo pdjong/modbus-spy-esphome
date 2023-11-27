@@ -13,42 +13,46 @@
 using std::queue;
 
 class FakeUartInterface : public esphome::modbus_spy::IUartInterface {
-  public:
-    virtual bool read_byte(uint8_t* data) {
-      if (0 == this->fake_data_to_return_.size()) {
-        return false;
-      } else {
-        *data = this->fake_data_to_return_.front();
-        this->fake_data_to_return_.pop();
-        return true;
-      }
-    }
-
-    virtual bool read_array(uint8_t* data, size_t len) {
-      for (size_t i = 0; i < len; ++i) {
-        if (this->fake_data_to_return_.empty()) {
-          break;
-        } else {
-          *data++ = this->fake_data_to_return_.front();
-          this->fake_data_to_return_.pop();
-        }
-      }
+ public:
+  virtual bool read_byte(uint8_t* data) {
+    if (0 == this->fake_data_to_return_.size()) {
+      return false;
+    } else {
+      *data = this->fake_data_to_return_.front();
+      this->fake_data_to_return_.pop();
       return true;
     }
+  }
 
-    virtual int available() const {
-      return this->fake_data_to_return_.size();
-    }
-
-    // Access / configure methods
-    void set_fake_data_to_return(const uint8_t* fake_data, size_t len) {
-      for (size_t i = 0; i < len; ++i) {
-        this->fake_data_to_return_.push(fake_data[i]);
+  virtual bool read_array(uint8_t* data, size_t len) {
+    for (size_t i = 0; i < len; ++i) {
+      if (this->fake_data_to_return_.empty()) {
+        break;
+      } else {
+        *data++ = this->fake_data_to_return_.front();
+        this->fake_data_to_return_.pop();
       }
     }
+    return true;
+  }
 
-  protected:
-    queue<uint8_t> fake_data_to_return_;
+  virtual int available() const {
+    return this->fake_data_to_return_.size();
+  }
+
+  // Access / configure methods
+  void set_fake_data_to_return(const uint8_t* fake_data, size_t len) {
+    for (size_t i = 0; i < len; ++i) {
+      this->fake_data_to_return_.push(fake_data[i]);
+    }
+  }
+
+  virtual uint32_t get_baud_rate() const override {
+    return 19200;
+  }
+
+ protected:
+  queue<uint8_t> fake_data_to_return_;
 };
 
 typedef struct FakeUartInterfaceTaskArgs {

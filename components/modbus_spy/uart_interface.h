@@ -14,6 +14,7 @@ class IUartInterface {
  public:
   virtual bool read_byte(uint8_t* data) = 0;
   virtual int available() const = 0;
+  virtual uint32_t get_baud_rate() const = 0;
 };
 
 } //namespace modbus_spy
