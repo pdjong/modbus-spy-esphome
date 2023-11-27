@@ -48,11 +48,16 @@ class FakeUartInterface : public esphome::modbus_spy::IUartInterface {
   }
 
   virtual uint32_t get_baud_rate() const override {
-    return 19200;
+    return this->baud_rate_;
+  }
+
+  void set_baud_rate(uint32_t baud_rate) {
+    this->baud_rate_ = baud_rate;
   }
 
  protected:
   queue<uint8_t> fake_data_to_return_;
+  uint32_t baud_rate_ { 19200 };
 };
 
 typedef struct FakeUartInterfaceTaskArgs {
