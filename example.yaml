@@ -315,6 +315,7 @@ binary_sensor:
     register_address: 41213
   - platform: modbus_spy
     name: "Heating Switch"
+    icon: "mdi:fire"
     device_address: 0x0B
     register_address: 41215
   - platform: modbus_spy
@@ -322,7 +323,8 @@ binary_sensor:
     device_address: 0x0B
     register_address: 41306    
   - platform: template
-    name: Defrost
+    name: "Defrost"
+    icon: "mdi:snowflake-alert"
     lambda: |-
       return (id(defrost_value1).state == 68 && (id(defrost_value2).state == 1 || id(defrost_value3).state == 2048)) || 
              (id(defrost_value1).state == 4);
