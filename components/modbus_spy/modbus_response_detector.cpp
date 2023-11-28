@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <Arduino.h>
 #ifndef UNIT_TEST
 #include "esphome/core/helpers.h"
@@ -12,7 +14,12 @@ namespace modbus_spy {
 static const char *TAG = "ModbusResponseDetector";
 
 ModbusResponseDetector::ModbusResponseDetector(IUartInterface* uart_interface) :
-  uart_interface_(uart_interface) { 
+  uart_interface_(uart_interface) {
+  const uint32_t baud_rate = uart_interface->get_baud_rate();
+  const float us_per_bit = 1000000.0f / baud_rate;
+  const uint8_t bits_per_byte = 11;
+  const float us_per_byte = bits_per_byte * us_per_bit;
+  this->max_time_between_bytes_in_us_ = static_cast<uint16_t>(round(1.5 * us_per_byte));
 }
 
 ModbusFrame* ModbusResponseDetector::detect_response() {
@@ -39,7 +46,7 @@ ModbusFrame* ModbusResponseDetector::detect_response() {
       return nullptr;
     }
   }
-  this->time_last_byte_received_ = millis();
+  this->time_last_byte_received_ = micros();
   uint8_t address { 0 };
   if (!read_next_byte(&address)) {
     return nullptr;
@@ -137,7 +144,7 @@ bool ModbusResponseDetector::read_next_byte(uint8_t* byte) {
     bool waiting_too_long { false };
     do {
       delayMicroseconds(100);
-      waiting_too_long = (millis() - this->time_last_byte_received_) > MAX_TIME_BETWEEN_BYTES_IN_MS;
+      waiting_too_long = (micros() - this->time_last_byte_received_) > this->max_time_between_bytes_in_us_;
     } while ((this->uart_interface_->available() == 0) && !waiting_too_long);
     if (this->uart_interface_->available() == 0) {
       // Still nothing after waiting, so no byte in time...
@@ -146,7 +153,7 @@ bool ModbusResponseDetector::read_next_byte(uint8_t* byte) {
   }
   bool is_byte_received = this->uart_interface_->read_byte(byte);
   if (is_byte_received) {
-    this->time_last_byte_received_ = millis();
+    this->time_last_byte_received_ = micros();
   }
   return is_byte_received;
 }

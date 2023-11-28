@@ -21,7 +21,6 @@ class IModbusResponseDetector {
 class ModbusResponseDetector : public IModbusResponseDetector {
  private:
   static const uint16_t MAX_TIME_BETWEEN_REQUEST_AND_RESPONSE_IN_MS = 500;
-  static const uint8_t MAX_TIME_BETWEEN_BYTES_IN_MS = 3;
 
  public:
   ModbusResponseDetector(IUartInterface* uart_interface);
@@ -35,6 +34,7 @@ class ModbusResponseDetector : public IModbusResponseDetector {
  protected:
   IUartInterface* uart_interface_ { nullptr };
   uint32_t time_last_byte_received_ { 0 };
+  uint16_t max_time_between_bytes_in_us_ { 860 };
 
  private:
   bool read_next_byte(uint8_t* byte);
