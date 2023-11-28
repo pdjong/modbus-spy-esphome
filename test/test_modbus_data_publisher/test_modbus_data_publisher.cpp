@@ -14,23 +14,23 @@ using namespace esphome::modbus_spy;
 void test_add_register_sensor_and_find_same_sensor_returns_sensor() {
   // Arrange
   TestableModbusDataPublisher data_publisher;
-  FakeModbusRegisterSensor fake_register_sensor;
+  FakeModbusRegisterSensor *fake_register_sensor = new FakeModbusRegisterSensor;
 
   // Act
-  data_publisher.add_register_sensor(0x01, 0x1234, &fake_register_sensor);
+  data_publisher.add_register_sensor(0x01, 0x1234, fake_register_sensor);
   IModbusRegisterSensor *found_register_sensor = data_publisher.call_find_register_sensor(0x01, 0x1234);
 
   // Assert
-  TEST_ASSERT_EQUAL_PTR(&fake_register_sensor, found_register_sensor);
+  TEST_ASSERT_EQUAL_PTR(fake_register_sensor, found_register_sensor);
 }
 
 void test_add_register_sensor_and_find_for_different_device_returns_nullptr() {
   // Arrange
   TestableModbusDataPublisher data_publisher;
-  FakeModbusRegisterSensor fake_register_sensor;
+  FakeModbusRegisterSensor *fake_register_sensor = new FakeModbusRegisterSensor;
 
   // Act
-  data_publisher.add_register_sensor(0x01, 0x1234, &fake_register_sensor);
+  data_publisher.add_register_sensor(0x01, 0x1234, fake_register_sensor);
   IModbusRegisterSensor *found_register_sensor = data_publisher.call_find_register_sensor(0x02, 0x1234);
 
   // Assert
@@ -40,10 +40,10 @@ void test_add_register_sensor_and_find_for_different_device_returns_nullptr() {
 void test_add_register_sensor_and_find_for_different_register_address_returns_nullptr() {  
   // Arrange
   TestableModbusDataPublisher data_publisher;
-  FakeModbusRegisterSensor fake_register_sensor;
+  FakeModbusRegisterSensor *fake_register_sensor = new FakeModbusRegisterSensor;
 
   // Act
-  data_publisher.add_register_sensor(0x01, 0x1234, &fake_register_sensor);
+  data_publisher.add_register_sensor(0x01, 0x1234, fake_register_sensor);
   IModbusRegisterSensor *found_register_sensor = data_publisher.call_find_register_sensor(0x01, 0x1235);
 
   // Assert
@@ -53,43 +53,43 @@ void test_add_register_sensor_and_find_for_different_register_address_returns_nu
 void test_add_multiple_register_sensors_same_register_address_different_devices_find_returns_correct_sensor() {
   // Arrange
   TestableModbusDataPublisher data_publisher;
-  FakeModbusRegisterSensor fake_register_sensor1;
-  FakeModbusRegisterSensor fake_register_sensor2;
+  FakeModbusRegisterSensor *fake_register_sensor1 = new FakeModbusRegisterSensor;
+  FakeModbusRegisterSensor *fake_register_sensor2 = new FakeModbusRegisterSensor;
 
   // Act
-  data_publisher.add_register_sensor(0x01, 0x1234, &fake_register_sensor1);
-  data_publisher.add_register_sensor(0x02, 0x1234, &fake_register_sensor2);
+  data_publisher.add_register_sensor(0x01, 0x1234, fake_register_sensor1);
+  data_publisher.add_register_sensor(0x02, 0x1234, fake_register_sensor2);
   IModbusRegisterSensor *found_register_sensor2 = data_publisher.call_find_register_sensor(0x02, 0x1234);
   IModbusRegisterSensor *found_register_sensor1 = data_publisher.call_find_register_sensor(0x01, 0x1234);
 
   // Assert
-  TEST_ASSERT_EQUAL_PTR(&fake_register_sensor1, found_register_sensor1);
-  TEST_ASSERT_EQUAL_PTR(&fake_register_sensor2, found_register_sensor2);
+  TEST_ASSERT_EQUAL_PTR(fake_register_sensor1, found_register_sensor1);
+  TEST_ASSERT_EQUAL_PTR(fake_register_sensor2, found_register_sensor2);
 }
 
 void test_add_multiple_register_sensors_multiple_per_device_find_returns_correct_sensor() {
   // Arrange
   TestableModbusDataPublisher data_publisher;
-  FakeModbusRegisterSensor fake_register_sensor_device1_reg_addr1;
-  FakeModbusRegisterSensor fake_register_sensor_device1_reg_addr2;
-  FakeModbusRegisterSensor fake_register_sensor_device2_reg_addr1;
-  FakeModbusRegisterSensor fake_register_sensor_device2_reg_addr2;
+  FakeModbusRegisterSensor *fake_register_sensor_device1_reg_addr1 = new FakeModbusRegisterSensor;
+  FakeModbusRegisterSensor *fake_register_sensor_device1_reg_addr2 = new FakeModbusRegisterSensor;
+  FakeModbusRegisterSensor *fake_register_sensor_device2_reg_addr1 = new FakeModbusRegisterSensor;
+  FakeModbusRegisterSensor *fake_register_sensor_device2_reg_addr2 = new FakeModbusRegisterSensor;
 
   // Act
-  data_publisher.add_register_sensor(0x01, 0x0A01, &fake_register_sensor_device1_reg_addr1);
-  data_publisher.add_register_sensor(0x01, 0x0A02, &fake_register_sensor_device1_reg_addr2);
-  data_publisher.add_register_sensor(0x02, 0x0A01, &fake_register_sensor_device2_reg_addr1);
-  data_publisher.add_register_sensor(0x02, 0x0A02, &fake_register_sensor_device2_reg_addr2);
+  data_publisher.add_register_sensor(0x01, 0x0A01, fake_register_sensor_device1_reg_addr1);
+  data_publisher.add_register_sensor(0x01, 0x0A02, fake_register_sensor_device1_reg_addr2);
+  data_publisher.add_register_sensor(0x02, 0x0A01, fake_register_sensor_device2_reg_addr1);
+  data_publisher.add_register_sensor(0x02, 0x0A02, fake_register_sensor_device2_reg_addr2);
   IModbusRegisterSensor *found_register_sensor_device1_reg_addr1 = data_publisher.call_find_register_sensor(0x01, 0x0A01);
   IModbusRegisterSensor *found_register_sensor_device1_reg_addr2 = data_publisher.call_find_register_sensor(0x01, 0x0A02);
   IModbusRegisterSensor *found_register_sensor_device2_reg_addr1 = data_publisher.call_find_register_sensor(0x02, 0x0A01);
   IModbusRegisterSensor *found_register_sensor_device2_reg_addr2 = data_publisher.call_find_register_sensor(0x02, 0x0A02);
 
   // Assert
-  TEST_ASSERT_EQUAL_PTR(&fake_register_sensor_device1_reg_addr1, found_register_sensor_device1_reg_addr1);
-  TEST_ASSERT_EQUAL_PTR(&fake_register_sensor_device1_reg_addr2, found_register_sensor_device1_reg_addr2);
-  TEST_ASSERT_EQUAL_PTR(&fake_register_sensor_device2_reg_addr1, found_register_sensor_device2_reg_addr1);
-  TEST_ASSERT_EQUAL_PTR(&fake_register_sensor_device2_reg_addr2, found_register_sensor_device2_reg_addr2);
+  TEST_ASSERT_EQUAL_PTR(fake_register_sensor_device1_reg_addr1, found_register_sensor_device1_reg_addr1);
+  TEST_ASSERT_EQUAL_PTR(fake_register_sensor_device1_reg_addr2, found_register_sensor_device1_reg_addr2);
+  TEST_ASSERT_EQUAL_PTR(fake_register_sensor_device2_reg_addr1, found_register_sensor_device2_reg_addr1);
+  TEST_ASSERT_EQUAL_PTR(fake_register_sensor_device2_reg_addr2, found_register_sensor_device2_reg_addr2);
 }
 
 void test_publish_data_function_3() {
@@ -100,19 +100,19 @@ void test_publish_data_function_3() {
   const uint16_t register_value = 0x3210;
   ModbusDataPublisher data_publisher;
   vector<ModbusData*> *data = new vector<ModbusData*>;
-  ModbusData modbus_data;
-  modbus_data.address = register_address;
-  modbus_data.value = 0x3210;
-  data->push_back(&modbus_data);
+  ModbusData *modbus_data = new ModbusData;
+  modbus_data->address = register_address;
+  modbus_data->value = 0x3210;
+  data->push_back(modbus_data);
 
-  FakeModbusRegisterSensor fakeRegisterSensor;
-  data_publisher.add_register_sensor(device_address, register_address + 40001, &fakeRegisterSensor);
+  FakeModbusRegisterSensor *fakeRegisterSensor = new FakeModbusRegisterSensor;
+  data_publisher.add_register_sensor(device_address, register_address + 40001, fakeRegisterSensor);
 
   // Act
   data_publisher.publish_data(device_address, function, data);
 
   // Assert
-  vector<uint16_t> *published_states = fakeRegisterSensor.get_published_states();
+  vector<uint16_t> *published_states = fakeRegisterSensor->get_published_states();
   TEST_ASSERT_EQUAL_UINT8(1, published_states->size());
   uint16_t expected_value = register_value;
   uint16_t actual_value = published_states->at(0);

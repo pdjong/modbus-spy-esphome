@@ -15,24 +15,24 @@ ModbusDataPublisher::ModbusDataPublisher() {
 }
 
 ModbusDataPublisher::~ModbusDataPublisher() {
-  for (auto pair : this->device_sensors_) {
-    DeviceSensors *device_sensors = pair.second;
-    if (device_sensors->binary_sensors_ != nullptr) {
-      for (auto sensor_register_pair : *device_sensors->binary_sensors_) {
-        IModbusBinarySensor *binary_sensor = sensor_register_pair.second;
-        delete binary_sensor;
-      }
-      delete device_sensors->binary_sensors_;
-    }
-    if (device_sensors->register_sensors_ != nullptr) {
-      for (auto sensor_register_pair : *device_sensors->register_sensors_) {
-        IModbusRegisterSensor *register_sensor = sensor_register_pair.second;
-        delete register_sensor;
-      }
-      delete device_sensors->register_sensors_;
-    }
-    delete device_sensors;
-  }
+  // for (auto& pair : this->device_sensors_) {
+  //   DeviceSensors *device_sensors = pair.second;
+  //   if (device_sensors->binary_sensors_ != nullptr) {
+  //     for (auto& sensor_register_pair : *device_sensors->binary_sensors_) {
+  //       IModbusBinarySensor *binary_sensor = sensor_register_pair.second;
+  //       delete binary_sensor;
+  //     }
+  //     delete device_sensors->binary_sensors_;
+  //   }
+  //   if (device_sensors->register_sensors_ != nullptr) {
+  //     for (auto& sensor_register_pair : *device_sensors->register_sensors_) {
+  //       IModbusRegisterSensor *register_sensor = sensor_register_pair.second;
+  //       delete register_sensor;
+  //     }
+  //     delete device_sensors->register_sensors_;
+  //   }
+  //   delete device_sensors;
+  // }
 }
 
 void ModbusDataPublisher::add_register_sensor(
