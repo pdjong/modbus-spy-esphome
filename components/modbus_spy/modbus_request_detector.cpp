@@ -17,10 +17,14 @@ static const char *TAG = "ModbusRequestDetector";
 ModbusRequestDetector::ModbusRequestDetector(IUartInterface* uart_interface) : 
   uart_interface_(uart_interface) {
   const uint32_t baud_rate = uart_interface->get_baud_rate();
-  const float us_per_bit = 1000000.0f / baud_rate;
-  const uint8_t bits_per_byte = 11;
-  const float us_per_byte = bits_per_byte * us_per_bit;
-  this->max_time_between_bytes_in_us_ = static_cast<uint16_t>(round(1.5 * us_per_byte));
+  if (baud_rate <= 19200) {
+    const float us_per_bit = 1000000.0f / baud_rate;
+    constexpr uint8_t bits_per_byte = 11;
+    const float us_per_byte = bits_per_byte * us_per_bit;
+    this->max_time_between_bytes_in_us_ = static_cast<uint16_t>(round(1.5 * us_per_byte));
+  } else {
+   this->max_time_between_bytes_in_us_ = MIN_TIMEOUT_BETWEEN_BYTES_IN_US;
+  }
 }
 
 ModbusFrame* ModbusRequestDetector::detect_request() {

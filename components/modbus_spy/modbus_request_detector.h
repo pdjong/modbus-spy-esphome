@@ -21,6 +21,7 @@ class IModbusRequestDetector {
 class ModbusRequestDetector : public IModbusRequestDetector {
  private:
   static const uint32_t MAX_TIME_TO_WAIT_FOR_REQUEST_IN_MS = 500;
+  static const uint16_t MIN_TIMEOUT_BETWEEN_BYTES_IN_US = 750;
 
  public:
   ModbusRequestDetector(IUartInterface* uart_interface);
