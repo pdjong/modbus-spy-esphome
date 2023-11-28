@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <Arduino.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -269,6 +271,77 @@ void test_modbus_response_detector_unsupported_function_results_in_nullptr() {
   TEST_ASSERT_TRUE(nullptr == response_frame);
 }
 
+void test_modbus_response_detector_receive_timeout_in_between_characters_results_in_nullptr() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x02, 0x03, 0x02, 0x34, 0x56, 0x6A, 0xBA };
+  ModbusResponseDetector modbus_response_detector(&fake_uart_interface);
+  bool uart_task_should_stop = false;
+  FakeUartInterfaceTaskArgs args = { 
+    .uart_interface = &fake_uart_interface,
+    .initial_delay_in_ms = 0,
+    .delay_between_bytes_in_us = static_cast<uint16_t>(round(1.8 * 573)),
+    .data_to_return = fake_data,
+    .len_of_data_to_return = 7,
+    .should_stop = &uart_task_should_stop
+  };
+  TaskHandle_t uart_task_handle { nullptr };
+  xTaskCreatePinnedToCore(fake_uart_interface_task,
+                    "fake_uart_interface_task", // name
+                    30000,                      // stack size (in words)
+                    &args,                      // input params
+                    1,                          // priority
+                    &uart_task_handle,          // Handle, not needed
+                    0                           // core
+  );
+
+  // Act
+  ModbusFrame *response_frame = modbus_response_detector.detect_response();
+  uart_task_should_stop = true;
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
+
+  // Assert
+  TEST_ASSERT_TRUE(nullptr == response_frame);
+}
+
+void test_modbus_response_detector_receive_timeout_in_between_characters_lower_baud_rate_results_in_nullptr() {
+  // Arrange
+  FakeUartInterface fake_uart_interface;
+  uint8_t fake_data[] = { 0x02, 0x03, 0x02, 0x34, 0x56, 0x6A, 0xBA };
+  fake_uart_interface.set_baud_rate(4800);
+  ModbusResponseDetector modbus_response_detector(&fake_uart_interface);
+  bool uart_task_should_stop = false;
+  constexpr uint16_t BYTE_TIME_IN_US = 2292;
+  constexpr uint16_t TOO_LONG_TIME_IN_BETWEEN_BYTES_IN_US = 1.8 * BYTE_TIME_IN_US;
+  FakeUartInterfaceTaskArgs args = { 
+    .uart_interface = &fake_uart_interface,
+    .initial_delay_in_ms = 0,
+    .delay_between_bytes_in_us = TOO_LONG_TIME_IN_BETWEEN_BYTES_IN_US,
+    .data_to_return = fake_data,
+    .len_of_data_to_return = 7,
+    .should_stop = &uart_task_should_stop
+  };
+  TaskHandle_t uart_task_handle { nullptr };
+  xTaskCreatePinnedToCore(fake_uart_interface_task,
+                    "fake_uart_interface_task", // name
+                    30000,                      // stack size (in words)
+                    &args,                      // input params
+                    1,                          // priority
+                    &uart_task_handle,          // Handle, not needed
+                    0                           // core
+  );
+
+  // Act
+  ModbusFrame *response_frame = modbus_response_detector.detect_response();
+  uart_task_should_stop = true;
+  // Delay 5 ms to make sure that the fake uart task is done
+  delay(5);
+
+  // Assert
+  TEST_ASSERT_TRUE(nullptr == response_frame);
+}
+
 void test_modbus_response_detector_response_function_1() {
   // Arrange
   FakeUartInterface fake_uart_interface;
@@ -370,7 +443,9 @@ int runUnityTests(void) {
   RUN_TEST(test_modbus_response_detector_wrong_crc_results_in_nullptr);
   RUN_TEST(test_modbus_response_detector_request_function_3_results_in_nullptr);
   RUN_TEST(test_modbus_response_detector_unsupported_function_results_in_nullptr);
-  
+  RUN_TEST(test_modbus_response_detector_receive_timeout_in_between_characters_results_in_nullptr);
+  RUN_TEST(test_modbus_response_detector_receive_timeout_in_between_characters_lower_baud_rate_results_in_nullptr);
+
   RUN_TEST(test_modbus_response_detector_response_function_1);
   RUN_TEST(test_modbus_response_detector_response_function_6);
 
