@@ -242,6 +242,7 @@ void test_modbus_request_detector_receive_timeout_in_between_characters_lower_ba
   // Arrange
   FakeUartInterface fake_uart_interface;
   uint8_t fake_data[] = { 0x0B, 0x03, 0x04, 0xAF, 0x00, 0x1E, 0xFF, 0xFF };
+  fake_uart_interface.set_baud_rate(4800);
   ModbusRequestDetector modbus_request_detector(&fake_uart_interface);
   bool uart_task_should_stop = false;
   constexpr uint16_t BYTE_TIME_IN_US = 2292;
