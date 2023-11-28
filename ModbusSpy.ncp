@@ -36,10 +36,11 @@
         <Name>ModbusSpy</Name>
         <Access>Public</Access>
         <Location left="964" top="543" />
-        <Size width="476" height="111" />
+        <Size width="476" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public ModbusRegisterSensor create_sensor(uint8_t device_address, uint16_t register_address)</Member>
         <Member type="Method">public BinarySensor create_binary_sensor(uint8_t device_address, uint16_t register_address)</Member>
+        <Member type="Method">public uint32_t get_baud_rate()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
@@ -115,11 +116,12 @@
       <Entity type="Class">
         <Name>IUartInterface</Name>
         <Access>Public</Access>
-        <Location left="1582" top="1015" />
-        <Size width="180" height="111" />
+        <Location left="1582" top="1009" />
+        <Size width="180" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public abstract bool read_byte(uint8_t data)</Member>
         <Member type="Method">public abstract int available()</Member>
+        <Member type="Method">public abstract uint32_t get_baud_rate()</Member>
         <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Class">
@@ -271,8 +273,6 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="3" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -283,18 +283,18 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>1237</X>
-          <Y>686</Y>
+          <Y>703</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="6">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -309,6 +309,8 @@
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -319,8 +321,6 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="10">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -354,8 +354,6 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="12">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -364,7 +362,7 @@
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1674</X>
-          <Y>985</Y>
+          <Y>979</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -377,8 +375,6 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -393,8 +389,6 @@
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="10">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -409,24 +403,20 @@
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="15">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>1009</X>
-          <Y>690</Y>
+          <Y>707</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>957</X>
-          <Y>694</Y>
+          <X>919</X>
+          <Y>706</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="15">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -441,8 +431,6 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="18" second="16">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -457,8 +445,6 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="17" second="16">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -473,16 +459,12 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="6" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -493,6 +475,8 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="8" second="16">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -503,6 +487,8 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="14">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -525,6 +511,8 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="5" second="22">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -539,6 +527,8 @@
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="23">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -553,6 +543,8 @@
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="21">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -567,6 +559,8 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="21" second="17">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -577,6 +571,8 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="21" second="18">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -587,6 +583,8 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="17" second="12">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -597,11 +595,13 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="18" second="12">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
           <X>1557</X>
-          <Y>1111</Y>
+          <Y>1105</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -705,8 +705,6 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="5" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -900,8 +898,6 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="9" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -916,8 +912,6 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -962,8 +956,6 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -974,16 +966,12 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -998,8 +986,6 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1014,8 +1000,6 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1030,8 +1014,6 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1046,8 +1028,6 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1062,6 +1042,8 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1076,8 +1058,6 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1092,8 +1072,6 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="12">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1116,6 +1094,8 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="9" second="13">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1126,6 +1106,8 @@ ModbusDataPublisher removes them from the heap in its destructor.</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="4">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1451,8 +1433,6 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
     </Entities>
     <Relationships>
       <Relationship type="Association" first="0" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1467,8 +1447,6 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1483,6 +1461,8 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="7" second="5">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1497,8 +1477,6 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="7" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1525,8 +1503,6 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="7" second="10">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1537,8 +1513,6 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1553,6 +1527,8 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1567,8 +1543,6 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="11">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1583,6 +1557,8 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="11">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1593,6 +1569,8 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="11">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1607,8 +1585,6 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1623,8 +1599,6 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1639,6 +1613,8 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1649,24 +1625,18 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="13">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="6" second="12">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="7" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1681,8 +1651,6 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="7" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1697,6 +1665,8 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="4">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1711,6 +1681,8 @@ The ModbusSniffer passes this list to the ModbusDataPublisher, which has a list 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
