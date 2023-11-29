@@ -30,8 +30,7 @@ logger:
     #ModbusSpy: WARN
 # Enable Home Assistant API
 api:
-  encryption:
-    key: "DYWW/4NFHUUChW2rbGIhJv7MME2MqROqOHKF4WblPHk="
+
 ota:
   password: "e5264b2500ef5b812b82d4342c5a60f6"
 
@@ -48,11 +47,11 @@ captive_portal:
 # Status LED of ESP
 status_led:
   pin: 
-    number: 33
+    number: GPIO19
 
 uart:
   baud_rate: 19200
-  rx_pin: 32
+  rx_pin: GPIO32
   parity: ODD
 
 modbus_spy:
@@ -319,27 +318,24 @@ binary_sensor:
     device_address: 0x0B
     register_address: 41215
   - platform: modbus_spy
-    name: "Three Way Valve"
+    name: "Three Way Valve State"
     device_address: 0x0B
     register_address: 41306    
+    on_state:
+      then:
+        - text_sensor.template.publish:
+            id: three_way_valve_text
+            state: !lambda |
+              if (x) 
+                return "Verwarming";
+              else
+                return "Tapwater";    
   - platform: template
     name: "Defrost"
     icon: "mdi:snowflake-alert"
     lambda: |-
       return (id(defrost_value1).state == 68 && (id(defrost_value2).state == 1 || id(defrost_value3).state == 2048)) || 
              (id(defrost_value1).state == 4);
-
-# decode20 = 0x083c -> 42109
-# decode24 = 0x0846 -> 42119
-# decode25 = 0x0847 -> 42120
-#
-#
-# binary_sensor:
-#   - platform: template
-#     name: defrost
-#     lambda: |-
-#       return (id(decode20).state == 68 && (id(decode24).state == 1 || id(decode25).state == 2048)) || (id(decode20).state == 4);
-              
 
 time:
   - platform: homeassistant
@@ -348,10 +344,33 @@ time:
     on_time_sync:
       - component.update: sensor_uptime_timestamp      
 
-# text_sensor:
-#   - platform: template
-#     id: three_way_valve_text
-#     name: modbus_spy_three_way_valve_text
+text_sensor:
+  - platform: debug
+    device:
+      name: "Device Info"
+    reset_reason:
+      name: "Reset Reason"
+  - platform: template
+    name: Three Way Valve
+    id: three_way_valve_text
+
+switch:
+  - platform: restart
+    name: ${friendly_name} Restart
+  - platform: factory_reset
+    name: ${friendly_name} Factory Reset
+  - platform: gpio
+    pin: GPIO22
+    name: Relais 1
+    id: relay1
+    interlock: [relay2]
+    interlock_wait_time: 5s
+  - platform: gpio
+    pin: GPIO23
+    name: Relais 2
+    id: relay2
+    interlock: [relay1]
+    interlock_wait_time: 5s
 
 debug:
   update_interval: 5s
