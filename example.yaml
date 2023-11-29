@@ -105,9 +105,16 @@ sensor:
     register_address: 41203
     filters:
       - offset: -3000
-      - multiply: .01          
+      - multiply: .01   
+    on_value:
+      then:
+        - sensor.template.publish:
+            id: heat_exchanger_delta_t   
+            state: !lambda |-
+              return x - id(heat_exchanger_water_inlet_temperature).state;
   - platform: modbus_spy
     name: "Heat Exchanger Water Inlet Temperature"
+    id: heat_exchanger_water_inlet_temperature
     device_class: "temperature"
     accuracy_decimals: 1
     state_class: "measurement"
@@ -117,7 +124,15 @@ sensor:
     register_address: 41204
     filters:
       - offset: -3000
-      - multiply: .01                        
+      - multiply: .01    
+  - platform: template
+    name: Heat Exchanger Delta T
+    id: heat_exchanger_delta_t  
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "K"
+    icon: "mdi:delta"                             
   - platform: modbus_spy
     name: "Indoor Coil Temperature"
     device_class: "temperature"
@@ -272,8 +287,6 @@ sensor:
     id: defrost_value3
     device_address: 0x02
     register_address: 42120        
-    
-
   - platform: debug
     free:
       name: Heap Free
