@@ -12,7 +12,6 @@ namespace modbus_spy {
 static const char *TAG = "ModbusDataSplitter";
 
 vector<ModbusData*>* ModbusDataSplitter::split_request_and_response_data(ModbusFrame* request, ModbusFrame* response) {
-  ESP_LOGD(TAG, "ModbusDataSplitter::split_request_and_response_data");
   vector<ModbusData*>* split_data { nullptr };
 
   if (!address_and_function_match(request, response)) {

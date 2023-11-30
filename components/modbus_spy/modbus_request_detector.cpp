@@ -28,7 +28,6 @@ ModbusRequestDetector::ModbusRequestDetector(IUartInterface* uart_interface) :
 }
 
 ModbusFrame* ModbusRequestDetector::detect_request() {
-  ESP_LOGD(TAG, "ModbusRequestDetector::detect_request");
 	//  1. Read the first byte. Assume it is the address
 	//  2. Read the second byte. Assume it is the function
 	//  If function 1-6:

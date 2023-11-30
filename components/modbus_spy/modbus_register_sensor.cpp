@@ -24,7 +24,7 @@ ModbusRegisterSensor::~ModbusRegisterSensor() {
 }
 
 void ModbusRegisterSensor::publish_state(uint16_t state) {
-  ESP_LOGD(TAG, "About to publish state: %d", state);
+  ESP_LOGV(TAG, "About to publish state: %d", state);
   this->sensor_->publish_state(static_cast<float>(state));
 }
 

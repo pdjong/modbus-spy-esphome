@@ -36,7 +36,6 @@ binary_sensor::BinarySensor* ModbusSpy::create_binary_sensor(uint8_t device_addr
 }
 
 void ModbusSpy::setup() {
-  ESP_LOGD(TAG, "ModbusSpy::setup");
   this->sniffer_->start_sniffing();
 }
 

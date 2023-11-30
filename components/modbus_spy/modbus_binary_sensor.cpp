@@ -24,7 +24,7 @@ ModbusBinarySensor::~ModbusBinarySensor() {
 }
 
 void ModbusBinarySensor::publish_state(bool state) {
-  ESP_LOGD(TAG, "About to publish state: %d", state);
+  ESP_LOGV(TAG, "About to publish state: %d", state);
   this->sensor_->publish_state(state);
 }
 
