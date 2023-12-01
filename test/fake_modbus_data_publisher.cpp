@@ -6,6 +6,10 @@
 
 using std::vector;
 
+FakeModbusDataPublisher::~FakeModbusDataPublisher() {
+  // TODO
+}
+
 void FakeModbusDataPublisher::publish_data(uint8_t device_address, uint8_t function, vector<ModbusData*>* data) {
   for (ModbusData* data_item : *data) {
     PublishedData *published_data = new PublishedData;

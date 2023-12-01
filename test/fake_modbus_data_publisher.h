@@ -23,6 +23,7 @@ class PublishedData {
 
 class FakeModbusDataPublisher : public IModbusDataPublisher {
  public:
+  virtual ~FakeModbusDataPublisher() override;
   virtual void publish_data(uint8_t device_address, uint8_t function, std::vector<ModbusData*>* data);
   virtual void add_register_sensor(uint8_t device_address, uint16_t register_address, IModbusRegisterSensor* register_sensor) override {}
   virtual void add_binary_sensor(uint8_t device_address, uint16_t register_address, IModbusBinarySensor* binary_sensor) override {}

@@ -11,6 +11,9 @@ namespace modbus_spy {
 
 static const char *TAG = "ModbusDataPublisher";
 
+IModbusDataPublisher::~IModbusDataPublisher() {
+}
+
 ModbusDataPublisher::ModbusDataPublisher(bool dump_not_configured_data) : 
   should_dump_not_configured_data_(dump_not_configured_data) {
 }
