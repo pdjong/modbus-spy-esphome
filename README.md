@@ -3,7 +3,7 @@
 ## What is this all about?
 
 This repository contains an integration for a Modbus spy in ESPHome.
-It provides access to data exchanged on a Modbus data bus.
+It provides access to data exchanged on a Modbus data bus without sending data on the bus itself.
 
 Originally it was intended to get live data from an Itho Daalderop HP-S95 fully electric heat pump to integrate with ESPHome in Home Assistant.
 
@@ -91,7 +91,7 @@ binary_sensor:
     register_address: 41213
 ```
 
-As you can see, the temperature sensors have a filter to offset by -3000 and then divide by 100.
+As you can see, the temperature sensors have a filter to offset by -3000 and then divide by 100. A value of 5380 results in 23,80 °C. 
 This is done because Itho Daalderop defined it like that, probably so that a wide range of negative and positive values with an accuracy of 0.01 °C is supported. 
 Note that this is just an example and it is required to put suitable filters in as needed.
 

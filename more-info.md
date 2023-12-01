@@ -1,13 +1,5 @@
 # modbus-spy-esphome
 
-### How to find the register addresses
-
-- Vendor documentation (if available)
-- Set log level to DEBUG  
-The component will log all registers it detects and supports, e.g.:  
-`Finding sensor for register address 42100, to publish value 5102`
-- Black magic
-
 ## Modbus
 
 A communications protocol that is very popular in industrial environments, but also used by devices like heat pumps and ventilation systems. For more information on Modbus see [Modbus on Wikipedia](https://en.wikipedia.org/wiki/Modbus), [Modbus website](https://modbus.org) or [the Modbus specs](https://modbus.org/specs.php) on that site.
@@ -23,7 +15,7 @@ The PCB contains a single RS-485 transceiver chip, only receives and does NOT tr
 
 This sw integration only supports Modbus based on RTU transmission mode. 
 It assumes a 2-wire bus on which both the client and servers send and receive. 
-Another possible bus topology is the 4-wire bus: this is two 2-wire buses in parallel, where one is used for client to servers communication, and another for the other way around. This is in principle not supported! All communication needs to come in on a single UART RX pin. One could of using a logic AND to combine two RX signals to a single signal, but this is a hypothetical solution to a problem I did not encounter yet. 
+Another possible bus topology is the 4-wire bus: this is two 2-wire buses in parallel, where one is used for client to servers communication, and another for the other way around. This is in principle not supported! All communication needs to come in on a single UART RX pin. One could think of using a logic AND to combine two RX signals to a single signal, but this is a hypothetical solution to a problem I did not encounter yet. 
 
 ### Modbus - Protocol
 
@@ -33,8 +25,8 @@ Example:
 1. To read out a range of registers from server X, the client sends a request on the bus that addresses server X, indicating it wants to read registers by using so-called function code 3, and indicates the range in the request.
 2. Server X sends a response containing its own address and function code 3, and the requested data.
 
-Modbus defines roughly two different types of data: single bits and 16-bit registers.
-Registers can be divided in Input Registers and Holding Registers, while single bits can be divided in Discrete Inputs and Coils.
+Modbus defines roughly two different types of data in its data model: single bits and 16-bit registers.
+Registers can be divided in Input Registers and Holding Registers, while single bits can be divided in Discrete Inputs and Coils. Each of these four types of storage has a dedicated range of addresses. When sending these addresses in a frame on the bus the addresses are converted according to so-called PDU (Protocol Data Unit) address rules and are zero-based.
 
 Applications can decide how to use those bits and registers: it is also possible to use a 16-bit register to store multiple 1-bit values, or combine two or more 16-bit registers to form bigger registers.
 
@@ -70,7 +62,7 @@ This means that if the client reads out holding registers, this integration is a
 Two types of data are supported: 
 - 16-bit values  
 These can be configured as a sensor
-- Single flag occupying an entire 16-bit register  
+- Single on-off flag occupying an entire 16-bit register  
 These can be configured as binary_sensor
 
 ### Unsupported Modbus features
@@ -78,6 +70,14 @@ These can be configured as binary_sensor
 Function codes other than 3 are currently not supported.
 
 Error and exception codes are not supported explicitly. If a response can be matched to a request, the data will be parsed. If not (e.g. if a server returns an error code) the request, response or request-response pair will be discarded.
+
+### How to find the register addresses
+
+- Vendor documentation (if available)
+- Set log level to DEBUG  
+The component will log all registers it detects and supports, e.g.:  
+`Finding sensor for register address 42100, to publish value 5102`
+- Black magic
 
 ## Structure of this repository
 
@@ -162,31 +162,29 @@ An example YAML file can be found in example.yaml
 
 ## Unit Testing - What does it look like
 
-Using PlatformIO one can execute the unit tests, with the following results (at moment of writing this):
-
-![Unit testing result](unit_testing_result.png)
+Using PlatformIO one can execute the unit tests, requiring an ESP32 connected to the PC (embedded tests).
 
 ## Design
 
 ### Design Overview
 
-See below diagram (taken from [design.ncp](https://github.com/pdjong/mbus-esphome/blob/main/design.ncp))
+See below diagram (taken from [design.ncp](https://github.com/pdjong/modbus-spy-esphome/blob/rewrite/ModbusSpy.ncp))
 
-MbusController is a Component that starts a FreeRTOS task in which it reads out the meter if required, and passes the read data to its MbusSensors. Those transform the raw binary data to a sensor value and then publish this value.
+ModbusSpy is a Component that delegates most of its responsibilities to the ModbusSniffer together with the ModbusDataPublisher. 
 
-MbusReader uses its DataLinkLayer to read out the meter's binary data in the form of a Long Frame telegram. It then passes this telegram to the DataBlockReader, which knows how to read the variable data blocks from the binary user data in the telegram.
+ModbusSniffer starts a FreeRTOS task in which it sniffs out the data on the bus, and passes the read data to the ModbusDataPublisher.
 
-MbusController needs to know what data block each sensor requires. Therefore the sensors implement an interface that provides a way for the MbusController to see if a given data block fits the sensor.
+ModbusSniffer uses ModbusRequest- and ModbusResponseDetector to read out the Modbus data in the form of request and response frames. It then passes these frames to the ModbusDataSplitter, which checks if the request and response belong together. If so then depending on the function code it converts the data in the frames to instances of ModbusData containing the address and value. Result of the ModbusDataSplitter is a list of these ModbusData instances.
+
+ModbusSniffer passes this list to the ModbusDataPublisher, along with the device address and function code. Then the ModbusDataPublisher sees if it has sensors in its administration for which the data is intended.
 
 ![Design overview](design_overview.png)
 
 ### IUartInterface
 
-The DataLinkLayer does not directly use the UARTDevice, but uses an interface instead. This is to enable unit testing of the DataLinkLayer and MbusReader classes.
+The ModbusRequest- and ModbusResponseDetector do not directly use the UARTDevice, but use an interface instead. This is to enable unit testing.
 
-Unit test code instantiates FakeUartInterface and passes that to the code under test (MbusReader or DataLinkLayer).  
-The MbusController code instantiates Esp32ArduinoUartInterface while passing itself as a UARTDevice, and passes that to the MbusReader.
+Unit test code instantiates FakeUartInterface and passes that to the code under test (ModbusSniffer, ModbusRequest- and ModbusResponseDetector).  
+The ModbusSpy code instantiates Esp32ArduinoUartInterface while passing itself as a UARTDevice, and passes that to the ModbusSniffer.
 
 That way the Esp32ArduinoUartInterface actually uses the real hardware, while the FakeUartInterface does not.
-
-![IUartInterface](iuartinterface.png)
