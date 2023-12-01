@@ -32,7 +32,7 @@ class ModbusDataPublisher : public IModbusDataPublisher {
   } DeviceSensors;
 
  public:
-  ModbusDataPublisher(bool dump_not_configured_data);
+  ModbusDataPublisher(bool dump_not_configured_data = false);
 
  private:
   ModbusDataPublisher(const ModbusDataPublisher&);

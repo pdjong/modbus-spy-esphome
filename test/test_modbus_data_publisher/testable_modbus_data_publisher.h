@@ -9,6 +9,7 @@ using esphome::modbus_spy::IModbusRegisterSensor;
 
 class TestableModbusDataPublisher : public ModbusDataPublisher {
  public:
+  TestableModbusDataPublisher() : ModbusDataPublisher(false) {}
   IModbusRegisterSensor* call_find_register_sensor(uint8_t device_address, uint16_t data_model_register_address) {
     return find_register_sensor(device_address, data_model_register_address);
   }
