@@ -13,6 +13,7 @@ namespace modbus_spy {
 
 class IModbusRegisterSensor {
  public:
+  virtual ~IModbusRegisterSensor();
   virtual void publish_state(uint16_t state) = 0;
 };
 
@@ -21,7 +22,7 @@ class IModbusRegisterSensor {
 class ModbusRegisterSensor : public IModbusRegisterSensor {
  public:
   ModbusRegisterSensor();
-  ~ModbusRegisterSensor();
+  virtual ~ModbusRegisterSensor() override;
 
   virtual void publish_state(uint16_t state) override;
   sensor::Sensor* get_sensor() const;

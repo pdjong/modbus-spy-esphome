@@ -15,6 +15,9 @@ namespace modbus_spy {
 
 static const char *TAG = "ModbusBinarySensor";
 
+IModbusBinarySensor::~IModbusBinarySensor() {
+}
+
 ModbusBinarySensor::ModbusBinarySensor() {
   this->sensor_ = new binary_sensor::BinarySensor;
 }

@@ -15,6 +15,9 @@ namespace modbus_spy {
 
 static const char *TAG = "ModbusRegisterSensor";
 
+IModbusRegisterSensor::~IModbusRegisterSensor() {
+}
+
 ModbusRegisterSensor::ModbusRegisterSensor() {
   this->sensor_ = new sensor::Sensor;
 }

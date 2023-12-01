@@ -13,6 +13,7 @@ namespace modbus_spy {
 
 class IModbusBinarySensor {
  public:
+  virtual ~IModbusBinarySensor();
   virtual void publish_state(bool state) = 0;
 };
 
@@ -21,7 +22,7 @@ class IModbusBinarySensor {
 class ModbusBinarySensor : public IModbusBinarySensor {
  public:
   ModbusBinarySensor();
-  ~ModbusBinarySensor();
+  virtual ~ModbusBinarySensor() override;
 
   virtual void publish_state(bool state) override;
   binary_sensor::BinarySensor* get_sensor() const;
