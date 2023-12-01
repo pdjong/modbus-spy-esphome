@@ -1,6 +1,6 @@
 substitutions:
-  device_name: daalderop-1.2.1
-  friendly_name: Daalderop v1.2.1
+  device_name: daalderop
+  friendly_name: Daalderop
   time_timezone: "Europe/Amsterdam"
 
 esphome:
@@ -23,263 +23,285 @@ external_components:
     
 # Enable logging
 logger:
-  # baud_rate: 115200
-  level: INFO 
+  level: INFO
   logs:
+    ModbusDataPublisher: INFO
+    ModbusRequestDetector: INFO
+    ModbusResponseDetector: INFO
+    ModbusDataSplitter: INFO
+    ModbusRegisterSensor: INFO
+    ModbusBinarySensor: INFO
     sensor: INFO
-    MbusController: INFO
+    dallas.sensor: ERROR
 # Enable Home Assistant API
 api:
-#   encryption:
-#     key: "PsKaCvrdD8AjEdWsv7b32V2KGBf7kicJAqhE+/zU1H8="
+
 ota:
   password: "e5264b2500ef5b812b82d4342c5a60f6"
+
 wifi:
-# Next two lines for building locally with ESPHome
-  ssid: "?"
-  password: "?"
-# Next two lines for building on Home Assistant OS, ESPHome
-#  ssid: !secret wifi_ssid
-#  password: !secret wifi_password
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "Daalderop-v-1-2"
-    password: "MHcfSqvZc6fe"
+    ssid: "HeatPumpController"
+    password: "heatpump"
+
+captive_portal:
 
 # Status LED of ESP
 status_led:
   pin: 
-    number: 33
+    number: GPIO19
 
 uart:
   baud_rate: 19200
-  rx_pin: 32
+  rx_pin: GPIO32
   parity: ODD
 
-sensor:
-  - platform: daalderop
-    cooling_heating_temperature:
-      name: daalderop_cooling_heating_temperature
-    sanitary_hot_water_temperature:
-      name: daalderop_sanitary_hot_water_temperature
-    outside_temperature:
-      name: daalderop_outside_temperature
-    inside_temperature:
-      name: daalderop_inside_temperature
-    heat_exchanger_water_inlet_temperature:
-      name: daalderop_heat_exchanger_water_inlet_temperature
-    heat_exchanger_water_outlet_temperature:
-      name: daalderop_heat_exchanger_water_outlet_temperature
-    compressor_working_speed_actual:
-      name: daalderop_compressor_working_speed_actual
-    compressor_working_speed_setpoint:
-      name: daalderop_compressor_working_speed_setpoint
-    outdoor_fan_setpoint:
-      name: daalderop_outdoor_fan_setpoint
-    outdoor_fan_1_actual:
-      name: daalderop_outdoor_fan_1_actual
-    indoor_coil_temperature:
-      name: daalderop_indoor_coil_temperature
-    low_pressure:
-      name: daalderop_low_pressure
-    high_pressure:
-      name: daalderop_high_pressure
-    suction_temperature:
-      name: daalderop_suction_temperature
-    discharge_temperature:
-      name: daalderop_discharge_temperature
-    outdoor_coil_temperature:
-      name: daalderop_outdoor_coil_temperature
-    internal_pump_active:
-      name: daalderop_internal_pump_active
-    heating_switch:
-      name: daalderop_heating_switch
-    three_way_valve:
-      id: daalderop_three_way_valve   
-      name: daalderop_three_way_valve      
-      on_state:
-        then:
-          - text_sensor.template.publish:
-              id: three_way_valve_text
-              state: !lambda |
-                if (x) 
-                  return "Verwarming";
-                else
-                  return "Tapwater";
-    
-    outdoor_voltage:
-      name: daalderop_outdoor_voltage
-    outdoor_current:
-      name: daalderop_outdoor_current
+modbus_spy:
+  id: modbusspy
+  log_not_configured_data: False
+
+dallas:
+  - pin: GPIO27  
+    update_interval: 2s
   
-    # decode1:
-    #   name: daalderop_decode1
-    # decode2:
-    #   name: daalderop_decode2
-    # decode3:
-    #   name: daalderop_decode3
-    # decode4:
-    #   name: daalderop_decode4
-    # decode5:
-    #   name: daalderop_decode5
-    # decode6:
-    #   name: daalderop_decode6
-    # decode7:
-    #   name: daalderop_decode7
-    # decode8:
-    #   name: daalderop_decode8
-    # decode9:
-    #   name: daalderop_decode9
-    # decode10:
-    #   name: daalderop_decode10
-    decode20:
-      name: daalderop_decode20   
-      id: decode20
-    # decode21:
-    #   name: daalderop_decode21  
-    # decode22:
-    #   name: daalderop_decode22   
-    # decode23:
-    #   name: daalderop_decode23   
-    decode24:
-      name: daalderop_decode24 
-      id: decode24
-    decode25:
-      name: daalderop_decode25   
-      id: decode25
-    # decode26:
-    #   name: daalderop_decode26   
-    # decode27:
-    #   name: daalderop_decode27   
-    # decode28:
-    #   name: daalderop_decode28   
-    # decode29:
-    #   name: daalderop_decode29   
-    # decode30:
-    #   name: daalderop_decode30     
-    # decode31:
-    #   name: daalderop_decode31    
-    # decode32:
-    #   name: daalderop_decode32    
-    # decode33:
-    #   name: daalderop_decode33    
-    # decode34:
-    #   name: daalderop_decode34    
-    # decode35:
-    #   name: daalderop_decode35
-    # decode120:
-    #   name: daalderop_decode120      
-    # decode121:
-    #   name: daalderop_decode121  
-    # decode122:
-    #   name: daalderop_decode122   
-    # decode123:
-    #   name: daalderop_decode123   
-    # decode124:
-    #   name: daalderop_decode124   
-    # decode125:
-    #   name: daalderop_decode125   
-    # decode126:
-    #   name: daalderop_decode126   
-    # decode127:
-    #   name: daalderop_decode127   
-    # decode128:
-    #   name: daalderop_decode128   
-    # decode129:
-    #   name: daalderop_decode129   
-    # decode130:
-    #   name: daalderop_decode130     
-    # decode131:
-    #   name: daalderop_decode131    
-    # decode132:
-    #   name: daalderop_decode132    
-    # decode133:
-    #   name: daalderop_decode133    
-    # decode134:
-    #   name: daalderop_decode134    
-    # decode135:
-    #   name: daalderop_decode135           
-      
-    # decode201:
-    #   name: daalderop_decode201  
-    # decode202:
-    #   name: daalderop_decode202   
-    # decode203:
-    #   name: daalderop_decode203   
-    # decode204:
-    #   name: daalderop_decode204   
-    # decode205:
-    #   name: daalderop_decode205   
-    # decode206:
-    #   name: daalderop_decode206   
-    # decode207:
-    #   name: daalderop_decode207   
-    # decode208:
-    #   name: daalderop_decode208   
-    # decode209:
-    #   name: daalderop_decode209   
-    decode210:
-      name: daalderop_decode210     
-    # decode211:
-    #   name: daalderop_decode211    
-    # decode212:
-    #   name: daalderop_decode212    
-    # decode213:
-    #   name: daalderop_decode213    
-    # decode214:
-    #   name: daalderop_decode214    
-    # decode215:
-    #   name: daalderop_decode215  
-    # decode216:
-    #   name: daalderop_decode216   
-    # decode217:
-    #   name: daalderop_decode217   
-    # decode218:
-    #   name: daalderop_decode218   
-    # decode219:
-    #   name: daalderop_decode219   
-
-    # decode301:
-    #   name: daalderop_decode301  
-    # decode302:
-    #   name: daalderop_decode302   
-    # decode303:
-    #   name: daalderop_decode303   
-    # decode304:
-    #   name: daalderop_decode304   
-    # decode305:
-    #   name: daalderop_decode305   
-    # decode306:
-    #   name: daalderop_decode306   
-    # decode307:
-    #   name: daalderop_decode307   
-    # decode308:
-    #   name: daalderop_decode308   
-    # decode309:
-    #   name: daalderop_decode309   
-    # decode310:
-    #   name: daalderop_decode310     
-    # decode311:
-    #   name: daalderop_decode311    
-    # decode312:
-    #   name: daalderop_decode312    
-    # decode313:
-    #   name: daalderop_decode313    
-    # decode314:
-    #   name: daalderop_decode314    
-    # decode315:
-    #   name: daalderop_decode315  
-    # decode316:
-    #   name: daalderop_decode316   
-    # decode317:
-    #   name: daalderop_decode317   
-    # decode318:
-    #   name: daalderop_decode318   
-    # decode319:
-    #   name: daalderop_decode319   
-    # decode320:
-    #   name: daalderop_decode320   
-
+sensor:
+  - platform: modbus_spy
+    name: "Inside Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41200
+    filters:
+      - offset: -3000
+      - multiply: .01
+  - platform: modbus_spy
+    name: "Sanitary Hot Water Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41201
+    filters:
+      - offset: -3000
+      - multiply: .01  
+  - platform: modbus_spy
+    name: "Heating/Cooling Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41202
+    filters:
+      - offset: -3000
+      - multiply: .01     
+  - platform: modbus_spy
+    name: "Heat Exchanger Water Outlet Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41203
+    filters:
+      - offset: -3000
+      - multiply: .01   
+    on_value:
+      then:
+        - sensor.template.publish:
+            id: heat_exchanger_delta_t   
+            state: !lambda |-
+              return x - id(heat_exchanger_water_inlet_temperature).state;
+  - platform: modbus_spy
+    name: "Heat Exchanger Water Inlet Temperature"
+    id: heat_exchanger_water_inlet_temperature
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41204
+    filters:
+      - offset: -3000
+      - multiply: .01    
+  - platform: template
+    name: Heat Exchanger Delta T
+    id: heat_exchanger_delta_t  
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "K"
+    icon: "mdi:delta"                             
+  - platform: modbus_spy
+    name: "Indoor Coil Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41205
+    filters:
+      - offset: -3000
+      - multiply: .01                        
+  - platform: modbus_spy
+    name: "Heating/Cooling Circuit 1 Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41208
+    filters:
+      - offset: -3000
+      - multiply: .01
+  - platform: modbus_spy
+    name: "Outdoor Voltage"
+    device_class: "voltage"
+    accuracy_decimals: 0
+    state_class: "measurement"
+    unit_of_measurement: "V"
+    device_address: 0x02
+    register_address: 42101
+  - platform: modbus_spy
+    name: "Outdoor Current"
+    device_class: "current"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "A"
+    device_address: 0x02
+    register_address: 42102
+    filters:
+      - multiply: .1
+  - platform: modbus_spy
+    name: "Compressor Working Speed Setpoint"
+    device_class: "frequency"
+    accuracy_decimals: 0
+    state_class: "measurement"
+    unit_of_measurement: "Hz"
+    device_address: 0x02
+    register_address: 42103
+  - platform: modbus_spy
+    name: "Compressor Working Speed Actual"
+    device_class: "frequency"
+    accuracy_decimals: 0
+    state_class: "measurement"
+    unit_of_measurement: "Hz"
+    device_address: 0x02
+    register_address: 42104
+  - platform: modbus_spy
+    name: "Outdoor Fan Setpoint"
+    device_class: "frequency"
+    accuracy_decimals: 0
+    state_class: "measurement"
+    unit_of_measurement: "rpm"
+    device_address: 0x02
+    register_address: 42105
+  - platform: modbus_spy
+    name: "Outdoor Fan 1 Actual"
+    device_class: "frequency"
+    accuracy_decimals: 0
+    state_class: "measurement"
+    unit_of_measurement: "rpm"
+    device_address: 0x02
+    register_address: 42106
+  - platform: modbus_spy
+    name: "Outside Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42111
+    filters:
+      - offset: -3000
+      - multiply: .01
+  - platform: modbus_spy
+    name: "Outdoor Coil Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42112
+    filters:
+      - offset: -3000
+      - multiply: .01
+  - platform: modbus_spy
+    name: "Discharge Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42113
+    filters:
+      - offset: -3000
+      - multiply: .01       
+  - platform: modbus_spy
+    name: "Suction Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x02
+    register_address: 42114
+    filters:
+      - offset: -3000
+      - multiply: .01 
+  - platform: modbus_spy
+    name: "Low Pressure"
+    device_class: "pressure"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "bar"
+    device_address: 0x02
+    register_address: 42117
+    filters:
+      - multiply: .1    
+  - platform: modbus_spy
+    name: "High Pressure"
+    device_class: "pressure"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "bar"
+    device_address: 0x02
+    register_address: 42118
+    filters:
+      - multiply: .1   
+  - platform: modbus_spy
+    id: defrost_value1
+    device_address: 0x02
+    register_address: 42109
+  - platform: modbus_spy
+    id: defrost_value2
+    device_address: 0x02
+    register_address: 42119
+  - platform: modbus_spy
+    id: defrost_value3
+    device_address: 0x02
+    register_address: 42120        
+  - platform: debug
+    free:
+      name: Heap Free
+    loop_time:
+      name: Loop Time
   - platform: uptime
     id: sensor_uptime
   - platform: template
@@ -294,22 +316,63 @@ sensor:
       );
       return timestamp;
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
-    name: "Daalderop WiFi Signal dB"
+    name: "Modbus Spy WiFi Signal dB"
     id: wifi_signal_db
     update_interval: 20s
   - platform: copy # Reports the WiFi signal strength in %
     source_id: wifi_signal_db
-    name: "Daalderop WiFi Signal Percent"
+    name: "Modbus Spy WiFi Signal Percent"
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: " %"
+  - platform: dallas
+    index: 0
+    name: Dallas Temperature 1
+  - platform: dallas
+    index: 1
+    name: Dallas Temperature 2
+  - platform: dallas
+    index: 2
+    name: Dallas Temperature 3      
+  - platform: pulse_meter
+    pin: GPIO33
+    name: Pulse Meter
+    total:
+      name: Total Pulses  
 
 binary_sensor:
+  - platform: modbus_spy
+    name: "Pump 1 Active"
+    device_address: 0x0B
+    register_address: 41301
+  - platform: modbus_spy
+    name: "Internal Pump Active"
+    device_address: 0x0B
+    register_address: 41213
+  - platform: modbus_spy
+    name: "Heating Switch"
+    icon: "mdi:fire"
+    device_address: 0x0B
+    register_address: 41215
+  - platform: modbus_spy
+    name: "Three Way Valve State"
+    device_address: 0x0B
+    register_address: 41306    
+    on_state:
+      then:
+        - text_sensor.template.publish:
+            id: three_way_valve_text
+            state: !lambda |
+              if (x) 
+                return "Verwarming";
+              else
+                return "Tapwater";    
   - platform: template
-    name: daalderop_defrost
+    name: "Defrost"
+    icon: "mdi:snowflake-alert"
     lambda: |-
-      return (id(decode20).state == 68 && (id(decode24).state == 1 || id(decode25).state == 2048)) || (id(decode20).state == 4);
-              
+      return (id(defrost_value1).state == 68 && (id(defrost_value2).state == 1 || id(defrost_value3).state == 2048)) || 
+             (id(defrost_value1).state == 4);
 
 time:
   - platform: homeassistant
@@ -319,6 +382,35 @@ time:
       - component.update: sensor_uptime_timestamp      
 
 text_sensor:
+  - platform: debug
+    device:
+      name: "Device Info"
+    reset_reason:
+      name: "Reset Reason"
   - platform: template
+    name: Three Way Valve
     id: three_way_valve_text
-    name: daalderop_three_way_valve_text
+
+switch:
+  - platform: restart
+    name: ${friendly_name} Restart
+  - platform: factory_reset
+    name: ${friendly_name} Factory Reset
+  - platform: gpio
+    pin: GPIO22
+    name: Relais 1
+    id: relay1
+    interlock: [relay2]
+    interlock_wait_time: 5s
+  - platform: gpio
+    pin: GPIO23
+    name: Relais 2
+    id: relay2
+    interlock: [relay1]
+    interlock_wait_time: 5s
+
+debug:
+  update_interval: 5s
+
+web_server:
+  port: 80
