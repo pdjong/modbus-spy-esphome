@@ -11,7 +11,8 @@ namespace modbus_spy {
 
 static const char *TAG = "ModbusDataPublisher";
 
-ModbusDataPublisher::ModbusDataPublisher() {
+ModbusDataPublisher::ModbusDataPublisher(bool dump_not_configured_data) : 
+  should_dump_not_configured_data_(dump_not_configured_data) {
 }
 
 ModbusDataPublisher::~ModbusDataPublisher() {
@@ -107,16 +108,24 @@ uint16_t ModbusDataPublisher::convert_pdu_address_to_data_model_address(uint8_t 
 
 void ModbusDataPublisher::find_sensor_and_publish_data(uint8_t device_address, uint16_t data_model_register_address, uint16_t value) {
   ESP_LOGD(TAG, "Finding sensor for register address %d, to publish value %d", data_model_register_address, value);
+  bool found_a_sensor { false };
   IModbusRegisterSensor *register_sensor = find_register_sensor(device_address, data_model_register_address);
   if (register_sensor != nullptr) {
     ESP_LOGV(TAG, "Found sensor!");
+    found_a_sensor = true;
     register_sensor->publish_state(value);
-  } else {
+  }
+  if (!found_a_sensor) {
     IModbusBinarySensor *binary_sensor = find_binary_sensor(device_address, data_model_register_address);
     if (binary_sensor != nullptr) {
       ESP_LOGV(TAG, "Found binary sensor! For register %d", data_model_register_address);
+      found_a_sensor = true;
       binary_sensor->publish_state(static_cast<bool>(value));
     }
+  }
+
+  if (!found_a_sensor && this->should_dump_not_configured_data_) {
+    ESP_LOGI(TAG, "No sensor for: device 0x%02X, data model address %d, value %d", device_address, data_model_register_address, value);
   }
 }
 

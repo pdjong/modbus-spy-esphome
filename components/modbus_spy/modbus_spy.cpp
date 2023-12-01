@@ -14,7 +14,7 @@ namespace modbus_spy {
 
 static const char *TAG = "modbus_spy";
 
-ModbusSpy::ModbusSpy() {
+ModbusSpy::ModbusSpy(bool log_not_configured_data) : data_publisher_(log_not_configured_data) {
   Esp32ArduinoUartInterface *uart_interface = new Esp32ArduinoUartInterface(this);
   this->sniffer_ = new ModbusSniffer(uart_interface, &this->data_publisher_);
 }

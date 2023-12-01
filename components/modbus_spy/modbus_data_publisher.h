@@ -32,7 +32,7 @@ class ModbusDataPublisher : public IModbusDataPublisher {
   } DeviceSensors;
 
  public:
-  ModbusDataPublisher();
+  ModbusDataPublisher(bool dump_not_configured_data);
 
  private:
   ModbusDataPublisher(const ModbusDataPublisher&);
@@ -46,6 +46,7 @@ class ModbusDataPublisher : public IModbusDataPublisher {
 
  protected:
   std::map<uint8_t, DeviceSensors*> device_sensors_;
+  bool should_dump_not_configured_data_ { false };
   IModbusRegisterSensor* find_register_sensor(uint8_t device_address, uint16_t data_model_register_address);
   IModbusBinarySensor* find_binary_sensor(uint8_t device_address, uint16_t data_model_register_address);
 

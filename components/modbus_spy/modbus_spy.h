@@ -14,7 +14,7 @@ namespace modbus_spy {
 
 class ModbusSpy : public Component, public uart::UARTDevice {
  public:
-  ModbusSpy();
+  ModbusSpy(bool log_not_configured_data);
 
  private:
   ModbusSpy(const ModbusSpy&);

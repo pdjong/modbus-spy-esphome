@@ -61,6 +61,7 @@ uart:
 
 modbus_spy:
   id: modbusspy
+  log_not_configured_data: False
 
 dallas:
   - pin: GPIO27  
