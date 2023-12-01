@@ -153,12 +153,11 @@ Below follows the structure of this repository:
     ├── ModbusSpy.ncp
     ├── more-info.md
     ├── platformio.ini
-    ├── README.md
-    └── 
+    └── README.md
 
-The entire component resides in /components/mbus_controller  
+The entire component resides in /components/modbus_spy  
 Unit test files are in /test  
-Design diagrams are in design.ncp, which can be opened in [NClass](https://nclass.sourceforge.net/)  
+Design diagrams are in ModbusSpy.ncp, which can be opened in [NClass](https://nclass.sourceforge.net/)  
 An example YAML file can be found in example.yaml
 
 ## Unit Testing - What does it look like
