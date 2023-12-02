@@ -28,7 +28,7 @@ class ModbusSpy : public Component, public uart::UARTDevice {
   float get_setup_priority() const override;
   uint32_t get_baud_rate() const { return parent_->get_baud_rate(); }
   sensor::Sensor* create_sensor(uint8_t device_address, uint16_t register_address);
-  binary_sensor::BinarySensor* create_binary_sensor(uint8_t device_address, uint16_t register_address);
+  binary_sensor::BinarySensor* create_binary_sensor(uint8_t device_address, uint16_t register_address, int8_t bit);
 
  protected:
   ModbusSniffer* sniffer_;

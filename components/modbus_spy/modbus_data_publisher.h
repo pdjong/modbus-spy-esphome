@@ -21,7 +21,7 @@ class IModbusDataPublisher {
  public:
   virtual ~IModbusDataPublisher();
   virtual void add_register_sensor(uint8_t device_address, uint16_t register_address, IModbusRegisterSensor* register_sensor) = 0;
-  virtual void add_binary_sensor(uint8_t device_address, uint16_t register_address, IModbusBinarySensor* binary_sensor) = 0;
+  virtual void add_binary_sensor(uint8_t device_address, uint16_t register_address, int8_t bit, IModbusBinarySensor* binary_sensor) = 0;
   virtual void publish_data(uint8_t device_address, uint8_t function, std::vector<ModbusData*>* data) = 0;
 };
 
@@ -42,7 +42,7 @@ class ModbusDataPublisher : public IModbusDataPublisher {
   virtual ~ModbusDataPublisher() override;
   
   virtual void add_register_sensor(uint8_t device_address, uint16_t register_address, IModbusRegisterSensor* register_sensor) override;
-  virtual void add_binary_sensor(uint8_t device_address, uint16_t register_address, IModbusBinarySensor* binary_sensor) override;
+  virtual void add_binary_sensor(uint8_t device_address, uint16_t register_address, int8_t bit, IModbusBinarySensor* binary_sensor) override;
   virtual void publish_data(uint8_t device_address, uint8_t function, std::vector<ModbusData*>* data) override;
 
  protected:

@@ -29,7 +29,11 @@ sensor::Sensor* ModbusSpy::create_sensor(uint8_t device_address, uint16_t regist
   return register_sensor->get_sensor();
 }
 
-binary_sensor::BinarySensor* ModbusSpy::create_binary_sensor(uint8_t device_address, uint16_t register_address) {
+binary_sensor::BinarySensor* ModbusSpy::create_binary_sensor(
+  uint8_t device_address,
+  uint16_t register_address,
+  int8_t bit
+) {
   ModbusBinarySensor *binary_sensor = new ModbusBinarySensor();
   this->data_publisher_.add_binary_sensor(device_address, register_address, binary_sensor);
   return binary_sensor->get_sensor();
