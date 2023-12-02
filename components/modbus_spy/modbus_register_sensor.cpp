@@ -1,5 +1,3 @@
-#ifndef UNIT_TEST
-
 #ifdef UNIT_TEST
 #include <test_includes.h>
 #else
@@ -18,6 +16,8 @@ static const char *TAG = "ModbusRegisterSensor";
 IModbusRegisterSensor::~IModbusRegisterSensor() {
 }
 
+#ifndef UNIT_TEST
+
 ModbusRegisterSensor::ModbusRegisterSensor() {
   this->sensor_ = new sensor::Sensor;
 }
@@ -35,7 +35,7 @@ sensor::Sensor* ModbusRegisterSensor::get_sensor() const {
   return this->sensor_;
 }
 
+#endif // UNIT_TEST
+
 } //namespace modbus_spy
 } //namespace esphome
-
-#endif // UNIT_TEST

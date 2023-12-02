@@ -10,7 +10,6 @@ using esphome::modbus_spy::IModbusBinarySensor;
 
 class FakeModbusBinarySensor : public IModbusBinarySensor {
  public:
-  virtual ~FakeModbusBinarySensor() override;
   virtual void publish_state(bool state) override;
   vector<bool>* get_published_states();
  protected:

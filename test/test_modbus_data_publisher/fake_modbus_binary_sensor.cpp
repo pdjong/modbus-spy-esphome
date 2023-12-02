@@ -1,8 +1,5 @@
 #include "fake_modbus_binary_sensor.h"
 
-FakeModbusBinarySensor::~FakeModbusBinarySensor() {
-}
-
 void FakeModbusBinarySensor::publish_state(bool state) {
   this->published_states_.push_back(state);
 }

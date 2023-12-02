@@ -138,9 +138,9 @@ void test_publish_data_binary_flag_sensors() {
   FakeModbusBinarySensor *fakeBinarySensorBit0 = new FakeModbusBinarySensor;
   data_publisher.add_binary_sensor(device_address, register_address + 40001, 0, fakeBinarySensorBit0);
   FakeModbusBinarySensor *fakeBinarySensorBit1 = new FakeModbusBinarySensor;
-  data_publisher.add_binary_sensor(device_address, register_address + 40001, 1, fakeBinarySensorBit0);
+  data_publisher.add_binary_sensor(device_address, register_address + 40001, 1, fakeBinarySensorBit1);
   FakeModbusBinarySensor *fakeBinarySensorBit15 = new FakeModbusBinarySensor;
-  data_publisher.add_binary_sensor(device_address, register_address + 40001, 15, fakeBinarySensorBit0);
+  data_publisher.add_binary_sensor(device_address, register_address + 40001, 15, fakeBinarySensorBit15);
 
   // Act
   data_publisher.publish_data(device_address, function, data);
@@ -154,7 +154,7 @@ void test_publish_data_binary_flag_sensors() {
 void assert_binary_sensor_for_bit(FakeModbusBinarySensor* sensor, uint8_t bit, uint16_t register_value) {
   vector<bool> *published_states = sensor->get_published_states();
   TEST_ASSERT_EQUAL_UINT8(1, published_states->size());
-  bool expected_value = (register_value & (1 << 0)) >> 0;
+  bool expected_value = (register_value & (1 << bit)) >> bit;
   bool actual_value = published_states->at(0);
   if (expected_value) {
     TEST_ASSERT_TRUE(actual_value);
