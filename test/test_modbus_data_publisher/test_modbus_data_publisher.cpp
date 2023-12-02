@@ -99,27 +99,51 @@ void test_publish_data_function_3() {
   // Arrange
   const uint8_t device_address = 0x02;
   const int8_t function = 3;
-  const uint16_t register_address = 0x01AF;
-  const uint16_t register_value = 0x3210;
   ModbusDataPublisher data_publisher;
   vector<ModbusData*> *data = new vector<ModbusData*>;
-  ModbusData *modbus_data = new ModbusData;
-  modbus_data->address = register_address;
-  modbus_data->value = 0x3210;
-  data->push_back(modbus_data);
+  const uint16_t register_address_1 = 0x01AF;
+  const uint16_t register_value_1 = 0x3210;
+  ModbusData *modbus_data_1 = new ModbusData;
+  modbus_data_1->address = register_address_1;
+  modbus_data_1->value = register_value_1;
+  data->push_back(modbus_data_1);
+  const uint16_t register_address_2 = 0x01B0;
+  const uint16_t register_value_2 = 1;
+  ModbusData *modbus_data_2 = new ModbusData;
+  modbus_data_2->address = register_address_2;
+  modbus_data_2->value = register_value_2;
+  data->push_back(modbus_data_2);
+  const uint16_t register_address_3 = 0x01B1;
+  const uint16_t register_value_3 = 0b10;
+  ModbusData *modbus_data_3 = new ModbusData;
+  modbus_data_3->address = register_address_3;
+  modbus_data_3->value = register_value_3;
+  data->push_back(modbus_data_3);
 
-  FakeModbusRegisterSensor *fakeRegisterSensor = new FakeModbusRegisterSensor;
-  data_publisher.add_register_sensor(device_address, register_address + 40001, fakeRegisterSensor);
+  FakeModbusRegisterSensor *fake_register_sensor = new FakeModbusRegisterSensor;
+  data_publisher.add_register_sensor(device_address, register_address_1 + 40001, fake_register_sensor);
+  FakeModbusBinarySensor *fake_binary_full_register_sensor = new FakeModbusBinarySensor;
+  data_publisher.add_binary_sensor(device_address, register_address_2 + 40001, -1, fake_binary_full_register_sensor);
+  FakeModbusBinarySensor *fake_binary_bit_sensor = new FakeModbusBinarySensor;
+  data_publisher.add_binary_sensor(device_address, register_address_3 + 40001, 1, fake_binary_bit_sensor);
 
   // Act
   data_publisher.publish_data(device_address, function, data);
 
   // Assert
-  vector<uint16_t> *published_states = fakeRegisterSensor->get_published_states();
-  TEST_ASSERT_EQUAL_UINT8(1, published_states->size());
-  uint16_t expected_value = register_value;
-  uint16_t actual_value = published_states->at(0);
+  vector<uint16_t> *published_states_1 = fake_register_sensor->get_published_states();
+  TEST_ASSERT_EQUAL_UINT8(1, published_states_1->size());
+  uint16_t expected_value = register_value_1;
+  uint16_t actual_value = published_states_1->at(0);
   TEST_ASSERT_EQUAL_UINT16(expected_value, actual_value);
+
+  vector<bool> *published_states_2 = fake_binary_full_register_sensor->get_published_states();
+  TEST_ASSERT_EQUAL_UINT8(1, published_states_2->size());
+  TEST_ASSERT_TRUE(published_states_2->at(0));
+
+  vector<bool> *published_states_3 = fake_binary_bit_sensor->get_published_states();
+  TEST_ASSERT_EQUAL_UINT8(1, published_states_3->size());
+  TEST_ASSERT_TRUE(published_states_3->at(0));
 }
 
 void test_publish_data_binary_flag_sensors() {
