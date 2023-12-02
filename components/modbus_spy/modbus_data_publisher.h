@@ -30,6 +30,7 @@ class ModbusDataPublisher : public IModbusDataPublisher {
   typedef struct DeviceSensors {
     std::map<uint16_t, IModbusRegisterSensor*>* register_sensors_ { nullptr };
     std::map<uint16_t, IModbusBinarySensor*>* binary_sensors_full_register_ { nullptr };
+    std::map<uint16_t, IModbusBinarySensor**>* binary_sensors_bit_ { nullptr };
   } DeviceSensors;
 
  public:
@@ -50,12 +51,14 @@ class ModbusDataPublisher : public IModbusDataPublisher {
   bool should_dump_not_configured_data_ { false };
   IModbusRegisterSensor* find_register_sensor(uint8_t device_address, uint16_t data_model_register_address);
   IModbusBinarySensor* find_binary_sensor_full_register(uint8_t device_address, uint16_t data_model_register_address);
+  IModbusBinarySensor** find_binary_bit_sensors(uint8_t device_address, uint16_t data_model_register_address);
 
  private:
   uint16_t convert_pdu_address_to_data_model_address(uint8_t function, uint16_t pdu_address);
   void find_sensor_and_publish_data(uint8_t device_address, uint16_t data_model_register_address, uint16_t value);
   std::map<uint16_t, IModbusRegisterSensor*>* get_register_sensors_for_device(uint8_t device_address);
   std::map<uint16_t, IModbusBinarySensor*>* get_binary_sensors_full_register_for_device(uint8_t device_address);
+  std::map<uint16_t, IModbusBinarySensor**>* get_binary_sensors_bit_for_device(uint8_t device_address);
   DeviceSensors* get_sensors_for_device(uint8_t device_address);
 };
 

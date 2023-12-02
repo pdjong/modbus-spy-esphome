@@ -54,8 +54,22 @@ void ModbusDataPublisher::add_binary_sensor(
   int8_t bit,
   IModbusBinarySensor* binary_sensor
 ) {
-  std::map<uint16_t, IModbusBinarySensor*> *binary_sensors_for_device = get_binary_sensors_full_register_for_device(device_address);
-  binary_sensors_for_device->insert({ register_address, binary_sensor });
+  if (-1 == bit) {
+    std::map<uint16_t, IModbusBinarySensor*> *binary_sensors_full_register_for_device = get_binary_sensors_full_register_for_device(device_address);
+    (*binary_sensors_full_register_for_device)[register_address] = binary_sensor;
+  } else {
+    std::map<uint16_t, IModbusBinarySensor**> *binary_sensors_bit_for_device = get_binary_sensors_bit_for_device(device_address);
+    // See if there's a list of bit sensors for the register. If not, create it.
+    IModbusBinarySensor **bit_sensors_for_register = (*binary_sensors_bit_for_device)[register_address];
+    if (nullptr == bit_sensors_for_register) {
+      bit_sensors_for_register = new IModbusBinarySensor*[16];
+      for (uint8_t i = 0; i < 16; ++i) {
+        bit_sensors_for_register[i] = nullptr;
+      }
+      (*binary_sensors_bit_for_device)[register_address] = bit_sensors_for_register;
+    }
+    bit_sensors_for_register[bit] = binary_sensor;
+  }
 }
 
 std::map<uint16_t, IModbusRegisterSensor*>* ModbusDataPublisher::get_register_sensors_for_device(uint8_t device_address) {
@@ -76,6 +90,16 @@ std::map<uint16_t, IModbusBinarySensor*>* ModbusDataPublisher::get_binary_sensor
     sensors_for_device->binary_sensors_full_register_ = binary_sensors_full_register_for_device;
   }
   return binary_sensors_full_register_for_device;
+}
+
+std::map<uint16_t, IModbusBinarySensor**>* ModbusDataPublisher::get_binary_sensors_bit_for_device(uint8_t device_address) {
+  DeviceSensors *sensors_for_device = get_sensors_for_device(device_address);
+  std::map<uint16_t, IModbusBinarySensor**>* binary_sensors_bit_for_device = sensors_for_device->binary_sensors_bit_;
+  if (nullptr == binary_sensors_bit_for_device) {
+    binary_sensors_bit_for_device = new std::map<uint16_t, IModbusBinarySensor**>;
+    sensors_for_device->binary_sensors_bit_ = binary_sensors_bit_for_device;
+  }
+  return binary_sensors_bit_for_device;
 }
 
 ModbusDataPublisher::DeviceSensors* ModbusDataPublisher::get_sensors_for_device(uint8_t device_address) {
@@ -119,12 +143,24 @@ void ModbusDataPublisher::find_sensor_and_publish_data(uint8_t device_address, u
     found_a_sensor = true;
     register_sensor->publish_state(value);
   }
-  if (!found_a_sensor) {
-    IModbusBinarySensor *binary_sensor = find_binary_sensor_full_register(device_address, data_model_register_address);
-    if (binary_sensor != nullptr) {
-      ESP_LOGV(TAG, "Found binary sensor! For register %d", data_model_register_address);
-      found_a_sensor = true;
-      binary_sensor->publish_state(static_cast<bool>(value));
+
+  IModbusBinarySensor *binary_sensor = find_binary_sensor_full_register(device_address, data_model_register_address);
+  if (binary_sensor != nullptr) {
+    ESP_LOGV(TAG, "Found binary sensor! For register %d", data_model_register_address);
+    found_a_sensor = true;
+    binary_sensor->publish_state(static_cast<bool>(value));
+  }
+
+  IModbusBinarySensor **bit_sensors = find_binary_bit_sensors(device_address, data_model_register_address);
+  if (bit_sensors != nullptr) {
+    ESP_LOGV(TAG, "Found bit sensors! For register %d", data_model_register_address);
+    found_a_sensor = true;
+    for (uint8_t bit = 0; bit < 16; ++bit) {
+      IModbusBinarySensor *bit_sensor = bit_sensors[bit];
+      if (bit_sensor != nullptr) {
+        bool bit_value = (value & (1 << bit)) >> bit;
+        bit_sensor->publish_state(bit_value);
+      }
     }
   }
 
@@ -157,6 +193,16 @@ IModbusBinarySensor* ModbusDataPublisher::find_binary_sensor_full_register(uint8
   return binary_sensors_full_register_for_device[data_model_register_address];
 }
 
+IModbusBinarySensor** ModbusDataPublisher::find_binary_bit_sensors(uint8_t device_address, uint16_t data_model_register_address) {
+  DeviceSensors *device_sensors = this->device_sensors_[device_address];
+  if (nullptr == device_sensors) {
+    return nullptr;
+  }
+  if (nullptr == device_sensors->binary_sensors_bit_) {
+    return nullptr;
+  }
+  return (*device_sensors->binary_sensors_bit_)[data_model_register_address];
+}
 
 } //namespace modbus_spy
 } //namespace esphome
