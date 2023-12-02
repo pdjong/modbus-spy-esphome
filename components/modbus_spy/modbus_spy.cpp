@@ -35,7 +35,7 @@ binary_sensor::BinarySensor* ModbusSpy::create_binary_sensor(
   int8_t bit
 ) {
   ModbusBinarySensor *binary_sensor = new ModbusBinarySensor();
-  this->data_publisher_.add_binary_sensor(device_address, register_address, binary_sensor);
+  this->data_publisher_.add_binary_sensor(device_address, register_address, bit, binary_sensor);
   return binary_sensor->get_sensor();
 }
 

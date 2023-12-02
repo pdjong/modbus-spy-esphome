@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <unity.h>
 
+#include "fake_modbus_binary_sensor.h"
 #include "fake_modbus_register_sensor.h"
 #include "modbus_data.h"
 #include <test_includes.h>
@@ -10,6 +11,8 @@
 
 using std::vector;
 using namespace esphome::modbus_spy;
+
+void assert_binary_sensor_for_bit(FakeModbusBinarySensor* sensor, uint8_t bit, uint16_t value);
 
 void test_add_register_sensor_and_find_same_sensor_returns_sensor() {
   // Arrange
@@ -119,6 +122,47 @@ void test_publish_data_function_3() {
   TEST_ASSERT_EQUAL_UINT16(expected_value, actual_value);
 }
 
+void test_publish_data_binary_flag_sensors() {
+  // Arrange
+  const uint8_t device_address = 0x02;
+  const int8_t function = 3;
+  const uint16_t register_address = 0x01AF;
+  const uint16_t register_value = 0b1100111010001110;
+  ModbusDataPublisher data_publisher;
+  vector<ModbusData*> *data = new vector<ModbusData*>;
+  ModbusData *modbus_data = new ModbusData;
+  modbus_data->address = register_address;
+  modbus_data->value = register_value;
+  data->push_back(modbus_data);
+
+  FakeModbusBinarySensor *fakeBinarySensorBit0 = new FakeModbusBinarySensor;
+  data_publisher.add_binary_sensor(device_address, register_address + 40001, 0, fakeBinarySensorBit0);
+  FakeModbusBinarySensor *fakeBinarySensorBit1 = new FakeModbusBinarySensor;
+  data_publisher.add_binary_sensor(device_address, register_address + 40001, 1, fakeBinarySensorBit0);
+  FakeModbusBinarySensor *fakeBinarySensorBit15 = new FakeModbusBinarySensor;
+  data_publisher.add_binary_sensor(device_address, register_address + 40001, 15, fakeBinarySensorBit0);
+
+  // Act
+  data_publisher.publish_data(device_address, function, data);
+
+  // Assert
+  assert_binary_sensor_for_bit(fakeBinarySensorBit0, 0, register_value);
+  assert_binary_sensor_for_bit(fakeBinarySensorBit1, 1, register_value);
+  assert_binary_sensor_for_bit(fakeBinarySensorBit15, 15, register_value);
+}
+
+void assert_binary_sensor_for_bit(FakeModbusBinarySensor* sensor, uint8_t bit, uint16_t register_value) {
+  vector<bool> *published_states = sensor->get_published_states();
+  TEST_ASSERT_EQUAL_UINT8(1, published_states->size());
+  bool expected_value = (register_value & (1 << 0)) >> 0;
+  bool actual_value = published_states->at(0);
+  if (expected_value) {
+    TEST_ASSERT_TRUE(actual_value);
+  } else {
+    TEST_ASSERT_FALSE(actual_value);
+  }
+}
+
 int runUnityTests(void) {
   UNITY_BEGIN();
 
@@ -131,6 +175,7 @@ int runUnityTests(void) {
 
   // publish_data tests
   RUN_TEST(test_publish_data_function_3);
+  RUN_TEST(test_publish_data_binary_flag_sensors);
 
   return UNITY_END();
 }
