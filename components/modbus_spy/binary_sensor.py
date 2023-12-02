@@ -18,7 +18,7 @@ CONFIG_SCHEMA = binary_sensor.BINARY_SENSOR_SCHEMA.extend({
     cv.GenerateID(CONF_MODBUS_SPY_ID): cv.use_id(ModbusSpy),
     cv.Required(CONF_DEVICE_ADDRESS): int,
     cv.Required(CONF_REGISTER_ADDRESS): int,
-    cv.Optional(CONF_BIT, default=-1): int
+    cv.Optional(CONF_BIT, default=-1): cv.int_range(-1, 15)
 })
 
 async def to_code(config):
