@@ -342,6 +342,24 @@ sensor:
 
 binary_sensor:
   - platform: modbus_spy
+    id: defrost_value1_bit2
+    device_address: 0x02
+    register_address: 42109
+    bit: 2
+    name: "Defrost value1 bit 2"
+  - platform: modbus_spy
+    id: defrost_value1_bit6
+    device_address: 0x02
+    register_address: 42109
+    bit: 6
+    name: "Defrost value1 bit 6"
+  - platform: modbus_spy
+    id: defrost_value3_bit11
+    device_address: 0x02
+    register_address: 42120
+    bit: 11
+    name: "Defrost value3 bit 11"
+  - platform: modbus_spy
     name: "Pump 1 Active"
     device_address: 0x0B
     register_address: 41301
