@@ -53,6 +53,7 @@ uart:
 
 modbus_spy:
   id: modbusspy
+  log_not_configured_data: true
   
 sensor:
   - platform: modbus_spy

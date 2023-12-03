@@ -1,9 +1,11 @@
 #ifndef TESTABLE_MODBUS_DATA_PUBLISHER_
 #define TESTABLE_MODBUS_DATA_PUBLISHER_
 
+#include "modbus_binary_sensor.h"
 #include "modbus_data_publisher.h"
 #include "modbus_register_sensor.h"
 
+using esphome::modbus_spy::IModbusBinarySensor;
 using esphome::modbus_spy::ModbusDataPublisher;
 using esphome::modbus_spy::IModbusRegisterSensor;
 

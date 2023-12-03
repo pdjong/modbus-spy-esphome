@@ -1,5 +1,3 @@
-#ifndef UNIT_TEST
-
 #ifdef UNIT_TEST
 #include <test_includes.h>
 #else
@@ -18,6 +16,8 @@ static const char *TAG = "ModbusBinarySensor";
 IModbusBinarySensor::~IModbusBinarySensor() {
 }
 
+#ifndef UNIT_TEST
+
 ModbusBinarySensor::ModbusBinarySensor() {
   this->sensor_ = new binary_sensor::BinarySensor;
 }
@@ -35,7 +35,7 @@ binary_sensor::BinarySensor* ModbusBinarySensor::get_sensor() const {
   return this->sensor_;
 }
 
+#endif // UNIT_TEST
+
 } //namespace modbus_spy
 } //namespace esphome
-
-#endif // UNIT_TEST

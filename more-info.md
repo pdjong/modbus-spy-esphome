@@ -74,7 +74,7 @@ Error and exception codes are not supported explicitly. If a response can be mat
 ### How to find the register addresses
 
 - Vendor documentation (if available)
-- Set log level to DEBUG  
+- Set log level to INFO and add "log_not_configured_data: true" to the modbus_spy config  
 The component will log all registers it detects and supports, e.g.:  
 `Finding sensor for register address 42100, to publish value 5102`
 - Black magic

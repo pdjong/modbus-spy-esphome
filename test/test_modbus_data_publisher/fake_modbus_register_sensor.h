@@ -10,7 +10,6 @@ using esphome::modbus_spy::IModbusRegisterSensor;
 
 class FakeModbusRegisterSensor : public IModbusRegisterSensor {
  public:
-  virtual ~FakeModbusRegisterSensor() override;
   virtual void publish_state(uint16_t state) override;
   vector<uint16_t>* get_published_states();
  protected:
