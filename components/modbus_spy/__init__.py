@@ -6,6 +6,7 @@ from esphome.components import uart
 CODEOWNERS = ["@pdjong"]
 
 DEPENDENCIES = ["uart"]
+AUTO_LOAD = ["binary_sensor"]
 MULTI_CONF = True
 
 modbus_spy_ns = cg.esphome_ns.namespace('modbus_spy')
