@@ -44,7 +44,6 @@ void ModbusSpy::setup() {
 }
 
 void ModbusSpy::loop() {
-  delay(5);
 }
 
 float ModbusSpy::get_setup_priority() const {
