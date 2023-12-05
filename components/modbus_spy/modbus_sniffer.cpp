@@ -78,6 +78,7 @@ void ModbusSniffer::sniff_loop_task(void* params) {
     }
     ModbusFrame *response_frame = response_detector->detect_response();
     if (nullptr == response_frame) {
+      delete request_frame;
       modbus_sniffer->empty_rx_buffer();
       continue;
     }
