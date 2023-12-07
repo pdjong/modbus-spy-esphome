@@ -32,7 +32,7 @@ logger:
     ModbusRegisterSensor: INFO
     ModbusBinarySensor: INFO
     sensor: INFO
-    dallas.sensor: ERROR
+    dallas.sensor: NONE
 # Enable Home Assistant API
 api:
 
@@ -68,18 +68,18 @@ dallas:
     update_interval: 2s
   
 sensor:
-  - platform: modbus_spy
-    name: "Inside Temperature"
-    device_class: "temperature"
-    accuracy_decimals: 1
-    state_class: "measurement"
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer"    
-    device_address: 0x0B
-    register_address: 41200
-    filters:
-      - offset: -3000
-      - multiply: .01
+  # - platform: modbus_spy
+  #   name: "Inside Temperature"
+  #   device_class: "temperature"
+  #   accuracy_decimals: 1
+  #   state_class: "measurement"
+  #   unit_of_measurement: "°C"
+  #   icon: "mdi:thermometer"    
+  #   device_address: 0x0B
+  #   register_address: 41200
+  #   filters:
+  #     - offset: -3000
+  #     - multiply: .01
   - platform: modbus_spy
     name: "Sanitary Hot Water Temperature"
     device_class: "temperature"
@@ -143,56 +143,56 @@ sensor:
     state_class: "measurement"
     unit_of_measurement: "K"
     icon: "mdi:delta"                             
-  - platform: modbus_spy
-    name: "Indoor Coil Temperature"
-    device_class: "temperature"
-    accuracy_decimals: 1
-    state_class: "measurement"
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer"    
-    device_address: 0x0B
-    register_address: 41205
-    filters:
-      - offset: -3000
-      - multiply: .01                        
-  - platform: modbus_spy
-    name: "Heating/Cooling Circuit 1 Temperature"
-    device_class: "temperature"
-    accuracy_decimals: 1
-    state_class: "measurement"
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer"    
-    device_address: 0x0B
-    register_address: 41208
-    filters:
-      - offset: -3000
-      - multiply: .01
-  - platform: modbus_spy
-    name: "Outdoor Voltage"
-    device_class: "voltage"
-    accuracy_decimals: 0
-    state_class: "measurement"
-    unit_of_measurement: "V"
-    device_address: 0x02
-    register_address: 42101
-  - platform: modbus_spy
-    name: "Outdoor Current"
-    device_class: "current"
-    accuracy_decimals: 1
-    state_class: "measurement"
-    unit_of_measurement: "A"
-    device_address: 0x02
-    register_address: 42102
-    filters:
-      - multiply: .1
-  - platform: modbus_spy
-    name: "Compressor Working Speed Setpoint"
-    device_class: "frequency"
-    accuracy_decimals: 0
-    state_class: "measurement"
-    unit_of_measurement: "Hz"
-    device_address: 0x02
-    register_address: 42103
+  # - platform: modbus_spy
+  #   name: "Indoor Coil Temperature"
+  #   device_class: "temperature"
+  #   accuracy_decimals: 1
+  #   state_class: "measurement"
+  #   unit_of_measurement: "°C"
+  #   icon: "mdi:thermometer"    
+  #   device_address: 0x0B
+  #   register_address: 41205
+  #   filters:
+  #     - offset: -3000
+  #     - multiply: .01                        
+  # - platform: modbus_spy
+  #   name: "Heating/Cooling Circuit 1 Temperature"
+  #   device_class: "temperature"
+  #   accuracy_decimals: 1
+  #   state_class: "measurement"
+  #   unit_of_measurement: "°C"
+  #   icon: "mdi:thermometer"    
+  #   device_address: 0x0B
+  #   register_address: 41208
+  #   filters:
+  #     - offset: -3000
+  #     - multiply: .01
+  # - platform: modbus_spy
+  #   name: "Outdoor Voltage"
+  #   device_class: "voltage"
+  #   accuracy_decimals: 0
+  #   state_class: "measurement"
+  #   unit_of_measurement: "V"
+  #   device_address: 0x02
+  #   register_address: 42101
+  # - platform: modbus_spy
+  #   name: "Outdoor Current"
+  #   device_class: "current"
+  #   accuracy_decimals: 1
+  #   state_class: "measurement"
+  #   unit_of_measurement: "A"
+  #   device_address: 0x02
+  #   register_address: 42102
+  #   filters:
+  #     - multiply: .1
+  # - platform: modbus_spy
+  #   name: "Compressor Working Speed Setpoint"
+  #   device_class: "frequency"
+  #   accuracy_decimals: 0
+  #   state_class: "measurement"
+  #   unit_of_measurement: "Hz"
+  #   device_address: 0x02
+  #   register_address: 42103
   - platform: modbus_spy
     name: "Compressor Working Speed Actual"
     device_class: "frequency"
@@ -201,14 +201,14 @@ sensor:
     unit_of_measurement: "Hz"
     device_address: 0x02
     register_address: 42104
-  - platform: modbus_spy
-    name: "Outdoor Fan Setpoint"
-    device_class: "frequency"
-    accuracy_decimals: 0
-    state_class: "measurement"
-    unit_of_measurement: "rpm"
-    device_address: 0x02
-    register_address: 42105
+  # - platform: modbus_spy
+  #   name: "Outdoor Fan Setpoint"
+  #   device_class: "frequency"
+  #   accuracy_decimals: 0
+  #   state_class: "measurement"
+  #   unit_of_measurement: "rpm"
+  #   device_address: 0x02
+  #   register_address: 42105
   - platform: modbus_spy
     name: "Outdoor Fan 1 Actual"
     device_class: "frequency"
@@ -241,50 +241,50 @@ sensor:
     filters:
       - offset: -3000
       - multiply: .01
-  - platform: modbus_spy
-    name: "Discharge Temperature"
-    device_class: "temperature"
-    accuracy_decimals: 1
-    state_class: "measurement"
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer"    
-    device_address: 0x02
-    register_address: 42113
-    filters:
-      - offset: -3000
-      - multiply: .01       
-  - platform: modbus_spy
-    name: "Suction Temperature"
-    device_class: "temperature"
-    accuracy_decimals: 1
-    state_class: "measurement"
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer"    
-    device_address: 0x02
-    register_address: 42114
-    filters:
-      - offset: -3000
-      - multiply: .01 
-  - platform: modbus_spy
-    name: "Low Pressure"
-    device_class: "pressure"
-    accuracy_decimals: 1
-    state_class: "measurement"
-    unit_of_measurement: "bar"
-    device_address: 0x02
-    register_address: 42117
-    filters:
-      - multiply: .1    
-  - platform: modbus_spy
-    name: "High Pressure"
-    device_class: "pressure"
-    accuracy_decimals: 1
-    state_class: "measurement"
-    unit_of_measurement: "bar"
-    device_address: 0x02
-    register_address: 42118
-    filters:
-      - multiply: .1   
+  # - platform: modbus_spy
+  #   name: "Discharge Temperature"
+  #   device_class: "temperature"
+  #   accuracy_decimals: 1
+  #   state_class: "measurement"
+  #   unit_of_measurement: "°C"
+  #   icon: "mdi:thermometer"    
+  #   device_address: 0x02
+  #   register_address: 42113
+  #   filters:
+  #     - offset: -3000
+  #     - multiply: .01       
+  # - platform: modbus_spy
+  #   name: "Suction Temperature"
+  #   device_class: "temperature"
+  #   accuracy_decimals: 1
+  #   state_class: "measurement"
+  #   unit_of_measurement: "°C"
+  #   icon: "mdi:thermometer"    
+  #   device_address: 0x02
+  #   register_address: 42114
+  #   filters:
+  #     - offset: -3000
+  #     - multiply: .01 
+  # - platform: modbus_spy
+  #   name: "Low Pressure"
+  #   device_class: "pressure"
+  #   accuracy_decimals: 1
+  #   state_class: "measurement"
+  #   unit_of_measurement: "bar"
+  #   device_address: 0x02
+  #   register_address: 42117
+  #   filters:
+  #     - multiply: .1    
+  # - platform: modbus_spy
+  #   name: "High Pressure"
+  #   device_class: "pressure"
+  #   accuracy_decimals: 1
+  #   state_class: "measurement"
+  #   unit_of_measurement: "bar"
+  #   device_address: 0x02
+  #   register_address: 42118
+  #   filters:
+  #     - multiply: .1   
   - platform: modbus_spy
     id: defrost_value1
     device_address: 0x02
@@ -325,44 +325,44 @@ sensor:
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: " %"
-  - platform: dallas
-    index: 0
-    name: Dallas Temperature 1
-  - platform: dallas
-    index: 1
-    name: Dallas Temperature 2
-  - platform: dallas
-    index: 2
-    name: Dallas Temperature 3      
-  - platform: pulse_meter
-    pin: GPIO33
-    name: Pulse Meter
-    total:
-      name: Total Pulses  
+  # - platform: dallas
+  #   index: 0
+  #   name: Dallas Temperature 1
+  # - platform: dallas
+  #   index: 1
+  #   name: Dallas Temperature 2
+  # - platform: dallas
+  #   index: 2
+  #   name: Dallas Temperature 3      
+  # - platform: pulse_meter
+  #   pin: GPIO33
+  #   name: Pulse Meter
+  #   total:
+  #     name: Total Pulses  
 
 binary_sensor:
-  - platform: modbus_spy
-    id: defrost_value1_bit2
-    device_address: 0x02
-    register_address: 42109
-    bit: 2
-    name: "Defrost value1 bit 2"
-  - platform: modbus_spy
-    id: defrost_value1_bit6
-    device_address: 0x02
-    register_address: 42109
-    bit: 6
-    name: "Defrost value1 bit 6"
-  - platform: modbus_spy
-    id: defrost_value3_bit11
-    device_address: 0x02
-    register_address: 42120
-    bit: 11
-    name: "Defrost value3 bit 11"
-  - platform: modbus_spy
-    name: "Pump 1 Active"
-    device_address: 0x0B
-    register_address: 41301
+  # - platform: modbus_spy
+  #   id: defrost_value1_bit2
+  #   device_address: 0x02
+  #   register_address: 42109
+  #   bit: 2
+  #   name: "Defrost value1 bit 2"
+  # - platform: modbus_spy
+  #   id: defrost_value1_bit6
+  #   device_address: 0x02
+  #   register_address: 42109
+  #   bit: 6
+  #   name: "Defrost value1 bit 6"
+  # - platform: modbus_spy
+  #   id: defrost_value3_bit11
+  #   device_address: 0x02
+  #   register_address: 42120
+  #   bit: 11
+  #   name: "Defrost value3 bit 11"
+  # - platform: modbus_spy
+  #   name: "Pump 1 Active"
+  #   device_address: 0x0B
+  #   register_address: 41301
   - platform: modbus_spy
     name: "Internal Pump Active"
     device_address: 0x0B
@@ -373,7 +373,8 @@ binary_sensor:
     device_address: 0x0B
     register_address: 41215
   - platform: modbus_spy
-    name: "Three Way Valve State"
+    # name: "Three Way Valve State"
+    id: three_way_valve_state
     device_address: 0x0B
     register_address: 41306    
     on_state:
