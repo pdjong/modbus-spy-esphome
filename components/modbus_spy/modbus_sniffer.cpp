@@ -60,6 +60,7 @@ void ModbusSniffer::sniff_loop_task(void* params) {
   IModbusResponseDetector *response_detector =
     ModbusFrameDetectorFactory::create_response_detector(modbus_sniffer->uart_interface_);
   ModbusDataSplitter data_splitter;
+  uint8_t loop_counter_for_free_stack_dump { 0 };
   while (true) {
     if (modbus_sniffer->should_stop_sniffing_) {
       ModbusFrameDetectorFactory::clear_detectors();
@@ -91,6 +92,12 @@ void ModbusSniffer::sniff_loop_task(void* params) {
     }
     uint8_t device_address = request_frame->get_address();
     uint8_t function = request_frame->get_function();
+
+    if (100 == ++loop_counter_for_free_stack_dump) {
+      uint16_t free_bytes = uxTaskGetStackHighWaterMark(NULL);
+      ESP_LOGI(TAG, "Free bytes on stack: %d", free_bytes);
+    }
+
     delete request_frame;
     delete response_frame;
     modbus_sniffer->data_publisher_->publish_data(device_address, function, split_data);
