@@ -32,7 +32,7 @@ logger:
     ModbusRegisterSensor: INFO
     ModbusBinarySensor: INFO
     sensor: INFO
-    dallas.sensor: ERROR
+    dallas.sensor: NONE
 # Enable Home Assistant API
 api:
 
@@ -61,11 +61,11 @@ uart:
 
 modbus_spy:
   id: modbusspy
-  log_not_configured_data: false
+  log_not_configured_data: true
 
 dallas:
   - pin: GPIO27  
-    update_interval: 2s
+    update_interval: 5s
   
 sensor:
   - platform: modbus_spy
@@ -79,9 +79,10 @@ sensor:
     register_address: 41200
     filters:
       - offset: -3000
-      - multiply: .01
+      - multiply: 0.01
+      - delta: 0.1
   - platform: modbus_spy
-    name: "Sanitary Hot Water Temperature"
+    name: "Domestic Hot Water Temperature"
     device_class: "temperature"
     accuracy_decimals: 1
     state_class: "measurement"
@@ -91,7 +92,8 @@ sensor:
     register_address: 41201
     filters:
       - offset: -3000
-      - multiply: .01  
+      - multiply: 0.01  
+      - delta: 0.1     
   - platform: modbus_spy
     name: "Heating/Cooling Temperature"
     device_class: "temperature"
@@ -103,7 +105,8 @@ sensor:
     register_address: 41202
     filters:
       - offset: -3000
-      - multiply: .01     
+      - multiply: 0.01  
+      - delta: 0.1      
   - platform: modbus_spy
     name: "Heat Exchanger Water Outlet Temperature"
     device_class: "temperature"
@@ -115,7 +118,8 @@ sensor:
     register_address: 41203
     filters:
       - offset: -3000
-      - multiply: .01   
+      - multiply: 0.01   
+      - delta: 0.1
     on_value:
       then:
         - sensor.template.publish:
@@ -134,7 +138,8 @@ sensor:
     register_address: 41204
     filters:
       - offset: -3000
-      - multiply: .01    
+      - multiply: 0.01
+      - delta: 0.1       
   - platform: template
     name: Heat Exchanger Delta T
     id: heat_exchanger_delta_t  
@@ -154,7 +159,8 @@ sensor:
     register_address: 41205
     filters:
       - offset: -3000
-      - multiply: .01                        
+      - multiply: 0.01         
+      - delta: 0.1                  
   - platform: modbus_spy
     name: "Heating/Cooling Circuit 1 Temperature"
     device_class: "temperature"
@@ -165,8 +171,59 @@ sensor:
     device_address: 0x0B
     register_address: 41208
     filters:
+      - filter_out: 3000
       - offset: -3000
-      - multiply: .01
+      - multiply: 0.01
+      - delta: 0.1  
+  - platform: modbus_spy
+    name: "Heating/Cooling Circuit 2 Temperature"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    state_class: "measurement"
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer"    
+    device_address: 0x0B
+    register_address: 41209
+    filters:
+      - filter_out: 3000
+      - offset: -3000
+      - multiply: 0.01
+      - delta: 0.1        
+  - platform: modbus_spy   # 0 = high; 250 = medium; 500 = low; 1000=off  41104 = setpoint
+    name: "Internal Pump Speed State"
+    state_class: "measurement"
+    device_address: 0x0B
+    register_address: 41304
+    filters:
+      - delta: 1
+      - lambda: !lambda |-      
+          switch ((int)x)
+          {
+            case 1000:
+              return 0;
+            case 500:
+              return 1;
+            case 250:
+              return 2;
+            default:
+              return 3; 
+          }
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: internal_pump_speed_text
+            state: !lambda |
+              switch ((int)x)
+              {
+                case 0:
+                  return "Uit";
+                case 1:
+                  return "Laag";
+                case 2:
+                  return "Gemiddeld";
+                default:
+                  return "Hoog";
+              }            
   - platform: modbus_spy
     name: "Outdoor Voltage"
     device_class: "voltage"
@@ -175,6 +232,8 @@ sensor:
     unit_of_measurement: "V"
     device_address: 0x02
     register_address: 42101
+    filters:
+      - delta: 1    
   - platform: modbus_spy
     name: "Outdoor Current"
     device_class: "current"
@@ -184,7 +243,8 @@ sensor:
     device_address: 0x02
     register_address: 42102
     filters:
-      - multiply: .1
+      - multiply: 0.1
+      - delta: 0.1
   - platform: modbus_spy
     name: "Compressor Working Speed Setpoint"
     device_class: "frequency"
@@ -193,6 +253,8 @@ sensor:
     unit_of_measurement: "Hz"
     device_address: 0x02
     register_address: 42103
+    filters:
+      - delta: 1
   - platform: modbus_spy
     name: "Compressor Working Speed Actual"
     device_class: "frequency"
@@ -201,6 +263,8 @@ sensor:
     unit_of_measurement: "Hz"
     device_address: 0x02
     register_address: 42104
+    filters:
+      - delta: 1
   - platform: modbus_spy
     name: "Outdoor Fan Setpoint"
     device_class: "frequency"
@@ -209,6 +273,8 @@ sensor:
     unit_of_measurement: "rpm"
     device_address: 0x02
     register_address: 42105
+    filters:
+      - delta: 1    
   - platform: modbus_spy
     name: "Outdoor Fan 1 Actual"
     device_class: "frequency"
@@ -217,6 +283,15 @@ sensor:
     unit_of_measurement: "rpm"
     device_address: 0x02
     register_address: 42106
+    filters:
+      - delta: 1
+  - platform: modbus_spy
+    name: "Expansion Valve Openings"
+    state_class: "measurement"
+    device_address: 0x02
+    register_address: 42108    
+    filters:
+      - delta: 1    
   - platform: modbus_spy
     name: "Outside Temperature"
     device_class: "temperature"
@@ -228,7 +303,8 @@ sensor:
     register_address: 42111
     filters:
       - offset: -3000
-      - multiply: .01
+      - multiply: 0.01
+      - delta: 0.1
   - platform: modbus_spy
     name: "Outdoor Coil Temperature"
     device_class: "temperature"
@@ -240,7 +316,8 @@ sensor:
     register_address: 42112
     filters:
       - offset: -3000
-      - multiply: .01
+      - multiply: 0.01
+      - delta: 0.1   
   - platform: modbus_spy
     name: "Discharge Temperature"
     device_class: "temperature"
@@ -252,7 +329,8 @@ sensor:
     register_address: 42113
     filters:
       - offset: -3000
-      - multiply: .01       
+      - multiply: 0.01       
+      - delta: 0.1   
   - platform: modbus_spy
     name: "Suction Temperature"
     device_class: "temperature"
@@ -264,7 +342,8 @@ sensor:
     register_address: 42114
     filters:
       - offset: -3000
-      - multiply: .01 
+      - multiply: 0.01 
+      - delta: 0.1   
   - platform: modbus_spy
     name: "Low Pressure"
     device_class: "pressure"
@@ -274,7 +353,8 @@ sensor:
     device_address: 0x02
     register_address: 42117
     filters:
-      - multiply: .1    
+      - multiply: 0.1    
+      - delta: 0.1  
   - platform: modbus_spy
     name: "High Pressure"
     device_class: "pressure"
@@ -284,7 +364,8 @@ sensor:
     device_address: 0x02
     register_address: 42118
     filters:
-      - multiply: .1   
+      - multiply: 0.1   
+      - delta: 0.1
   - platform: modbus_spy
     id: defrost_value1
     device_address: 0x02
@@ -316,53 +397,69 @@ sensor:
       );
       return timestamp;
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
-    name: "Modbus Spy WiFi Signal dB"
+    name: "WiFi Signal dB"
     id: wifi_signal_db
     update_interval: 20s
   - platform: copy # Reports the WiFi signal strength in %
     source_id: wifi_signal_db
-    name: "Modbus Spy WiFi Signal Percent"
+    name: "WiFi Signal Percent"
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: " %"
   - platform: dallas
     index: 0
     name: Dallas Temperature 1
-  - platform: dallas
-    index: 1
-    name: Dallas Temperature 2
-  - platform: dallas
-    index: 2
-    name: Dallas Temperature 3      
-  - platform: pulse_meter
+    filters:
+      - delta: 0.1  
+  # - platform: dallas
+  #   index: 1
+  #   name: Dallas Temperature 2
+  # - platform: dallas
+  #   index: 2
+  #   name: Dallas Temperature 3      
+  - platform: pulse_counter
     pin: GPIO33
     name: Pulse Meter
+    update_interval: 2s
+    unit_of_measurement: 'l/hr'
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.1265822784810127
+      - delta: 5
     total:
       name: Total Pulses  
 
 binary_sensor:
-  - platform: modbus_spy
-    id: defrost_value1_bit2
-    device_address: 0x02
-    register_address: 42109
-    bit: 2
-    name: "Defrost value1 bit 2"
-  - platform: modbus_spy
-    id: defrost_value1_bit6
-    device_address: 0x02
-    register_address: 42109
-    bit: 6
-    name: "Defrost value1 bit 6"
-  - platform: modbus_spy
-    id: defrost_value3_bit11
-    device_address: 0x02
-    register_address: 42120
-    bit: 11
-    name: "Defrost value3 bit 11"
+  # - platform: modbus_spy
+  #   id: defrost_value1_bit2
+  #   device_address: 0x02
+  #   register_address: 42109
+  #   bit: 2
+  #   name: "Defrost value1 bit 2"
+  # - platform: modbus_spy
+  #   id: defrost_value1_bit6
+  #   device_address: 0x02
+  #   register_address: 42109
+  #   bit: 6
+  #   name: "Defrost value1 bit 6"
+  # - platform: modbus_spy
+  #   id: defrost_value3_bit11
+  #   device_address: 0x02
+  #   register_address: 42120
+  #   bit: 11
+  #   name: "Defrost value3 bit 11"
   - platform: modbus_spy
     name: "Pump 1 Active"
     device_address: 0x0B
     register_address: 41301
+  - platform: modbus_spy
+    name: "Pump 2 Active"
+    device_address: 0x0B
+    register_address: 41302   
+  - platform: modbus_spy
+    name: "Domestic Hot Water Pump Active"
+    device_address: 0x0B
+    register_address: 41303   
   - platform: modbus_spy
     name: "Internal Pump Active"
     device_address: 0x0B
@@ -385,6 +482,11 @@ binary_sensor:
                 return "Verwarming";
               else
                 return "Tapwater";    
+  - platform: modbus_spy
+    name: "Internal Auxilliary Heater"
+    icon: "mdi:flash"
+    device_address: 0x0B
+    register_address: 41310
   - platform: template
     name: "Defrost"
     icon: "mdi:snowflake-alert"
@@ -408,6 +510,9 @@ text_sensor:
   - platform: template
     name: Three Way Valve
     id: three_way_valve_text
+  - platform: template
+    name: Internal Pump Speed
+    id: internal_pump_speed_text
 
 switch:
   - platform: restart
